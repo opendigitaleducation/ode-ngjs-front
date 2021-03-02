@@ -1,0 +1,31 @@
+{
+  "name": "ode-ngjs-front",
+  "version": "0.1.0",
+  "description": "Open Digital Education Frontend Framework",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "compile": "npx tsc --build ./tsconfig.json",
+    "test": "npm run compile && npm run jasmine",
+    "jasmine": "npx jasmine --config=ts/test/config/jasmine.json",
+    "build": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcbe-ode/ode-ngjs-front.git"
+  },
+  "author": "Open Digital Education",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jcbe-ode/ode-ngjs-front/issues"
+  },
+  "homepage": "https://github.com/jcbe-ode/ode-ngjs-front#readme",
+  "files": [
+    "dist/src/**/*"
+  ],
+  "devDependencies": {
+    "@types/jasmine": "^3.6.4",
+    "jasmine": "^3.6.4",
+    "typescript": "^4.2.2"
+  }
+}
