@@ -1,21 +1,32 @@
 /* The say-something directive.
  *
  * Usage:
- * <say-something ngModel="ODE"></say-something>
+ * 1) import your directive's factory,
+ *      import 
+ * 2) Add it to your angular module,
+ * 3) use it
+ * <say-something ngModel="ode"></say-something>
  */
+import { IAttributes, ICompileService, IController, IDirective, IHttpService, IScope } from "angular";
 
 /* Controller for the directive */
-class Controller {
+class Controller implements IController {
+    $http:IHttpService;
     userName: any;
+
     sayHello():string {
         return `Hello, ${this.userName} !`
+    }
+
+    constructor($http:IHttpService) {
+        this.$http = $http;
     }
 }
 
 /* Directive */
-class Directive {
-    restrict	= 'E';
-	template	= `<span>{{ctrl.sayHello()}}</span>`;
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+    restrict = 'E';
+	template = `<span>{{ctrl.sayHello()}}</span>`;
 //or
 //  templateUrl = '';
 
@@ -30,10 +41,10 @@ class Directive {
         userName: '@ngModel'
 	};
 
-	controller  = [Controller];
-	controllerAs= 'ctrl';
+	controller = ["$http", Controller];
+	controllerAs = 'ctrl';
 
-//	require = ['saySomething','ngModel'];
+	require = ['saySomething','ngModel'];
 
     /**
      * Link method for the directive.
@@ -43,20 +54,20 @@ class Directive {
      * @param $attr hash object with key-value pairs of normalized attribute names and their corresponding attribute values.
      * @param controllers Array of "require"d controllers : [ngModelCtrl]
      */
-    link($scope:angular.IScope, $elem:JQLite, $attr:angular.IAttributes, controllers:angular.IController[]) { 
-        
+    link(scope:IScope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
+        // Manipulate the DOM here...
     }
 
-    $compile:angular.ICompileService;
+    $compile:ICompileService;
 
     /* Constructor with Dependency Injection */
     static $inject = ["$compile"];
-    constructor($compile:angular.ICompileService) {
+    constructor($compile:ICompileService) {
         this.$compile = $compile;
     }
 }
 
 /** Directive factory */
-export default ($compile:angular.ICompileService) => {
+export default ($compile:ICompileService) => {
 	return new Directive($compile);
 }
