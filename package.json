@@ -2,12 +2,12 @@
   "name": "ode-ngjs-front",
   "version": "0.1.0",
   "description": "Open Digital Education Frontend Framework",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/ts/index.js",
+  "types": "dist/ts/index.d.ts",
   "scripts": {
     "compile": "npx tsc --build ./tsconfig.json",
     "test": "npm run compile && npm run jasmine",
-    "jasmine": "npx jasmine --config=ts/test/config/jasmine.json",
+    "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
     "build": "npx webpack"
   },
   "repository": {
@@ -21,11 +21,18 @@
   },
   "homepage": "https://github.com/jcbe-ode/ode-ngjs-front#readme",
   "files": [
-    "dist/src/**/*"
+    "dist/ts/**/*"
   ],
+  "dependencies": {
+    "angular": "1.7.9",
+    "angular-route": "1.7.9",
+    "angular-sanitize": "1.7.9"
+  },
   "devDependencies": {
+    "@types/angular": "^1.7.4",
     "@types/jasmine": "^3.6.4",
     "jasmine": "^3.6.4",
+    "ode-ts-client": "^0.1.0",
     "typescript": "^4.2.2"
   }
 }
