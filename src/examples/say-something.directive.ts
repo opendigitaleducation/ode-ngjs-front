@@ -1,4 +1,4 @@
-/* The say-something directive.
+/* The say-something example directive.
  *
  * Usage:
  * 1) import your directive's factory,
@@ -6,20 +6,22 @@
  * 2) Add it to your angular module,
  * 3) use it
  * <say-something ngModel="ode"></say-something>
+ * 
+ * 4) unit-tesing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
  */
 import { IAttributes, ICompileService, IController, IDirective, IHttpService, IScope } from "angular";
 
 /* Controller for the directive */
-class Controller implements IController {
+export class SaySomethingController implements IController {
+    constructor($http:IHttpService) {
+        this.$http = $http;
+    }
+    
     $http:IHttpService;
     userName: any;
 
     sayHello():string {
         return `Hello, ${this.userName} !`
-    }
-
-    constructor($http:IHttpService) {
-        this.$http = $http;
     }
 }
 
@@ -41,7 +43,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         userName: '@ngModel'
 	};
 
-	controller = ["$http", Controller];
+	controller = ["$http", SaySomethingController];
 	controllerAs = 'ctrl';
 
 	require = ['saySomething','ngModel'];
