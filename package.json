@@ -1,6 +1,6 @@
 {
   "name": "ode-ngjs-front",
-  "version": "0.1.0",
+  "version": "0.1.0-explorer.0",
   "description": "Open Digital Education Frontend Framework",
   "main": "dist/ts/index.js",
   "types": "dist/ts/index.d.ts",
@@ -10,7 +10,7 @@
     "postupdate-deps": "npm run copy-libs",
     "copy-libs": "cpx \"node_modules/{angular,angular-*,html5-boilerplate/dist}/**/*\" lib -C",
     "compile": "npx tsc --build ./tsconfig.json",
-    "test": "npm run compile && npm run karma",
+    "test": "npm run compile",
     "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
     "karma": "npx karma start src/test/config/karma.js",
     "build": "npx webpack"
@@ -45,7 +45,10 @@
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^4.0.1",
-    "ode-ts-client": "^0.1.0",
-    "typescript": "^4.2.2"
+    "ode-ts-client": "^0.1.0-explorer.0",
+    "terser-webpack-plugin": "^5.1.1",
+    "typescript": "^4.2.2",
+    "webpack": "^5.22.0",
+    "webpack-cli": "^4.5.0"
   }
 }
