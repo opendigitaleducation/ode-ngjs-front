@@ -1,6 +1,6 @@
 {
   "name": "ode-ngjs-front",
-  "version": "0.1.0-explorer.1",
+  "version": "0.1.0-explorer.2",
   "description": "Open Digital Education Frontend Framework",
   "main": "dist/ts/index.js",
   "types": "dist/ts/index.d.ts",
@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/jcbe-ode/ode-ngjs-front#readme",
   "files": [
-    "dist/ts/**/*"
+    "dist/ts/**/*",
+    "dist/example/**/*"
   ],
   "dependencies": {
     "angular": "1.7.9",
