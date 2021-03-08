@@ -1,7 +1,9 @@
-import "jasmine";
 import { IControllerService, IRootScopeService, module } from "angular";
 import "angular-mocks/index";
 import { SaySomethingController } from "../examples/say-something.directive";
+
+/* FIXME UNIT TESTING NEEDS FIXING : angularjs needs the global window object */
+//var window = {};
 
 describe('window', function () {
     it('is defined', function () {
