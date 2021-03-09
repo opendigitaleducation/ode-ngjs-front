@@ -1,6 +1,6 @@
 import { IControllerService, IRootScopeService, module } from "angular";
 import "angular-mocks/index";
-import { SaySomethingController } from "../examples/say-something.directive";
+import { Controller } from "../examples/say-something.directive";
 
 /* FIXME UNIT TESTING NEEDS FIXING : angularjs needs the global window object */
 //var window = {};
@@ -30,7 +30,7 @@ describe('SaySomethingController', function () {
     describe('SaySomethingController.sayHello()', function () {
         it('say hello to world', function () {
             //var $scope = $rootScope.$new();
-            var controller = $controller<SaySomethingController>('SaySomethingController', { $http: null });
+            var controller = $controller<Controller>('SaySomethingController', { $http: null });
             controller.userName = 'world';
             expect(controller.sayHello()).toEqual('Hello, world !');
         });

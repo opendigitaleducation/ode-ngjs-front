@@ -12,7 +12,7 @@
 import { IAttributes, ICompileService, IController, IDirective, IHttpService, IScope } from "angular";
 
 /* Controller for the directive */
-export class SaySomethingController implements IController {
+export class Controller implements IController {
     constructor($http:IHttpService) {
         this.$http = $http;
     }
@@ -26,7 +26,7 @@ export class SaySomethingController implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+export class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = `<span>{{ctrl.sayHello()}}</span>`;
 //or
@@ -43,7 +43,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         userName: '@ngModel'
 	};
 
-	controller = ["$http", SaySomethingController];
+	controller = ["$http", Controller];
 	controllerAs = 'ctrl';
 
 	require = ['saySomething','ngModel'];
@@ -70,6 +70,6 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 }
 
 /** Directive factory */
-export default ($compile:ICompileService) => {
+export function DirectiveFactory($compile:ICompileService) {
 	return new Directive($compile);
 }
