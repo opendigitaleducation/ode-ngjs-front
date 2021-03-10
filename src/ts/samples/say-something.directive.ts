@@ -2,12 +2,13 @@
  *
  * Usage:
  * 1) import your directive's factory,
- *      import 
+ *      import { SaySomething } from 'ode-ngjs-front';
  * 2) Add it to your angular module,
- * 3) use it
- * <say-something ngModel="ode"></say-something>
+ *      ng.directives.push( ng.directive("saySomething", SaySomething.DirectiveFactory) );
+ * 3) Use it,
+ *      <say-something what="Hello" ng-model="'World'"></say-something>
  * 
- * 4) unit-tesing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
+ * 4) TODO unit-testing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
  */
 import { IAttributes, ICompileService, IController, IDirective, IHttpService, IScope } from "angular";
 
@@ -18,10 +19,11 @@ export class Controller implements IController {
     }
     
     $http:IHttpService;
-    userName: any;
+    what?: string;
+    userName?: any;
 
     sayHello():string {
-        return `Hello, ${this.userName} !`
+        return `${this.what}, ${this.userName} !`
     }
 }
 
@@ -33,19 +35,21 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
 //  templateUrl = '';
 
     /* Scope isolation, @see https://code.angularjs.org/1.7.9/docs/guide/directive#isolating-the-scope-of-a-directive */
-	scope = {};
+    scope = {
+        what: '@',
+        userName: '=ngModel'
+    };
 
     /* 
      * Binding the scope to the controller makes the controller cleaner.
      * @see why at https://ultimatecourses.com/blog/no-scope-soup-bind-to-controller-angularjs
      */
-	bindToController = {
-        userName: '@ngModel'
-	};
+	bindToController = true;
 
 	controller = ["$http", Controller];
 	controllerAs = 'ctrl';
 
+    /** @see the link method below. */
 	require = ['saySomething','ngModel'];
 
     /**
@@ -57,19 +61,27 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
      * @param controllers Array of "require"d controllers : [ngModelCtrl]
      */
     link(scope:IScope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
-        // Manipulate the DOM here...
+        let ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
+        let ngModelCtrl:IController|null = controllers ? controllers[1] as IController : null;
+
+        // TODO Manipulate the DOM here.
+
+        console.log( ctrl?.userName );
+        console.log( ngModelCtrl );
     }
 
     $compile:ICompileService;
 
-    /* Constructor with Dependency Injection */
+    /* Dependency Injection of the $compile service. It can be used in the link method. */
     static $inject = ["$compile"];
+
+    /* Constructor with Dependency Injection */
     constructor($compile:ICompileService) {
         this.$compile = $compile;
     }
 }
 
-/** Directive factory */
+/** Directive factory, with dependencies injected as required by $inject above. */
 export function DirectiveFactory($compile:ICompileService) {
 	return new Directive($compile);
 }

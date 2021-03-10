@@ -1,2 +1,3 @@
 /** Sample directive */
-export * as SaySomethingDirective from '../examples/say-something.directive';
+export * as Samples from './samples/index';
+export * as Directives from './directives/index';
