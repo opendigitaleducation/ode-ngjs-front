@@ -2,9 +2,9 @@
  *
  * Usage:
  * 1) import your directive's factory,
- *      import { SaySomething } from 'ode-ngjs-front';
+ *      import { Samples } from 'ode-ngjs-front';
  * 2) Add it to your angular module,
- *      ng.directives.push( ng.directive("saySomething", SaySomething.DirectiveFactory) );
+ *      ng.directives.push( ng.directive("saySomething", Samples.SaySomething.DirectiveFactory) );
  * 3) Use it,
  *      <say-something what="Hello" ng-model="'World'"></say-something>
  * 

@@ -2,7 +2,7 @@
  *
  * Usage:
  * 1) import your directive's factory,
- *      import { Directives.FolderExplorer } from 'ode-ngjs-front';
+ *      import { FolderExplorer } from 'ode-ngjs-front';
  * 2) Add it to your angular module,
  *      ng.directives.push( ng.directive("FolderExplorer", FolderExplorer.DirectiveFactory) );
  * 3) Use it,
