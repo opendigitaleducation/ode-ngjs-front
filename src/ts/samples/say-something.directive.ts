@@ -23,16 +23,20 @@ export class Controller implements IController {
     userName?: any;
 
     sayHello():string {
-        return `${this.what}, ${this.userName} !`
+        return `${this.what}, ${this.userName} !`;
     }
 }
 
 /* Directive */
 export class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
-	template = `<span>{{ctrl.sayHello()}}</span>`;
+
+// The require() will be resolved by webpack at bundle time.
+// If this is a ".html" file, it will be inlined as a javascript characters string, and thus must be used like below :
+	template = require("./say-something.directive.html");
 //or
-//  templateUrl = '';
+// If it is a ".lazy.html" file, it will be lazy-loade by angularjs at runtime, and thus must be used like below :
+//  templateUrl = require('./say-something.directive.lazy.html');
 
     /* Scope isolation, @see https://code.angularjs.org/1.7.9/docs/guide/directive#isolating-the-scope-of-a-directive */
     scope = {

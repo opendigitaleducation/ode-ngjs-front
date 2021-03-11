@@ -10,18 +10,18 @@
     "test": "npm run copy-libs && npm run compile",
     "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
     "karma": "npx karma start src/test/config/karma.js",
-    "build": "npx webpack"
+    "build": "cpx \"src/ts/**/*.html\" dist/ts/ -C && npx webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcbe-ode/ode-ngjs-front.git"
+    "url": "git+https://github.com/opendigitaleducation/ode-ngjs-front.git"
   },
   "author": "Open Digital Education",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/jcbe-ode/ode-ngjs-front/issues"
+    "url": "https://github.com/opendigitaleducation/ode-ngjs-front/issues"
   },
-  "homepage": "https://github.com/jcbe-ode/ode-ngjs-front#readme",
+  "homepage": "https://github.com/opendigitaleducation/ode-ngjs-front#readme",
   "files": [
     "dist/ts/**/*",
     "dist/examples/**/*"
@@ -38,6 +38,8 @@
     "@types/jasmine": "^3.6.4",
     "angular-mocks": "^1.7.9",
     "cpx": "^1.5.0",
+    "file-loader": "^6.2.0",
+    "html-loader": "^2.1.2",
     "http-server": "^0.12.3",
     "jasmine-core": "^3.6.0",
     "karma": "^6.1.1",
