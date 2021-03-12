@@ -1,16 +1,21 @@
 const path = require('path');
 const TerserPlugin = require("terser-webpack-plugin");
 
-module.exports = {
+module.exports = env => ({
   mode: "production",
   entry: {
-    'ode-ngjs-front': './dist/ts/index.js',
+    'ode-ngjs-front': './src/ts/index.ts',
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist', 'bundle'),
+    path: path.resolve(__dirname, 'dist', typeof env.build_target==="string" ? env.build_target : 'bundle'),
   },
-  devtool: "source-map",
+  // @see https://github.com/TypeStrong/ts-loader#devtool--sourcemaps
+  devtool: "inline-source-map",
+  resolve: {
+    // Resolvable extensions.
+    extensions: [".ts", ".tsx", ".js", ".html"]
+  },
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin({
@@ -19,11 +24,11 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.lazy\.html$/,
-        loader: 'file-loader',
-        options: {},
-      },
+      // ts-loader will handle files with `.ts` or `.tsx` extensions
+      { test: /\.tsx?$/, loader: "ts-loader" },
+      // file-loader will handle files with `.lazy.html` extensions
+      { test: /\.lazy\.html$/, loader: 'file-loader', options: {} },
+      // html-loader will handle all files with `.html` but not `.lazy.html` extensions
       {
         test: /\.html$/,
         exclude: /\.lazy\.html$/,
@@ -35,4 +40,4 @@ module.exports = {
       },
     ],
   },
-};
+});

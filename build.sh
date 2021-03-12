@@ -1,15 +1,14 @@
 #!/bin/bash
 
-if [ "$#" -gt 1 ]; then
-  echo "Usage: $0 <clean|init|build|publish>"
+if [ "$#" -gt 2 ]; then
+  echo "Usage: $0 <clean|init|build|watch|publish>"
   echo "Example: $0 clean"
   echo "Example: $0 init"
   echo "Example: $0 build"
+  echo "Example: $0 [--springboard=recette] watch"
   echo "Example: $0 publish"
   exit 1
 fi
-
-action=$1
 
 if [ ! -e node_modules ]
 then
@@ -21,6 +20,20 @@ then
   export USER_UID=1000
   export GROUP_GID=1000
 fi
+
+# options
+SPRINGBOARD="recette"
+for i in "$@"
+do
+case $i in
+    -s=*|--springboard=*)
+    SPRINGBOARD="${i#*=}"
+    shift
+    ;;
+    *)
+    ;;
+esac
+done
 
 clean () {
   rm -rf node_modules dist
@@ -34,25 +47,42 @@ build () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm run compile && npm run build"
 }
 
+watch () {
+  docker-compose run \
+    --rm \
+    -u "$USER_UID:$GROUP_GID" \
+    -v $PWD/../$SPRINGBOARD:/home/node/springboard \
+    node sh -c "npm run watch --springboard=/home/node/springboard/assets"
+}
+
 publish () {
   LOCAL_BRANCH=`echo $GIT_BRANCH | sed -e "s|origin/||g"`
 #  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm pack --dry-run"
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm publish --tag $LOCAL_BRANCH"
 }
 
-case $action in
-  clean)
-    clean
-    ;;
-  init)
-    init
-    ;;
-  build)
-    build
-    ;;
-  publish)
-    publish
-    ;;
-  *)
-    echo "Invalid argument : $action"
-esac
+for param in "$@"
+do
+  case $param in
+    clean)
+      clean
+      ;;
+    init)
+      init
+      ;;
+    build)
+      build
+      ;;
+    watch)
+      watch
+      ;;
+    publish)
+      publish
+      ;;
+    *)
+      echo "Invalid argument : $action"
+  esac
+  if [ ! $? -eq 0 ]; then
+    exit 1
+  fi
+done

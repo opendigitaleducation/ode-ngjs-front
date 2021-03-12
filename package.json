@@ -5,12 +5,12 @@
   "main": "dist/ts/index.js",
   "types": "dist/ts/index.d.ts",
   "scripts": {
-    "copy-libs": "cpx \"node_modules/{angular,angular-*,html5-boilerplate/dist}/**/*\" lib -C",
     "compile": "npx tsc --build ./tsconfig.json",
-    "test": "npm run copy-libs && npm run compile",
+    "test": "npm run compile && npm run jasmine",
     "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
     "karma": "npx karma start src/test/config/karma.js",
-    "build": "cpx \"src/ts/**/*.html\" dist/ts/ -C && npx webpack"
+    "build": "npx webpack",
+    "watch": "npx webpack --node-env development --env build_target=${npm_config_springboard} --watch"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,6 @@
     "@types/angular-mocks": "^1.7.0",
     "@types/jasmine": "^3.6.4",
     "angular-mocks": "^1.7.9",
-    "cpx": "^1.5.0",
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "http-server": "^0.12.3",
@@ -47,6 +46,7 @@
     "karma-jasmine": "^4.0.1",
     "ode-ts-client": "^0.1.0-explorer.0",
     "terser-webpack-plugin": "^5.1.1",
+    "ts-loader": "^8.0.18",
     "typescript": "^4.2.2",
     "webpack": "^5.22.0",
     "webpack-cli": "^4.5.0"
