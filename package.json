@@ -10,7 +10,7 @@
     "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
     "karma": "npx karma start src/test/config/karma.js",
     "build": "npx webpack",
-    "watch": "npx webpack --node-env development --env build_target=${npm_config_springboard} --watch"
+    "watch": "npx webpack --config webpack.config.watch.js --env build_target=${npm_config_springboard} --watch"
   },
   "repository": {
     "type": "git",

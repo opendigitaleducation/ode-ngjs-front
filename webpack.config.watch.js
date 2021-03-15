@@ -1,27 +1,19 @@
 const path = require('path');
-const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = env => ({
-  mode: "production",
+  mode: "development",
   entry: {
     'ode-ngjs-front': './src/ts/index.ts',
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist', 'bundle'),
-    clean: true
+    path: path.resolve(__dirname, 'dist', env.build_target),
   },
   // @see https://github.com/TypeStrong/ts-loader#devtool--sourcemaps
-  devtool: "source-map",
+  devtool: "inline-source-map",
   resolve: {
     // Resolvable extensions.
     extensions: [".ts", ".tsx", ".js", ".html"]
-  },
-  optimization: {
-    minimize: true,
-    minimizer: [new TerserPlugin({
-        extractComments: false,
-    })],
   },
   module: {
     rules: [
