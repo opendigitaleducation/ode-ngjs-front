@@ -9,6 +9,9 @@ module.exports = env => ({
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist', env.build_target),
   },
+  externals: {
+    "ode-ts-client": 'window.entcore["ode-ts-client"]'
+  },
   // @see https://github.com/TypeStrong/ts-loader#devtool--sourcemaps
   devtool: "inline-source-map",
   resolve: {

@@ -11,6 +11,9 @@ module.exports = env => ({
     path: path.resolve(__dirname, 'dist', 'bundle'),
     clean: true
   },
+  externals: {
+    "ode-ts-client": 'window.entcore["ode-ts-client"]'
+  },
   // @see https://github.com/TypeStrong/ts-loader#devtool--sourcemaps
   devtool: "source-map",
   resolve: {
