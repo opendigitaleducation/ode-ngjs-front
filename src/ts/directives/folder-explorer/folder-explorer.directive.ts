@@ -1,41 +1,45 @@
-/* The folder-explorer directive.
- *
- * Usage:
- * 1) import your directive's factory,
- *      import { FolderExplorer } from 'ode-ngjs-front';
- * 2) Add it to your angular module,
- *      ng.directives.push( ng.directive("FolderExplorer", FolderExplorer.DirectiveFactory) );
- * 3) Use it,
- *      <folder-explorer app="blog"></folder-explorer>
- * 
- * 4) TODO unit-testing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
- */
-import { IAttributes, ICompileService, IController, IDirective, IHttpService, IScope } from "angular";
+import { IAttributes, IController, IDirective, IScope } from "angular";
+import { App, IExplorerFramework, IExplorerContext, framework, ResourceType, IContext } from "ode-ts-client";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor($http:IHttpService) {
-        this.$http = $http;
+    constructor() {}
+    app?:App;
+    resource?:ResourceType;
+    explorer:IExplorerContext|null = null;
+    context:IContext|null = null;
+
+    build() {
+        if( !this.app )
+            throw new Error("App undefined for folder-explorer.");
+        if( !this.resource )
+            throw new Error("Resource undefined for folder-explorer.");
+        this.explorer = framework.createContext( [this.resource], this.app );
     }
-    $http:IHttpService;
+
+    async initialize() {
+        if( this.explorer ) {
+            this.context = await this.explorer.initialize();
+        }
+    }
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective {
     restrict = 'E';
 	template = require('./folder-explorer.directive.html').default;
-
-    /* Scope isolation, @see https://code.angularjs.org/1.7.9/docs/guide/directive#isolating-the-scope-of-a-directive */
-	scope = {};
-
-    /* 
-     * Binding the scope to the controller makes the controller cleaner.
-     * @see why at https://ultimatecourses.com/blog/no-scope-soup-bind-to-controller-angularjs
-     */
+	scope = {
+        app:'@', resource:'@'
+    };
 	bindToController = true;
-
-	controller = ["$http", Controller];
+	controller = [Controller];
 	controllerAs = 'ctrl';
+
+    link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
+        let ctrl:Controller = controller as Controller;
+        ctrl.build();
+        ctrl.initialize();
+    }
 
     /* Dependency Injection */
     static $inject = [];
@@ -43,7 +47,18 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     }
 }
 
-/** Directive factory, with dependencies injected as required by $inject above. */
+/** The folder-explorer directive.
+ *
+ * Usage:
+ * 1) import your directive's factory,
+ *      import { FolderExplorer } from 'ode-ngjs-front';
+ * 2) Add it to your angular module,
+ *      ng.directives.push( ng.directive("FolderExplorer", FolderExplorer.DirectiveFactory) );
+ * 3) Use it,
+ *      &lt;folder-explorer app="blog" resource="blog"></folder-explorer&gt;
+ * 
+ * 4) TODO unit-testing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
+ */
 export function DirectiveFactory() {
 	return new Directive();
 }
