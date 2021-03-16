@@ -23,7 +23,7 @@ export class Controller implements IController {
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
-	template = require('./folder-explorer.directive.html');
+	template = require('./folder-explorer.directive.html').default;
 
     /* Scope isolation, @see https://code.angularjs.org/1.7.9/docs/guide/directive#isolating-the-scope-of-a-directive */
 	scope = {};

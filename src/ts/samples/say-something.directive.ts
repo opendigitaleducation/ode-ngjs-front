@@ -33,7 +33,7 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
 
 // The require() will be resolved by webpack at bundle time.
 // If this is a ".html" file, it will be inlined as a javascript characters string, and thus must be used like below :
-	template = require("./say-something.directive.html");
+	template = require("./say-something.directive.html").default;
 //or
 // If it is a ".lazy.html" file, it will be lazy-loade by angularjs at runtime, and thus must be used like below :
 //  templateUrl = require('./say-something.directive.lazy.html');
