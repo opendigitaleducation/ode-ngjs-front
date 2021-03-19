@@ -31,7 +31,7 @@ module.exports = env => ({
       // ts-loader will handle files with `.ts` or `.tsx` extensions
       { test: /\.tsx?$/, loader: "ts-loader" },
       // file-loader will handle files with `.lazy.html` extensions
-      { test: /\.lazy\.html$/, loader: 'file-loader', options: {} },
+      { test: /\.lazy\.html$/, loader: 'file-loader', options: {}, type: 'javascript/auto' },
       // html-loader will handle all files with `.html` but not `.lazy.html` extensions
       {
         test: /\.html$/,
