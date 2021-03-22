@@ -1,32 +1,6 @@
 <div class="container d-flex">
     <!-- SIDEBAR -->
-    <aside class="sidebar sidebar--left">
-        <h1 class="sidebar__title">Blog</h1>
-        <ul class="sidebar__tree">
-            <li><a class="active" href="">Mes blogs</a>
-                <ul>
-                    <li><a href="">Dossier 1</a></li>
-                    <li><a href="">Dossier 2</a>
-                        <ul>
-                            <li><a href="">Sous-dossier 1</a></li>
-                            <li><a href="">Sous-dossier 2</a></li>
-                            <li><a href="">Sous-dossier 3</a></li>
-                            <li><a href="">Sous-dossier avec un nom très long</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="">Dossier 3</a>
-                        <ul>
-                            <li><a href="">Sous-dossier 1</a></li>
-                            <li><a href="">Sous-dossier 2</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="">Ma corbeille</a></li>
-        </ul>
-        <a class="btn btn-outline-secondary btn-block">Créer un dossier</a>
-        <a class="btn btn-outline-secondary btn-block">Importer</a>
-    </aside>
+    <sidebar folders="ctrl.context.folders"></sidebar>
     <!-- MAIN CONTENT -->
     <main class="main-content">
         <section class="explorer">
