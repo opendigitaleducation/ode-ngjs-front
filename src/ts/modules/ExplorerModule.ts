@@ -1,8 +1,8 @@
 import angular from "angular";
-import { Folder, FolderExplorer, Sidebar } from "../directives";
+import { Explorer, Folder, Sidebar } from "../directives";
 
-angular.module("explorerModule", [])
-.directive("folderExplorer", FolderExplorer.DirectiveFactory)
-.directive("sidebar", Sidebar.DirectiveFactory)
-.directive("folder", Folder.DirectiveFactory)
+angular.module("odeExplorerModule", [])
+.directive("odeExplorer", Explorer.DirectiveFactory)
+.directive("odeSidebar", Sidebar.DirectiveFactory)
+.directive("odeFolder", Folder.DirectiveFactory)
 ;

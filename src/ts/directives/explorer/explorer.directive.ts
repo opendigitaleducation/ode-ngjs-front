@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { App, IExplorerFramework, IExplorerContext, framework, ResourceType, IContext } from "ode-ts-client";
+import { App, IExplorerContext, framework, ResourceType, IContext } from "ode-ts-client";
 
 /* Controller for the directive */
 export class Controller implements IController {
@@ -11,9 +11,9 @@ export class Controller implements IController {
 
     build():Controller {
         if( !this.app )
-            throw new Error("App undefined for folder-explorer.");
+            throw new Error("App undefined for explorer.");
         if( !this.resource )
-            throw new Error("Resource undefined for folder-explorer.");
+            throw new Error("Resource undefined for explorer.");
         this.explorer = framework.createContext( [this.resource], this.app );
         return this;
     }
@@ -28,7 +28,7 @@ export class Controller implements IController {
 /* Directive */
 class Directive implements IDirective {
     restrict = 'E';
-	template = require('./folder-explorer.directive.html').default;
+	template = require('./explorer.directive.html').default;
 	scope = {
         app:'@', resource:'@'
     };
@@ -42,22 +42,17 @@ class Directive implements IDirective {
             scope.$apply();
         });
     }
-
-    /* Dependency Injection */
-    static $inject = [];
-    constructor() {
-    }
 }
 
-/** The folder-explorer directive.
+/** The ode-explorer directive.
  *
  * Usage:
  * 1) import your directive's factory,
- *      import { FolderExplorer } from 'ode-ngjs-front';
+ *      import { Explorer } from 'ode-ngjs-front';
  * 2) Add it to your angular module,
- *      ng.directives.push( ng.directive("FolderExplorer", FolderExplorer.DirectiveFactory) );
+ *      ng.directives.push( ng.directive("odeExplorer", Explorer.DirectiveFactory) );
  * 3) Use it,
- *      &lt;folder-explorer app="blog" resource="blog"></folder-explorer&gt;
+ *      &lt;ode-explorer app="blog" resource="blog"></ode-explorer&gt;
  * 
  * 4) TODO unit-testing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
  */
