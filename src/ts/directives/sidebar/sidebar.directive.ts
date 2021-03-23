@@ -1,28 +1,41 @@
-import { IController, IDirective } from "angular";
-import { IFolder } from "ode-ts-client";
+import { IAttributes, IController, IDirective, IScope } from "angular";
+import { GetResourcesResult, IContext, IExplorerContext } from "ode-ts-client";
+import { FolderController } from "./folder.directive";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor() {}
-    folders?: IFolder[];
+	explorer?: IExplorerContext;
+
+	get context():IContext|undefined {
+		return this.explorer?.getContext();
+	}
+
+	onSelectFolder(folderCtrl:FolderController):void {
+		if( this.explorer ) {
+			this.explorer.getSearchParameters().filters.folder = folderCtrl.folder?.id;
+			this.explorer.getResources().then( (result:GetResourcesResult) => {
+				folderCtrl.subfolders = result.folders;
+			});
+		}
+	}
 }
 
 /* Directive */
-class Directive implements IDirective {
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./sidebar.directive.html').default;
 	scope = {
-        folders: "="
-    };
+		explorer:"<context"
+	};
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
 }
 
-/** The explorer directive.
+/** The sidebar directive.
  *
  * Usage:
- *      &lt;ode-sidebar folders="folderArray"></ode-sidebar&gt;
+ *      &lt;ode-sidebar explorer="instance of IExplorerContext"></ode-sidebar&gt;
  */
 export function DirectiveFactory() {
 	return new Directive();

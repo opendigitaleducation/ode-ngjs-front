@@ -1,14 +1,60 @@
-import { IController, IDirective } from "angular";
+import { IController, IDirective, IRootScopeService } from "angular";
 import { IFolder } from "ode-ts-client";
 
-/* Controller for the directive */
-export class Controller implements IController {
-    constructor() {}
-    folder?:IFolder;
-    subfolders:IFolder[] = [];
+type OnSelectParam = {folderCtrl:FolderController};
 
-    hasChildren():boolean {
+/* Controller for the directive */
+export class FolderController implements IController {
+	constructor(private $rootScope:IRootScopeService) {
+		this.$rootScope = $rootScope;
+	}
+    folder?:IFolder;
+    onSelect?:(param:OnSelectParam)=>void;
+    onSubSelect?:Function; // For recursivity
+
+    private _isSelected:boolean = false;
+    private _subfolders:IFolder[] = [];
+
+    get isSelected():boolean {
+        return this._isSelected;
+    }
+
+    get hasChildren():boolean {
         return (typeof this.folder==="object") && this.folder.childNumber > 0;
+    }
+
+    get showSubfolders():boolean {
+        return this._isSelected && this._subfolders.length > 0;
+    }
+
+    get subfolders():IFolder[] {
+        return this._subfolders;
+    }
+
+    set subfolders( subFolders:IFolder[] ) {
+        this._subfolders = subFolders;
+        this.$rootScope.$apply();
+    }
+
+    getClass():{[classname:string]: boolean} {
+        return {
+            active: this._isSelected
+        };
+    }
+
+    toggle( open?:boolean ):void {
+        this._isSelected = open ?? !this._isSelected;
+        if( this._isSelected ) {
+            this.signalSelect();
+        }
+    }
+
+    private signalSelect() {
+        if( typeof this.onSelect === "function" ) {
+            this.onSelect( {folderCtrl: this} );
+        } else if( typeof this.onSubSelect === "function" ) {
+            this.onSubSelect( {folderCtrl: this} );
+        }
     }
 }
 
@@ -17,17 +63,19 @@ class Directive implements IDirective {
     restrict = 'A';
 	templateUrl = require('./folder.directive.lazy.html').default;
 	scope = {
-        folder:"=odeFolder"
+        folder:"<odeFolder",
+        onSelect:"&",
+        onSubSelect:"<?"
     };
 	bindToController = true;
-	controller = [Controller];
+	controller = ["$rootScope",FolderController];
 	controllerAs = 'ctrl';
 }
 
 /** The folder directive.
  * 
- * Usage:
- *      &lt;ode-folder folder="folder"></ode-folder&gt;
+ * Usage (pseudo-code):
+ *      &lt;div ode-folder="IFolder" on-select="OnSelectCb"></div&gt;
  */
 export function DirectiveFactory() {
 	return new Directive();

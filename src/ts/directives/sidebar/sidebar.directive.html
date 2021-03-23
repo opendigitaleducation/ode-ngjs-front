@@ -1,7 +1,7 @@
 <aside class="sidebar sidebar--left">
     <h1 class="sidebar__title">Blog</h1>
     <ul class="sidebar__tree">
-        <li ng-repeat="f in ctrl.folders track by f.id" ode-folder="f"></li>
+        <li ng-repeat="f in ctrl.context.folders track by f.id" ode-folder="f" on-select="ctrl.onSelectFolder(folderCtrl)"></li>
     </ul>
     <a class="btn btn-outline-secondary btn-block">Créer un dossier</a>
     <a class="btn btn-outline-secondary btn-block">Importer</a>

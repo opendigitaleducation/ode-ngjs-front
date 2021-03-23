@@ -3,9 +3,9 @@ import { App, IExplorerContext, framework, ResourceType, IContext } from "ode-ts
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor() {}
     app?:App;
     resource?:ResourceType;
+    
     explorer:IExplorerContext|null = null;
     context:IContext|null = null;
 

@@ -1,4 +1,10 @@
-<a class="active" href="">{{ctrl.folder.name}}</a>
-<ul ng-if="ctrl.subfolders.length > 0">
-    <li ng-repeat="f in ctrl.subfolders track by f.id" ode-folder="f"></li>
+
+<a ng-class="ctrl.getClass()" href="" ng-click="ctrl.toggle()">
+    <!--TODO begin : remove the following temporary artefact-->
+    <span ng-if="ctrl.hasChildren">>&nbsp;</span>
+    <!--TODO end -->
+    {{ctrl.folder.name}}
+</a>
+<ul ng-if="ctrl.showSubfolders">
+    <li ng-repeat="f in ctrl.subfolders track by f.id" ode-folder="f" on-sub-select="ctrl.onSelect"></li>
 </ul>
