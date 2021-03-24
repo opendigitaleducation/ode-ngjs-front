@@ -10,7 +10,6 @@ export class FolderController implements IController {
 	}
     folder?:IFolder;
     onSelect?:(param:OnSelectParam)=>void;
-    onSubSelect?:Function; // For recursivity
 
     private _isSelected:boolean = false;
     private _subfolders:IFolder[] = [];
@@ -44,16 +43,8 @@ export class FolderController implements IController {
 
     toggle( open?:boolean ):void {
         this._isSelected = open ?? !this._isSelected;
-        if( this._isSelected ) {
-            this.signalSelect();
-        }
-    }
-
-    private signalSelect() {
-        if( typeof this.onSelect === "function" ) {
-            this.onSelect( {folderCtrl: this} );
-        } else if( typeof this.onSubSelect === "function" ) {
-            this.onSubSelect( {folderCtrl: this} );
+        if( this._isSelected && typeof this.onSelect==="function") {
+            this.onSelect( {folderCtrl:this} );
         }
     }
 }
@@ -64,8 +55,7 @@ class Directive implements IDirective {
 	templateUrl = require('./folder.directive.lazy.html').default;
 	scope = {
         folder:"<odeFolder",
-        onSelect:"&",
-        onSubSelect:"<?"
+        onSelect:"&"
     };
 	bindToController = true;
 	controller = ["$rootScope",FolderController];
@@ -75,7 +65,7 @@ class Directive implements IDirective {
 /** The folder directive.
  * 
  * Usage (pseudo-code):
- *      &lt;div ode-folder="IFolder" on-select="OnSelectCb"></div&gt;
+ *      &lt;div ode-folder="IFolder" on-select="selectFolderCallback(OnSelectParam)"></div&gt;
  */
 export function DirectiveFactory() {
 	return new Directive();
