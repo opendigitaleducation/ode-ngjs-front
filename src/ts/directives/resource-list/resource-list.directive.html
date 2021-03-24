@@ -1,2 +1,10 @@
-<ng-transclude ng-transclude-slot="folders" ng-repeat="folder in ctrl.folders track by folder.id"></ng-transclude>
-<ng-transclude ng-transclude-slot="items" ng-repeat="item in ctrl.items track by item.id"></ng-transclude>
+<ng-transclude
+    ng-transclude-slot="folders" 
+    ng-repeat="folder in ctrl.folders track by folder.id"
+    ng-click="ctrl.onSelectFolder(folder)"
+></ng-transclude>
+<ng-transclude 
+    ng-transclude-slot="items" 
+    ng-repeat="item in ctrl.items track by item.id"
+    ng-click="ctrl.onSelectItem(item)"
+></ng-transclude>

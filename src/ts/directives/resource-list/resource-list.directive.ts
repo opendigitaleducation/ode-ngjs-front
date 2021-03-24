@@ -7,13 +7,12 @@ export class Controller implements IController {
     explorer?: IExplorerContext;
     folders:IFolder[] = [];
     items:IResource[] = [];
-    searchParams?:ISearchParameters;
 
     get context():IContext|undefined {
 		return this.explorer?.getContext();
 	}
 
-    manage( resultset:ISearchResults ) {
+    display( resultset:ISearchResults ) {
         // If pagination starts at 0, this is a new resultset.
         if( resultset.pagination.startIdx===0) {
             this.folders = resultset.folders ?? [];
@@ -21,6 +20,17 @@ export class Controller implements IController {
         } else {
             this.items.concat( resultset.resources );
         }
+    }
+
+    onSelectFolder( folder:IFolder ){
+        if( this.explorer ) {
+            this.explorer.getSearchParameters().filters.folder = folder.id;
+            this.explorer.getResources(); // Result will be display()ed when available.
+        }
+    }
+
+    onSelectItem( item:IResource ){
+        alert( item );
     }
 }
 
@@ -47,7 +57,7 @@ class Directive implements IDirective {
             if( newVal && !subscription ) {
                 subscription = ctrl?.explorer?.latestResources().subscribe({
                     next: (resultset) => { 
-                        ctrl?.manage(resultset);
+                        ctrl?.display(resultset);
                         scope.$apply();
                     }
                 }) ?? null;
@@ -66,7 +76,14 @@ class Directive implements IDirective {
 /** The ode-resource-list directive.
  * 
  * Usage (pseudo-code):
- *      &lt;div ode-resource-list context="instance of IExplorerContext">Content to transclude here</div&gt;
+ *      &lt;div ode-resource-list context="instance of IExplorerContext">_Content to transclude here_</div&gt;
+ * The content to transclude can reference some scope values :
+ * * Use _{{$parent.ctrl.xxx}}_ to access this directive's controller.
+ * * Use _&lt;ode-list-folder>{{$parent.folder.xxx}}</ode-list-folder&gt;_
+ *   where {{$parent.folder}} is an IFolder
+ * * Use _&lt;ode-list-item>{{$parent.item.xxx}}</ode-list-folder&gt;_
+ *   where {{$parent.item}} is an IResource
+ * 
  */
 export function DirectiveFactory() {
 	return new Directive();
