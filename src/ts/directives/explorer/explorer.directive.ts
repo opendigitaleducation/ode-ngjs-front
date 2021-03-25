@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { App, IExplorerContext, framework, ResourceType, IContext } from "ode-ts-client";
+import { App, IExplorerContext, framework, ResourceType, IContext, IOrder, ISearchParameters, SORT_ORDER } from "ode-ts-client";
 
 /* Controller for the directive */
 export class Controller implements IController {
@@ -22,6 +22,34 @@ export class Controller implements IController {
         if( this.explorer ) {
             return this.context = await this.explorer.initialize();
         }
+    }
+
+    getSortClass( sort:IOrder ) {
+        const search = this.explorer?.getSearchParameters();
+        if( search?.orders && search.orders[sort.id]===SORT_ORDER.ASC ) {
+            return { active: true }
+        }
+    }
+
+    toggleSortOrder( sort:IOrder ) {
+        // if( this.explorer ) {
+        //     const search = this.explorer.getSearchParameters();
+        //     if( !search.orders ) {
+        //         search.orders = [];
+        //     }
+        //     let s = search.orders.find( (s) => s.id===sort.id );
+        //     if( s ) {
+        //         // Toggle order
+        //         s.defaultValue = s.defaultValue==="asc" ? "desc" : "asc";
+        //     } else {
+        //         // New default sort order
+        //         s = Object.assign({}, sort);
+        //         if( !s.defaultValue ) {
+        //             s.defaultValue = "asc";
+        //         }
+        //     }
+        //     search.orders = [s];
+        //}
     }
 }
 

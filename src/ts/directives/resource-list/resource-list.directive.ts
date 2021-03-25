@@ -30,7 +30,7 @@ export class Controller implements IController {
     }
 
     onSelectItem( item:IResource ){
-        alert( item );
+        alert( item.name );
     }
 }
 

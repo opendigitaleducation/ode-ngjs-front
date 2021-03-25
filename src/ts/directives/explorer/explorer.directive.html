@@ -49,8 +49,10 @@
                                 <i class="fas fa-sort-alpha-down"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Ordre alphabétique</a>
-                                <a class="dropdown-item active" href="#">Dernière modification</a>
+                                <a class="dropdown-item" href=""
+                                   ng-repeat="sort in ctrl.context.orders track by sort.id"
+                                   ng-class="ctrl.getSortClass(sort)"
+                                   ng-click="ctrl.toggleSortOrder(sort)">{{sort.i18n}}</a>
                             </div>
                         </div>
                         <a class="btn" href="explorer.html"><i class="ic-grid"></i></a>
