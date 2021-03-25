@@ -1,0 +1,8 @@
+<!-- TOASTER -->
+<div class="toaster" ng-class="ctrl.getClass()">
+    <a  href=""
+        ng-repeat="a in ctrl.model.context.actions | filter:{available:true} track by a.id"
+        ng-class="ctrl.getActionClass(a)"
+        ng-click="ctrl.activate(a)"
+        >{{ctrl.getI18n(a)}}</a>
+</div>

@@ -1,6 +1,6 @@
 <div class="container d-flex">
     <!-- SIDEBAR -->
-    <ode-sidebar context="ctrl.explorer"></ode-sidebar>
+    <ode-sidebar model="ctrl.model"></ode-sidebar>
     <!-- MAIN CONTENT -->
     <main class="main-content">
         <section class="explorer">
@@ -61,7 +61,7 @@
                 </div>
             </section>
 
-            <section class="explorer__view dominos dominos--square" ode-resource-list context="ctrl.explorer">
+            <section class="explorer__view dominos dominos--square" ode-resource-list model="ctrl.model">
                 <ode-list-folder>
                     <article class="domino folder">
                         <div class="domino__image">
@@ -96,19 +96,7 @@
                 </ode-list-item>
             </section>
 
-            <!-- TOASTER -->
-            <div class="toaster d-none">
-                <a class="d-mobile-none" href="">Ouvrir</a>
-                <a href="">Propriétés</a>
-                <a href="">Déplacer</a>
-                <a href="">Dupliquer</a>
-                <a class="d-mobile-none" href="">Exporter</a>
-                <a href="">Partager</a>
-                <a class="d-mobile-none" href="">Commenter</a>
-                <a class="d-mobile-none" href="">Imprimer</a>
-                <a class="d-mobile-none" href="">Publier dans la bibliothèque</a>
-                <a href="">Supprimer</a>
-            </div>
+            <ode-toaster model="ctrl.model"></ode-toaster>
         </section>
     </main>
 </div>

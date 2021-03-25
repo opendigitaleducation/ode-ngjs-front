@@ -1,31 +1,30 @@
-import { IAttributes, IController, IDirective, IScope } from "angular";
-import { GetResourcesResult, IContext, IExplorerContext } from "ode-ts-client";
+import { IController, IDirective } from "angular";
+import { GetResourcesResult } from "ode-ts-client";
+import { UiModel } from "../../models/ui.model";
 import { FolderController } from "./folder.directive";
 
 /* Controller for the directive */
 export class Controller implements IController {
-	explorer?: IExplorerContext;
-
-	get context():IContext|undefined {
-		return this.explorer?.getContext();
-	}
+    constructor() {
+        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
+        this.model = null as unknown as UiModel;
+    }
+    model: UiModel;
 
 	onSelectFolder(folderCtrl:FolderController):void {
-		if( this.explorer ) {
-			this.explorer.getSearchParameters().filters.folder = folderCtrl.folder?.id;
-			this.explorer.getResources().then( (result:GetResourcesResult) => {
-				folderCtrl.subfolders = result.folders;
-			});
-		}
+		this.model.searchParameters.filters.folder = folderCtrl.folder?.id;
+		this.model.explorer.getResources().then( (result:GetResourcesResult) => {
+			folderCtrl.subfolders = result.folders;
+		});
 	}
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective {
     restrict = 'E';
 	template = require('./sidebar.directive.html').default;
 	scope = {
-		explorer:"<context"
+		model:"<"
 	};
 	bindToController = true;
 	controller = [Controller];
@@ -35,7 +34,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 /** The sidebar directive.
  *
  * Usage:
- *      &lt;ode-sidebar explorer="instance of IExplorerContext"></ode-sidebar&gt;
+ *      &lt;ode-sidebar context="instance of UiContext"></ode-sidebar&gt;
  */
 export function DirectiveFactory() {
 	return new Directive();

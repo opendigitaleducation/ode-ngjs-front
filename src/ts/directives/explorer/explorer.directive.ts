@@ -1,55 +1,31 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { App, IExplorerContext, framework, ResourceType, IContext, IOrder, ISearchParameters, SORT_ORDER } from "ode-ts-client";
+import { App, ResourceType, IOrder, SORT_ORDER } from "ode-ts-client";
+import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    app?:App;
-    resource?:ResourceType;
+    model?:UiModel;
     
-    explorer:IExplorerContext|null = null;
-    context:IContext|null = null;
-
-    build():Controller {
-        if( !this.app )
-            throw new Error("App undefined for explorer.");
-        if( !this.resource )
-            throw new Error("Resource undefined for explorer.");
-        this.explorer = framework.createContext( [this.resource], this.app );
-        return this;
-    }
-
-    async initialize() {
-        if( this.explorer ) {
-            return this.context = await this.explorer.initialize();
-        }
+    async buildContext( app:App, resource:ResourceType ) {
+        this.model = new UiModel(app, resource);
+        return await this.model.initialize();
     }
 
     getSortClass( sort:IOrder ) {
-        const search = this.explorer?.getSearchParameters();
-        if( search?.orders && search.orders[sort.id]===SORT_ORDER.ASC ) {
+        const sortOrders = this.model?.searchParameters.orders;
+        if( sortOrders && sortOrders[sort.id]===SORT_ORDER.ASC ) {
             return { active: true }
         }
     }
 
     toggleSortOrder( sort:IOrder ) {
-        // if( this.explorer ) {
-        //     const search = this.explorer.getSearchParameters();
-        //     if( !search.orders ) {
-        //         search.orders = [];
-        //     }
-        //     let s = search.orders.find( (s) => s.id===sort.id );
-        //     if( s ) {
-        //         // Toggle order
-        //         s.defaultValue = s.defaultValue==="asc" ? "desc" : "asc";
-        //     } else {
-        //         // New default sort order
-        //         s = Object.assign({}, sort);
-        //         if( !s.defaultValue ) {
-        //             s.defaultValue = "asc";
-        //         }
-        //     }
-        //     search.orders = [s];
-        //}
+        const search = this.model?.searchParameters;
+        if( search ) {
+            search.orders = search.orders || {};
+            search.orders[sort.id] = search.orders[sort.id] 
+                ? search.orders[sort.id]===SORT_ORDER.ASC ? SORT_ORDER.DESC : SORT_ORDER.ASC
+                : sort.defaultValue ? sort.defaultValue : SORT_ORDER.ASC;
+        }
     }
 }
 
@@ -57,16 +33,21 @@ export class Controller implements IController {
 class Directive implements IDirective {
     restrict = 'E';
 	template = require('./explorer.directive.html').default;
-	scope = {
-        app:'@', resource:'@'
-    };
+	scope = {};
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
 
     link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
         let ctrl:Controller = controller as Controller;
-        ctrl.build().initialize().then( (ctx) => {
+
+        const app:App = attr["app"] as App;
+        if( !app ) throw new Error("App undefined for explorer.");
+
+        const resource:ResourceType = attr["resource"] as ResourceType;
+        if( !resource ) throw new Error("Resource undefined for explorer.");
+            
+        ctrl.buildContext( app, resource ).then( ctx => {
             scope.$apply();
         });
     }

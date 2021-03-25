@@ -1,35 +1,31 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { IContext, IExplorerContext, IFolder, IResource, ISearchParameters, ISearchResults } from "ode-ts-client";
+import { IFolder, IResource, ISearchResults } from "ode-ts-client";
 import { Subscription } from "rxjs";
+import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    explorer?: IExplorerContext;
-    folders:IFolder[] = [];
-    items:IResource[] = [];
-
-    get context():IContext|undefined {
-		return this.explorer?.getContext();
-	}
+    constructor() {
+        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
+        this.model = null as unknown as UiModel;
+    }
+    model: UiModel;
 
     display( resultset:ISearchResults ) {
         // If pagination starts at 0, this is a new resultset.
         if( resultset.pagination.startIdx===0) {
-            this.folders = resultset.folders ?? [];
-            this.items = resultset.resources ?? [];
+            this.model.loadedFolders = resultset.folders ?? [];
+            this.model.loadedItems   = resultset.resources ?? [];
         } else {
-            this.items.concat( resultset.resources );
+            this.model.loadedItems.concat( resultset.resources );
         }
     }
 
-    onSelectFolder( folder:IFolder ){
-        if( this.explorer ) {
-            this.explorer.getSearchParameters().filters.folder = folder.id;
-            this.explorer.getResources(); // Result will be display()ed when available.
-        }
+    onClickFolder( folder:IFolder ){
+        alert( folder.name );
     }
 
-    onSelectItem( item:IResource ){
+    onClickItem( item:IResource ){
         alert( item.name );
     }
 }
@@ -39,7 +35,7 @@ class Directive implements IDirective {
     restrict = 'A';
 	template = require('./resource-list.directive.html').default;
 	scope = {
-		explorer:"<context"
+		model:"<"
     };
 	bindToController = true;
     transclude = {
@@ -50,13 +46,14 @@ class Directive implements IDirective {
 	controllerAs = 'ctrl';
 
      link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
-        let ctrl:Controller|null = controller ? controller as Controller : null;
+        let ctrl:Controller = controller as Controller;
         let subscription:Subscription|null = null;
         
-        scope.$watch(attr['context'], (newVal,oldVal)=>{
+        scope.$watch(attr['model'], (newVal,oldVal)=>{
             if( newVal && !subscription ) {
-                subscription = ctrl?.explorer?.latestResources().subscribe({
-                    next: (resultset) => { 
+                // Subscribe to the flow of resultset
+                subscription = ctrl.model.explorer.latestResources().subscribe({
+                    next: resultset => { 
                         ctrl?.display(resultset);
                         scope.$apply();
                     }
@@ -76,7 +73,7 @@ class Directive implements IDirective {
 /** The ode-resource-list directive.
  * 
  * Usage (pseudo-code):
- *      &lt;div ode-resource-list context="instance of IExplorerContext">_Content to transclude here_</div&gt;
+ *      &lt;div ode-resource-list context="instance of UiContext">_Content to transclude here_</div&gt;
  * The content to transclude can reference some scope values :
  * * Use _{{$parent.ctrl.xxx}}_ to access this directive's controller.
  * * Use _&lt;ode-list-folder>{{$parent.folder.xxx}}</ode-list-folder&gt;_
