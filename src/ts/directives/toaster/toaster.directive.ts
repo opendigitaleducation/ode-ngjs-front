@@ -1,5 +1,5 @@
 import { IController, IDirective } from "angular";
-import { ACTION, IAction } from "ode-ts-client";
+import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
@@ -24,11 +24,15 @@ export class Controller implements IController {
     model: UiModel;
 	private actionFilter:{[actionId:string]:boolean} = {};
 	private mobileFilter:{[actionId:string]:boolean} = {};
-	visible?: boolean = true;
+
+	/** Flag to show/hide the properties lightbox */
+	showProps: boolean = false;
+	props?:IProperty[];
+	items?:IResource[];
 
     getClass( action:IAction ):{[classname:string]: boolean} {
 		return {
-			"d-none": !this.visible
+			"d-none": this.model.selectedFolders.length===0 && this.model.selectedItems.length===0
 		};
 	}
 
@@ -50,14 +54,38 @@ export class Controller implements IController {
 			return;
 		
 		switch( action.id ) {
-			case ACTION.DELETE:
+			case ACTION.DELETE: {
 				this.model.explorer.delete( 
 					this.model.selectedItems.map(i => i.id), 
 					this.model.selectedFolders.map(f => f.id)
 				);
-				break;
+			}
+			break;
+			case ACTION.MANAGE: {
+				this.model.explorer.manageProperties( 
+					this.model.resourceType,
+					this.model.selectedItems
+				).then( res => {
+					if( res?.properties?.length > 0 ) {
+						this.manageProps( res.properties, this.model.selectedItems );
+					}
+				});
+			}
+			break;
 			default: alert( `"${action.id}" is not implemented.` );
 		}
+	}
+
+	/**
+	 * Display the properties lightbox.
+	 * @param props props to display/edit
+	 * @param items apply to these resources
+	 */
+	private manageProps( props:IProperty[], items:IResource[] ) {
+		this.props = props;
+		this.items = items;
+		this.showProps = true;
+		alert( "MANAGE="+this.showProps+" ("+this.props.map(p=>""+p.property+",")+") for items ["+this.items.map(i=>""+i.id+",")+"]" );
 	}
 }
 

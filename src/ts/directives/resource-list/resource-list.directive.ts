@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { IFolder, IResource, ISearchResults } from "ode-ts-client";
+import { ISearchResults } from "ode-ts-client";
 import { Subscription } from "rxjs";
 import { UiModel } from "../../models/ui.model";
 
@@ -18,17 +18,6 @@ export class Controller implements IController {
             this.model.loadedItems   = resultset.resources ?? [];
         } else {
             this.model.loadedItems.concat( resultset.resources );
-        }
-    }
-
-    onClickItem( item:IResource ){
-        const idx = this.model.selectedItems.findIndex(f => f.id===item.id);
-        if( idx===-1 ) {
-            // Select it.
-            this.model.selectedItems.push( item );
-        } else {
-            // De-select it.
-            this.model.selectedItems.splice(idx,1);
         }
     }
 }
