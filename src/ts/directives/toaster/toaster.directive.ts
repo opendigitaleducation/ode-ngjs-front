@@ -50,10 +50,13 @@ export class Controller implements IController {
 			return;
 		
 		switch( action.id ) {
-			case ACTION.DELETE: {
-				this.model.explorer.delete( [], [] );
+			case ACTION.DELETE:
+				this.model.explorer.delete( 
+					this.model.selectedItems.map(i => i.id), 
+					this.model.selectedFolders.map(f => f.id)
+				);
 				break;
-			};
+			default: alert( `"${action.id}" is not implemented.` );
 		}
 	}
 }

@@ -1,0 +1,12 @@
+<article class="domino folder" 
+        ng-class="{active: ctrl.selected}"
+        ng-click="ctrl.toggleSelect()"
+        >
+    <div class="domino__image">
+        <i class="fas ic-folder text-secondary"></i>
+    </div>
+    <div class="domino__infos">
+        <h2 class="domino__title">{{ctrl.folder.name}}</h2>
+        <span class="domino__info">Il y a 2 heures</span>
+    </div>
+</article>

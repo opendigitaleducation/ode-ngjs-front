@@ -1,7 +1,6 @@
 <ng-transclude
     ng-transclude-slot="folders" 
     ng-repeat="folder in ctrl.model.loadedFolders track by folder.id"
-    ng-click="ctrl.onClickFolder(folder)"
 ></ng-transclude>
 <ng-transclude 
     ng-transclude-slot="items" 

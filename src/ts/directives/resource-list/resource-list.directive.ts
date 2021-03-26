@@ -21,12 +21,15 @@ export class Controller implements IController {
         }
     }
 
-    onClickFolder( folder:IFolder ){
-        alert( folder.name );
-    }
-
     onClickItem( item:IResource ){
-        alert( item.name );
+        const idx = this.model.selectedItems.findIndex(f => f.id===item.id);
+        if( idx===-1 ) {
+            // Select it.
+            this.model.selectedItems.push( item );
+        } else {
+            // De-select it.
+            this.model.selectedItems.splice(idx,1);
+        }
     }
 }
 
