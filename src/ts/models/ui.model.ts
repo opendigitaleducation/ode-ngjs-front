@@ -1,4 +1,4 @@
-import { App, framework, IContext, IExplorerContext, IFolder, IResource, ISearchParameters, ResourceType } from "ode-ts-client";
+import { App, framework, GetResourcesResult, IContext, IExplorerContext, IFolder, IResource, ISearchParameters, ResourceType } from "ode-ts-client";
 
 export class UiModel {
     app:App;
@@ -27,10 +27,20 @@ export class UiModel {
     selectedFolders:IFolder[] = [];
     selectedItems:IResource[] = [];
 
-    breadcrumb:IFolder[] = [];
-
     get currentFolder():IFolder|undefined {
         if( this.breadcrumb.length > 0 )
             return this.breadcrumb[this.breadcrumb.length-1];
     }
+
+    openAsSubfolder( f:IFolder ):Promise<GetResourcesResult> {
+        this.searchParameters.filters.folder = f.id;
+        return this.explorer.getResources().then( r=>{
+            this.breadcrumb.push( f );
+            return r;
+        });
+    }
+
+    //---- Breadcrumb utilities
+    breadcrumb:IFolder[] = [];
+
 }

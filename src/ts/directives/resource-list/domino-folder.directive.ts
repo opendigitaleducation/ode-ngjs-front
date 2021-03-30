@@ -29,6 +29,10 @@ export class Controller implements IController {
             }
         }
     }
+
+    openSubfolder():void {
+		this.model.openAsSubfolder( this.folder );
+    }
 }
 
 /* Directive */

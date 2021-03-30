@@ -46,7 +46,7 @@ class Directive implements IDirective {
                 // Subscribe to the flow of resultset
                 subscription = ctrl.model.explorer.latestResources().subscribe({
                     next: resultset => { 
-                        ctrl?.display(resultset);
+                        ctrl?.display(resultset.output);
                         scope.$apply();
                     }
                 }) ?? null;
