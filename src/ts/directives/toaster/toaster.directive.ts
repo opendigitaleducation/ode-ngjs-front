@@ -1,10 +1,10 @@
-import { IController, IDirective } from "angular";
+import { IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
-	constructor() {
+	constructor( private $scope:IScope ) {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
         this.model = null as unknown as UiModel;
 
@@ -12,6 +12,7 @@ export class Controller implements IController {
 		// TODO Could be done in CSS
 		this.actionFilter[ACTION.INITIALIZE]= true;
 		this.actionFilter[ACTION.SEARCH]	= true;
+		this.actionFilter[ACTION.UPD_PROPS] = true;
 
 		// Following actions have mobile-mode css specificities.
 		// TODO Could be done in CSS
@@ -45,8 +46,8 @@ export class Controller implements IController {
         return ret;
     }
 
-	getI18n( action:IAction ): string {
-		return action.id; // TODO i18n
+	getI18nKey( action:IAction ): string {
+		return `explorer.toaster.btn.${action.id}.label`;
 	}
 
 	activate( action:IAction ) {
@@ -67,7 +68,7 @@ export class Controller implements IController {
 					this.model.selectedItems
 				).then( res => {
 					if( res?.properties?.length > 0 ) {
-						this.manageProps( res.properties, this.model.selectedItems );
+						this.editProps( res.properties, this.model.selectedItems );
 					}
 				});
 			}
@@ -81,11 +82,22 @@ export class Controller implements IController {
 	 * @param props props to display/edit
 	 * @param items apply to these resources
 	 */
-	private manageProps( props:IProperty[], items:IResource[] ) {
+	private editProps( props:IProperty[], items:IResource[] ) {
 		this.props = props;
 		this.items = items;
 		this.showProps = true;
-		alert( "MANAGE="+this.showProps+" ("+this.props.map(p=>""+p.property+",")+") for items ["+this.items.map(i=>""+i.id+",")+"]" );
+		//alert( "MANAGE="+this.showProps+" ("+this.props.map(p=>""+p.property+",")+") for items ["+this.items.map(i=>""+i.id+",")+"]" );
+		this.$scope.$apply();
+	}
+
+	/**
+	 * Close the properties lightbox.
+	 */
+	closeProps() {
+		delete this.props;
+		delete this.items;
+		this.showProps=false
+		this.$scope.$apply();
 	}
 }
 
@@ -97,7 +109,7 @@ class Directive implements IDirective {
 		model:"<"
 	};
 	bindToController = true;
-	controller = [Controller];
+	controller = ["$scope", Controller];
 	controllerAs = 'ctrl';
 }
 

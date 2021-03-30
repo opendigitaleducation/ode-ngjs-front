@@ -27,5 +27,10 @@ export class UiModel {
     selectedFolders:IFolder[] = [];
     selectedItems:IResource[] = [];
 
+    breadcrumb:IFolder[] = [];
 
+    get currentFolder():IFolder|undefined {
+        if( this.breadcrumb.length > 0 )
+            return this.breadcrumb[this.breadcrumb.length-1];
+    }
 }

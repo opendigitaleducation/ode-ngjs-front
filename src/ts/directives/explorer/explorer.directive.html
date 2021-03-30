@@ -10,16 +10,15 @@
                     <div class="col-lg-9 col-md-12 input-searchbar">
                         <!-- <label for="" class="visually-hidden">Taper votre recherche ici</label> -->
                         <i class="ic-search form-control-feedback"></i>
-                        <input type="search" class="form-control" id="" placeholder="Rechercher un blog">
+                        <input type="search" class="form-control" id="" i18n-placeholder="explorer.searchbar.placeholder">
                     </div>
                     <div class="col-lg-3 d-none d-sm-none d-md-none d-lg-block">
-                        <button class="btn btn-block btn-primary" type="submit"><i class="ic-plus"></i> Créer un
-                            blog</button>
+                        <button class="btn btn-block btn-primary" type="submit"><i class="ic-plus"></i>&nbsp;<i18n>explorer.toaster.btn.create.label</i18n></button>
                     </div>
                 </form>
                 
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h2>Mes blogs</h2>
+                    <h2>{{ctrl.model.currentFolder.name}}</h2>
                     <div class="filters d-flex">
                         <div class="dropdown">
                             <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"

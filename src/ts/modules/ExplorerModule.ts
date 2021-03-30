@@ -1,5 +1,5 @@
 import angular from "angular";
-import { DominoFolder, DominoItem, Explorer, Folder, ResourceList, Sidebar, Toaster } from "../directives";
+import { DominoFolder, DominoItem, Explorer, Folder, Modal, ResourceList, Sidebar, Toaster } from "../directives";
 
 angular.module("odeExplorerModule", [])
 .directive("odeExplorer", Explorer.DirectiveFactory)
@@ -9,4 +9,5 @@ angular.module("odeExplorerModule", [])
 .directive("odeDominoFolder", DominoFolder.DirectiveFactory)
 .directive("odeDominoItem", DominoItem.DirectiveFactory)
 .directive("odeToaster", Toaster.DirectiveFactory)
+.directive("odeModal", Modal.DirectiveFactory)
 ;

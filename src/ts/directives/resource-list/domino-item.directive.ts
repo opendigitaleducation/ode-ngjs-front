@@ -9,20 +9,20 @@ export class Controller implements IController {
         this.model = null as unknown as UiModel;
         this.item = null  as unknown as IResource;
     }
-    model: UiModel;
+    model:UiModel;
     item:IResource;
     private selected:boolean = false;
 
     toggleSelect( selected?:boolean ):void {
         const idx = this.model.selectedItems.findIndex(f => f.id===this.item.id);
         if( idx===-1 || selected===true ) {
-            // Select it if needed.
+            // Select it.
             if( !this.selected ) {
                 this.model.selectedItems.push( this.item );
                 this.selected = true;
             }
         } else {
-            // De-select it, if needed.
+            // De-select it.
             if( idx>=0 ) {
                 this.model.selectedItems.splice(idx,1);
                 this.selected = false;

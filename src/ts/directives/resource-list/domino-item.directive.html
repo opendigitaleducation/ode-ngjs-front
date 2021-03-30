@@ -5,18 +5,18 @@
     <div class="domino__image">
         <div class="domino__overlay transition-hover">
             <div class="domino__overlay--left">
-                <span title="Ressource public" ng-show="{{ctrl.item.public}}"><i class="ic-public"></i></span>
-                <span title="Ressource partagée" ng-show="{{ctrl.item.shared}}"><i class="ic-share"></i></span>
+                <span title="{{'explorer.domino.info.public.title'|i18n}}" ng-show="{{ctrl.item.public}}"><i class="ic-public"></i></span>
+                <span title="{{'explorer.domino.info.shared.title'|i18n}}" ng-show="{{ctrl.item.shared}}"><i class="ic-share"></i></span>
             </div>
             <div class="domino__overlay--right">
-                <span title="Nombre de vues"><i class="ic-view"></i>{{ctrl.item.views}}</span>
-                <span title="Nombre de commentaires"><i class="ic-comment"></i>{{ctrl.item.comments}}</span>
+                <span title="{{'explorer.domino.info.views.title'|i18n}}"><i class="ic-view"></i>{{ctrl.item.views}}</span>
+                <span title="{{'explorer.domino.info.comments.title'|i18n}}"><i class="ic-comment"></i>{{ctrl.item.comments}}</span>
             </div>
         </div>
     </div>
     <div class="domino__infos">
         <h2 class="domino__title">{{ctrl.item.name}}</h2>
-        <span class="domino__info">Modifié par <a>{{ctrl.item.modifierName}}</a></span>
+        <span class="domino__info"><i18n>explorer.domino.info.updated.by</i18n>&nbsp;<a>{{ctrl.item.modifierName}}</a></span>
         <span class="domino__info">Il y a 2 semaines</span>
     </div>
 </article>

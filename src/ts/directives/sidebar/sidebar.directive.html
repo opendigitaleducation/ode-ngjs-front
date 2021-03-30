@@ -1,8 +1,8 @@
 <aside class="sidebar sidebar--left">
-    <h1 class="sidebar__title">Blog</h1>
+    <h1 class="sidebar__title">{{'explorer.sidebar.title'|i18n}}</h1>
     <ul class="sidebar__tree">
         <li ng-repeat="f in ctrl.model.context.folders track by f.id" ode-folder="f" on-select="ctrl.onSelectFolder(folderCtrl)"></li>
     </ul>
-    <a class="btn btn-outline-secondary btn-block">Créer un dossier</a>
-    <a class="btn btn-outline-secondary btn-block">Importer</a>
+    <a class="btn btn-outline-secondary btn-block"><i18n>explorer.sidebar.btn.create.label</i18n></a>
+    <a class="btn btn-outline-secondary btn-block"><i18n>explorer.sidebar.btn.import.label</i18n></a>
 </aside>
