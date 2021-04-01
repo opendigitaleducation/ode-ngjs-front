@@ -1,10 +1,14 @@
-import { IAttributes, IController, IDirective, IScope } from "angular";
-import { App, ResourceType, IOrder, SORT_ORDER } from "ode-ts-client";
+import { IAttributes, IController, IDirective, ILocationService, IScope, IWindowService } from "angular";
+import { App, ResourceType, IOrder, SORT_ORDER, framework, RESOURCE, ACTION } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
     model?:UiModel;
+
+    constructor( private $location:ILocationService
+                ,private $window:IWindowService ) {
+    }
     
     async buildContext( app:App, resource:ResourceType ) {
         this.model = new UiModel(app, resource);
@@ -27,6 +31,21 @@ export class Controller implements IController {
                 : sort.defaultValue ? sort.defaultValue : SORT_ORDER.ASC;
         }
     }
+
+    onCreate():void {
+        // TODO ajouter une méthode "create" à IExplorerContext, fortement typée plutôt qu'interroger le bus en direct.
+        framework.getBus().send(RESOURCE.BLOG, ACTION.CREATE, "test proto").then( res => {
+            if( typeof res === "string" ) {
+                if( res.indexOf("#") < 0 ) {
+                    // Angular-based routing
+                    this.$location.path(res);
+                } else {
+                    // Browser-based routing
+                    this.$window.location.href = res;
+                }
+            }
+        });
+    }
 }
 
 /* Directive */
@@ -35,7 +54,7 @@ class Directive implements IDirective {
 	template = require('./explorer.directive.html').default;
 	scope = {};
 	bindToController = true;
-	controller = [Controller];
+	controller = ['$location','$window',Controller];
 	controllerAs = 'ctrl';
 
     link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
