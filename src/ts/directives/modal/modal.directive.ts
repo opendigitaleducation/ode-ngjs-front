@@ -5,13 +5,11 @@ export class Controller implements IController {
 	constructor() {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
 		this.id = null as unknown as string;
-		this.visible = null as unknown as boolean;
-		this.onCancel = null as unknown as Function;
 		this.onValidate = null as unknown as Function;
 	}
 	id:string;
-	visible:boolean;
-	onCancel:Function;
+	visible?:boolean;
+	onClose?:Function;
 	onValidate:Function;
 
 	getClass() {

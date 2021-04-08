@@ -1,0 +1,127 @@
+<div class="share temp">
+	<div class="line">
+		<form name="sharePanelForm">
+			<div>
+				<button class="panel-button right-magnet" ng-click="ctrl.share()" ng-disabled="ctrl.isSubmitDisabled()">
+					<i18n>share</i18n>
+				</button>
+				<div class="block" ng-if="ctrl.varyingRights">
+					<div class="warning">
+						<span class="no-style" translate content="[[ctrl.varyingRightsI18nKey]]"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="groups-list">
+				<div>
+					<ng-include src="ctrl.shareTable"></ng-include>
+				</div>
+
+				<div class="flex-row justify-between align-center">
+					<div class="saveSharebookmark">
+						<div class="flex-row align-center" 
+							ng-if="ctrl.display.showSaveSharebookmarkInput === false && ctrl.display.sharebookmarkSaved === false && ctrl.sharingModel.edited.length > 0"
+							workflow="directory.allowSharebookmarks">
+							<a class="hover-icon" ng-click="ctrl.display.showSaveSharebookmarkInput = true">
+								<i class="add-favorite cell"></i> <i18n>share.save.sharebookmark</i18n>
+							</a>
+						</div>
+						<div  class="flex-row"  ng-if="ctrl.display.showSaveSharebookmarkInput === true && ctrl.display.sharebookmarkSaved === false"
+							workflow="directory.allowSharebookmarks">
+							<input class="cell" 
+								type="text"
+								ng-model="ctrl.newSharebookmarkName" 
+								i18n-placeholder="share.mysharebookmark"
+								required 
+								ng-minlength="1">
+							<a class="button is-light uppercase"
+								ng-click="ctrl.createSharebookmark(newSharebookmarkName)"
+								ng-disabled="!ctrl.newSharebookmarkName || ctrl.sharingModel.edited.length < 1">
+								<i18n>ok</i18n>
+							</a>
+						</div>
+						<div ng-if="ctrl.display.sharebookmarkSaved === true" workflow="directory.allowSharebookmarks">
+							<span class="italic-text saved-in"><i18n>share.save.sharebookmark.in</i18n></span>
+							<a href="/userbook/annuaire#/search" target="_blank"><i18n>share.mysharebookmarks</i18n></a>
+						</div>
+					</div>
+
+					<a ng-click="ctrl.displayMore()" 
+						ng-if="ctrl.canShowMore()" 
+						class="display-more">
+						<i18n>share.more</i18n>
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="bottom-spacing-twice">
+		<div class="flex-row align-center">
+			<h2 class= "size-auto">
+				<span ng-if="!ctrl.display.workflowAllowSharebookmarks || ctrl.display.workflowAllowSharebookmarks == false">[[ctrl.translate('share.search.title')]]</span>
+				<span workflow="directory.allowSharebookmarks">[[ctrl.translate('share.search.sharebookmark.title')]]</span>
+			</h2>
+			<span class="tipbox up" workflow="directory.allowSharebookmarks">
+				<div>
+					<i class="help sticker square-medium"></i>
+				</div>
+				<div class="tipbox-content top">
+					<span class="small-text">
+						<i18n>share.tip.addFavorite</i18n>
+					</span>
+				</div>
+			</span>
+		</div>
+		
+		<search-user class="twelve cell" 
+			ng-model="ctrl.search"
+			clear-list="ctrl.clearSearch()"
+			on-send="ctrl.findUserOrGroup()"
+			search-track="ctrl.display.search">
+		</search-user>
+		<div class="found-users-list">
+			<div ng-repeat="item in ctrl.found | orderBy:[typeSort, 'name', 'username'] | limitTo:ctrl.maxResults" class="autocomplete temp">
+				<div ng-click="ctrl.addEdit(item)" class="">
+					<a class="cell right-spacing" ng-class="{sharebookmark: item.type === 'sharebookmark'}">
+						<i class="add-favorite cell" ng-if="item.type === 'sharebookmark'"></i>
+						<!-- group or sharebookmark name -->
+						<span ng-if="item.name">[[item.name]]</span>
+						<!-- user displayName -->
+						<span ng-if="item.username">[[item.username]]</span>
+					</a>
+					<!-- structureName for groups -->
+					<em ng-if="item.structureName" class="low-importance">[[item.structureName]]</em>
+					<!-- profile for users -->
+					<em ng-if="item.profile" class="low-importance">[[ctrl.translate(item.profile)]]</em>
+				</div>
+			</div>
+			<div class="" ng-if="ctrl.found.length === 0 && !ctrl.display.search.processing">
+				<div class="spacer-small"></div>
+				<label class="low-importance medium-importance italic-text" ng-if="ctrl.search.length >= 3" user-role="ADMIN_LOCAL">
+					<i18n>portal.no.result</i18n>
+				</label>
+				<label class="low-importance medium-importance italic-text" ng-if="ctrl.search.length" user-missing-role="ADMIN_LOCAL">
+					<i18n>portal.no.result</i18n>
+				</label>
+			</div>
+			<div class="">
+				<a ng-click="ctrl.addResults()" ng-if="ctrl.found.length > ctrl.maxResults" class="right-magnet reduce-block-four">
+					<i18n>seemore</i18n>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-show="ctrl.display.showCloseConfirmation === true">
+	<h1><i18n>sharepanel.close.title</i18n></h1>
+	<div>
+		<p><i18n>sharepanel.close.explanation</i18n></p>
+		<p><i18n>sharepanel.close.confirmation</i18n></p>
+	</div>
+	<div class="">
+		<button ng-click="closePanel()" class="right-magnet"><i18n>sharepanel.close.confirm</i18n></button>
+		<button ng-click="revertClose()" class="right-magnet cancel"><i18n>cancel</i18n></button>
+	</div>
+</div>

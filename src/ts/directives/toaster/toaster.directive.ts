@@ -27,7 +27,9 @@ export class Controller implements IController {
 	private mobileFilter:{[actionId:string]:boolean} = {};
 
 	/** Flag to show/hide the properties lightbox */
-	showProps: boolean = false;
+	showProps:boolean  = false;
+	/** Flag to show/hide the sharing lightbox */
+	showShares:boolean = false;
 	props?:IProperty[];
 	items?:IResource[];
 
@@ -62,6 +64,7 @@ export class Controller implements IController {
 				);
 			}
 			break;
+
 			case ACTION.MANAGE: {
 				this.model.explorer.manageProperties( 
 					this.model.resourceType,
@@ -73,6 +76,12 @@ export class Controller implements IController {
 				});
 			}
 			break;
+
+			case ACTION.SHARE: {
+				this.editShares( this.model.selectedItems );
+			}
+			break;
+			
 			default: alert( `"${action.id}" is not implemented.` );
 		}
 	}
@@ -87,7 +96,6 @@ export class Controller implements IController {
 		this.items = items;
 		this.showProps = true;
 		//alert( "MANAGE="+this.showProps+" ("+this.props.map(p=>""+p.property+",")+") for items ["+this.items.map(i=>""+i.id+",")+"]" );
-		this.$scope.$apply();
 	}
 
 	/**
@@ -98,6 +106,23 @@ export class Controller implements IController {
 		delete this.items;
 		this.showProps=false
 		this.$scope.$apply();
+	}
+
+	/**
+	 * Display the sharing lightbox.
+	 * @param items apply to these resources
+	 */
+	 private editShares( items:IResource[] ) {
+		this.items = items;
+		this.showShares = true;
+	}
+
+	/**
+	 * Close the sharing lightbox.
+	 */
+	closeShares() {
+		delete this.items;
+		this.showShares=false
 	}
 }
 
