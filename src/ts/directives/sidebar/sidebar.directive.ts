@@ -1,7 +1,7 @@
 import { IController, IDirective } from "angular";
 import { GetResourcesResult } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
-import { FolderController } from "./folder.directive";
+import { FolderController } from "./sidebar-folder.directive";
 
 /* Controller for the directive */
 export class Controller implements IController {

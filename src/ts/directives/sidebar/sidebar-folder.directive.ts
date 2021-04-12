@@ -52,7 +52,7 @@ export class FolderController implements IController {
 /* Directive */
 class Directive implements IDirective {
     restrict = 'A';
-	templateUrl = require('./folder.directive.lazy.html').default;
+	templateUrl = require('./sidebar-folder.directive.lazy.html').default;
 	scope = {
         folder:"<odeFolder",
         onSelect:"&"
@@ -65,7 +65,7 @@ class Directive implements IDirective {
 /** The folder directive.
  * 
  * Usage (pseudo-code):
- *      &lt;div ode-folder="IFolder" on-select="selectFolderCallback(OnSelectParam)"></div&gt;
+ *      &lt;div ode-sidebar-folder="IFolder" on-select="selectFolderCallback(OnSelectParam)"></div&gt;
  */
 export function DirectiveFactory() {
 	return new Directive();

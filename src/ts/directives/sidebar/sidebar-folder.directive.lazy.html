@@ -6,5 +6,5 @@
     {{ctrl.folder.name}}
 </a>
 <ul ng-if="ctrl.showSubfolders">
-    <li ng-repeat="f in ctrl.subfolders track by f.id" ode-folder="f" on-select="ctrl.onSelect({folderCtrl:folderCtrl})"></li>
+    <li ng-repeat="f in ctrl.subfolders track by f.id" ode-sidebar-folder="f" on-select="ctrl.onSelect({folderCtrl:folderCtrl})"></li>
 </ul>
