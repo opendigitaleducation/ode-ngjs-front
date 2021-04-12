@@ -14,11 +14,8 @@ import { IAttributes, ICompileService, IController, IDirective, IHttpService, IS
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor($http:IHttpService) {
-        this.$http = $http;
+    constructor(private $http:IHttpService) {
     }
-    
-    $http:IHttpService;
     what?: string;
     userName?: any;
 
@@ -68,24 +65,19 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
         let ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
         let ngModelCtrl:IController|null = controllers ? controllers[1] as IController : null;
 
-        // TODO Manipulate the DOM here.
+        // TODO Manipulate the DOM here with this.$compile()
 
         console.log( ctrl?.userName );
         console.log( ngModelCtrl );
     }
 
-    $compile:ICompileService;
-
-    /* Dependency Injection of the $compile service. It can be used in the link method. */
-    static $inject = ["$compile"];
-
     /* Constructor with Dependency Injection */
-    constructor($compile:ICompileService) {
-        this.$compile = $compile;
+    constructor(private $compile:ICompileService) {
     }
 }
 
-/** Directive factory, with dependencies injected as required by $inject above. */
+/** Directive factory, with dependencies injected as required by $inject below. */
 export function DirectiveFactory($compile:ICompileService) {
 	return new Directive($compile);
 }
+DirectiveFactory.$inject = ["$compile"];
