@@ -1,8 +1,8 @@
+import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { IBehaviours } from "../../legacy/Behaviours";
 import { HttpPromisified } from "../../legacy/http";
 import { Idiom } from "../../legacy/idiom";
-import { Me } from "../../legacy/me";
 import { Shareable, ShareVisible, SharePayload, ShareInfos, ShareAction } from "../../legacy/rights";
 import { UiModel } from "../../models/ui.model";
 
@@ -120,11 +120,9 @@ export class SharePanelController implements IController {
 
     //------------------
     //-- Initialization
+    /* this.model is null here. */
     $onInit() {
         this.translate = entcore.idiom.translate;
-        if( this.model?.app ) {
-            this.appPrefix = this.model.app;
-        }
         this.shareTable = require('./share-panel-table.lazy.html').default;
 
         this.loadDirectoryWorkflow();
@@ -143,7 +141,12 @@ export class SharePanelController implements IController {
         .catch( () => {
             this.loadAppBehavioursSharingConf();
         });
-
+    }
+    /* this.model is not null here. */
+    $postLink() {
+        if( this.model.app ) {
+            this.appPrefix = this.model.app;
+        }
         // Sanitize the injected "resources" data => adapt it to Array<ShareableWithId>
         this.resources = this.model.selectedItems.map( i => Object.assign({
             _id:i.id, 
@@ -698,11 +701,10 @@ interface IDirectiveScope extends IScope {
     closePanel?(cancelled:boolean):Promise<void>;
     revertClose?():void;
 }
-class Directive implements IDirective<IDirectiveScope,JQLite,IAttributes,SharePanelController> {
+class Directive implements IDirective<IDirectiveScope,JQLite,IAttributes,IController[]> {
     restrict= 'E';
     templateUrl= require('./share-panel.directive.lazy.html').default;
     scope= {
-        model: '<',
         onCancel: '&?',
         onSubmit: '&?',
         onValidate: '&?',
@@ -715,9 +717,13 @@ class Directive implements IDirective<IDirectiveScope,JQLite,IAttributes,SharePa
 	bindToController = true;
 	controller = ["$scope", SharePanelController];
 	controllerAs = 'ctrl';
+	require = ["odeSharePanel", "^^odeExplorer"];
 
-    link( scope:IDirectiveScope, element:JQLite, attrs:IAttributes, ctrl:SharePanelController|undefined ) {
-        if( !ctrl ) return;
+    link(scope:IDirectiveScope, element:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+		if( !controllers ) return;
+        const ctrl:SharePanelController = controllers[0] as SharePanelController;
+        const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
+        ctrl.model = odeExplorer.model;
 
         scope.$watch('resources', function () {
             ctrl.actions = [];

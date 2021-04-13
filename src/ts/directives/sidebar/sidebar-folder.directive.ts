@@ -54,7 +54,7 @@ class Directive implements IDirective {
     restrict = 'A';
 	templateUrl = require('./sidebar-folder.directive.lazy.html').default;
 	scope = {
-        folder:"<odeFolder",
+        folder:"<odeSidebarFolder",
         onSelect:"&"
     };
 	bindToController = true;

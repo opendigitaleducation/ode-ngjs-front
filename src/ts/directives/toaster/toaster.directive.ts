@@ -1,4 +1,5 @@
-import { IController, IDirective, IScope } from "angular";
+import * as Explorer from '../explorer/explorer.directive';
+import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
 
@@ -127,15 +128,22 @@ export class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective {
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./toaster.directive.html').default;
-	scope = {
-		model:"<"
-	};
+	scope = {};
 	bindToController = true;
 	controller = ["$scope", Controller];
 	controllerAs = 'ctrl';
+	require = ["odeToaster", "^^odeExplorer"];
+
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+		if( controllers ) {
+			const ctrl:Controller = controllers[0] as Controller;
+			const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
+			ctrl.model = odeExplorer.model;
+		}
+	}
 }
 
 /** The toaster directive.

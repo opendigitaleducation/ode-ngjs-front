@@ -1,5 +1,6 @@
+import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { IOrder, IFolder } from "ode-ts-client";
+import { IFolder } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
@@ -36,19 +37,22 @@ export class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective {
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./domino-folder.directive.html').default;
 	scope = {
-        model:"=",
         folder:"="
     };
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
+	require = ["odeDominoFolder", "^odeExplorer"];
 
-    link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
-        let ctrl:Controller = controller as Controller;
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+		if( !controllers ) return;
+        const ctrl:Controller = controllers[0] as Controller;
+        const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
+        ctrl.model = odeExplorer.model;
     }
 }
 

@@ -1,6 +1,6 @@
 <div class="container d-flex">
     <!-- SIDEBAR -->
-    <ode-sidebar model="ctrl.model"></ode-sidebar>
+    <ode-sidebar></ode-sidebar>
     <!-- MAIN CONTENT -->
     <main class="main-content">
         <section class="explorer">
@@ -63,16 +63,16 @@
                 </div>
             </section>
 
-            <section class="explorer__view dominos dominos--square" ode-resource-list model="ctrl.model">
+            <section class="explorer__view dominos dominos--square" ode-resource-list>
                 <ode-list-folder>
-                    <ode-domino-folder model="$parent.$parent.ctrl.model" folder="$parent.folder"></ode-domino-folder>
+                    <ode-domino-folder folder="$parent.folder"></ode-domino-folder>
                 </ode-list-folder>
                 <ode-list-item>
-                    <ode-domino-item model="$parent.$parent.ctrl.model" item="$parent.item"></ode-domino-item>
+                    <ode-domino-item item="$parent.item"></ode-domino-item>
                 </ode-list-item>
             </section>
 
-            <ode-toaster model="ctrl.model"></ode-toaster>
+            <ode-toaster></ode-toaster>
         </section>
     </main>
 </div>

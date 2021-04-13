@@ -1,3 +1,4 @@
+import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ISearchResults } from "ode-ts-client";
 import { Subscription } from "rxjs";
@@ -23,12 +24,10 @@ export class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective {
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
 	template = require('./resource-list.directive.html').default;
-	scope = {
-		model:"<"
-    };
+	scope = {};
 	bindToController = true;
     transclude = {
         folders: "odeListFolder",
@@ -36,20 +35,18 @@ class Directive implements IDirective {
     };
 	controller = [Controller];
 	controllerAs = 'ctrl';
+	require = ["odeResourceList", "^^odeExplorer"];
 
-     link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
-        let ctrl:Controller = controller as Controller;
-        let subscription:Subscription|null = null;
-        
-        scope.$watch(attr['model'], (newVal,oldVal)=>{
-            if( newVal && !subscription ) {
-                // Subscribe to the flow of resultset
-                subscription = ctrl.model.explorer.latestResources().subscribe({
-                    next: resultset => { 
-                        ctrl?.display(resultset.output);
-                        scope.$apply();
-                    }
-                }) ?? null;
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+		if( !controllers ) return;
+        const ctrl:Controller = controllers[0] as Controller;
+        const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
+        ctrl.model = odeExplorer.model;
+
+        let subscription:Subscription|null = ctrl.model.explorer.latestResources().subscribe({
+            next: resultset => { 
+                ctrl?.display(resultset.output);
+                scope.$apply();
             }
         });
 
