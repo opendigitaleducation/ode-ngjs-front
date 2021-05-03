@@ -5,16 +5,11 @@ import { HttpPromisified } from "../../legacy/http";
 import { Idiom } from "../../legacy/idiom";
 import { Shareable, ShareVisible, SharePayload, ShareInfos, ShareAction } from "../../legacy/rights";
 import { UiModel } from "../../models/ui.model";
+import { NotifyService } from '../../services/notify.service';
 
 // FIXME legacy stuff
 export const appPrefix: string = (window as any).appPrefix;
 export const infraPrefix: string = (window as any).infraPrefix;
-declare const notify:{
-    message(t:"error"|"info"|"success", message:string, timeout?:number):void;
-	error(message:string, timeout?:number):void;
-	info(message:string, timeout?:number):void;
-	success(message:string, timeout?:number):void;
-};
 declare const model:{
 	me: any;
     calendar: any;
@@ -91,7 +86,7 @@ export class SharePanelController implements IController {
 
     //------------------
     //-- Constructor
-    constructor( private $scope:IDirectiveScope ) {
+    constructor( private $scope:IDirectiveScope, private notify:NotifyService ) {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
         this.model = null as unknown as UiModel;
     }
@@ -411,9 +406,9 @@ export class SharePanelController implements IController {
         });
         try {
             await Promise.all(promises);
-            notify.success('share.notify.success');
+            this.notify.success('share.notify.success');
         } catch (e) {
-            notify.error('share.notify.error');
+            this.notify.error('share.notify.error');
         }
         if (this.autoClose && this.$scope.closePanel) {
             await this.$scope.closePanel(false);
@@ -715,7 +710,7 @@ class Directive implements IDirective<IDirectiveScope,JQLite,IAttributes,IContro
         autoClose: '='
     };
 	bindToController = true;
-	controller = ["$scope", SharePanelController];
+	controller = ["$scope", "odeNotify", SharePanelController];
 	controllerAs = 'ctrl';
 	require = ["odeSharePanel", "^^odeExplorer"];
 

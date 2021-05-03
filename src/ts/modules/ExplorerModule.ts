@@ -1,5 +1,6 @@
 import angular from "angular";
-import { DominoFolder, DominoItem, Explorer, SidebarFolder, Modal, ResourceList, SharePanel, Sidebar, Toaster } from "../directives";
+import { DominoFolder, DominoItem, Explorer, SidebarFolder, Modal, ResourceList, SharePanel, Sidebar, Toaster, PropsPanel } from "../directives";
+import { Notify } from "../services";
 
 angular.module("odeExplorerModule", [])
 .directive("odeExplorer", Explorer.DirectiveFactory)
@@ -10,5 +11,8 @@ angular.module("odeExplorerModule", [])
 .directive("odeDominoItem", DominoItem.DirectiveFactory)
 .directive("odeToaster", Toaster.DirectiveFactory)
 .directive("odeModal", Modal.DirectiveFactory)
+.directive("odePropsPanel", PropsPanel.DirectiveFactory)
 .directive("odeSharePanel", SharePanel.DirectiveFactory)
+
+.service("odeNotify", Notify.ServiceFactory)
 ;

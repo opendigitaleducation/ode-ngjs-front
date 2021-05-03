@@ -2,10 +2,11 @@ import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
+import { NotifyService } from '../../services/notify.service';
 
 /* Controller for the directive */
 export class Controller implements IController {
-	constructor( private $scope:IScope ) {
+	constructor( private $scope:IScope, private notify:NotifyService ) {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
         this.model = null as unknown as UiModel;
 
@@ -27,9 +28,9 @@ export class Controller implements IController {
 	private actionFilter:{[actionId:string]:boolean} = {};
 	private mobileFilter:{[actionId:string]:boolean} = {};
 
-	/** Flag to show/hide the properties lightbox */
+	/** Flag to show/hide the properties modal. */
 	showProps:boolean  = false;
-	/** Flag to show/hide the sharing lightbox */
+	/** Flag to show/hide the sharing modal. */
 	showShares:boolean = false;
 	props?:IProperty[];
 	items?:IResource[];
@@ -53,6 +54,21 @@ export class Controller implements IController {
 		return `explorer.toaster.btn.${action.id}.label`;
 	}
 
+	/**
+	 * Visibility rules for the action buttons.
+	 * @param action action to check
+	 * @returns true if the action button must be visible
+	 */
+	isActivable( action:IAction ):boolean {
+		const onlyOneItemSelected =  this.model.selectedItems.length===1 && this.model.selectedFolders.length===0;
+		switch( action.id ) {
+			case ACTION.OPEN: return onlyOneItemSelected;
+			case ACTION.SHARE: return onlyOneItemSelected;
+			case ACTION.MANAGE: return onlyOneItemSelected;
+			default: return true;
+		}
+	}
+
 	activate( action:IAction ) {
 		if( !action?.available )
 			return;
@@ -71,8 +87,9 @@ export class Controller implements IController {
 					this.model.resourceType,
 					this.model.selectedItems
 				).then( res => {
-					if( res?.properties?.length > 0 ) {
-						this.editProps( res.properties, this.model.selectedItems );
+					if( res?.genericProps.length > 0 ) {
+						this.editProps( res.genericProps, this.model.selectedItems );
+						this.$scope.$apply();
 					}
 				});
 			}
@@ -106,14 +123,13 @@ export class Controller implements IController {
 		delete this.props;
 		delete this.items;
 		this.showProps=false
-		this.$scope.$apply();
 	}
 
 	/**
 	 * Display the sharing lightbox.
 	 * @param items apply to these resources
 	 */
-	 private editShares( items:IResource[] ) {
+	private editShares( items:IResource[] ) {
 		this.items = items;
 		this.showShares = true;
 	}
@@ -133,7 +149,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./toaster.directive.html').default;
 	scope = {};
 	bindToController = true;
-	controller = ["$scope", Controller];
+	controller = ["$scope", "odeNotify", Controller];
 	controllerAs = 'ctrl';
 	require = ["odeToaster", "^^odeExplorer"];
 
