@@ -1,10 +1,11 @@
 #!/bin/bash
 
 if [ "$#" -gt 2 ]; then
-  echo "Usage: $0 <clean|init|build|watch|publish>"
+  echo "Usage: $0 <clean|init|build|infra|watch|publish>"
   echo "Example: $0 clean"
   echo "Example: $0 init"
   echo "Example: $0 build"
+  echo "Example: $0 infra   Use this option to update ode-ts-client with the version from your local folder"
   echo "Example: $0 [--springboard=recette] watch"
   echo "Example: $0 publish"
   exit 1
@@ -43,24 +44,22 @@ init () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install --production=false"
 }
 
-initDev () {
-  docker-compose run \
-    --rm \
-    -u "$USER_UID:$GROUP_GID" \
-    -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
-    node sh -c "npm install --production=false"
-}
-
 build () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm run build"
 }
 
-watch () {
-  docker-compose run \
-    --rm \
+infra () {
+  docker-compose run --rm \
     -u "$USER_UID:$GROUP_GID" \
-    -v $PWD/../$SPRINGBOARD:/home/node/springboard \
     -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
+    node sh -c "npm install --no-save /home/node/ode-ts-client"
+}
+
+watch () {
+  docker-compose run --rm \
+    -u "$USER_UID:$GROUP_GID" \
+    -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
+    -v $PWD/../$SPRINGBOARD:/home/node/springboard \
     node sh -c "npm run watch --springboard=/home/node/springboard/assets"
 }
 
@@ -79,11 +78,11 @@ do
     init)
       init
       ;;
-    initDev)
-      initDev
-      ;;
     build)
       build
+      ;;
+    infra)
+      infra
       ;;
     watch)
       watch
