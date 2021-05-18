@@ -1,13 +1,18 @@
 import angular from "angular";
+import { ConfigurationFrameworkFactory } from "ode-ts-client";
 
-export function bootstrap( app:string ):Promise<void> {
-    return Promise.resolve()
-    .then( () => {
-        angular.bootstrap( angular.element(document.querySelector('html') as HTMLHtmlElement), [app] );
-    });
-}
+(()=>{
+    const init = function() { 
+        angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
+        ConfigurationFrameworkFactory.instance.initialize(true);
+        document.removeEventListener("DOMContentLoaded", init);
+    }
+    document.addEventListener("DOMContentLoaded", init);
+})();
 
 /*
+//TODO que reprendre du code ci-dessous ?
+
     if(window.notLoggedIn){
          Behaviours.loadBehaviours(appPrefix, async function(){
              await skin.loadDisconnected();
