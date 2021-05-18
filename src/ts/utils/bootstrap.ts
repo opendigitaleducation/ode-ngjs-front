@@ -12,6 +12,27 @@ import { ConfigurationFrameworkFactory } from "ode-ts-client";
 
 /*
 //TODO que reprendre du code ci-dessous ?
+// Interpolate est dans base.module.ts
+
+var module = angular.module('app', ['ngSanitize', 'ngRoute'], ['$interpolateProvider', function($interpolateProvider) {
+		$interpolateProvider.startSymbol('[[');
+		$interpolateProvider.endSymbol(']]');
+	}]).config(['$sceDelegateProvider',function($sceDelegateProvider) {
+		$sceDelegateProvider.resourceUrlWhitelist([
+			// Allow same origin resource loads.
+			'self',
+			// Allow loading from our assets domain. **.
+			(window as any).CDN_DOMAIN + '/**'
+		  ]);
+	}])
+
+...
+
+module.config(['$locationProvider', function($locationProvider) {
+	$locationProvider.hashPrefix('');
+}]);
+
+...
 
     if(window.notLoggedIn){
          Behaviours.loadBehaviours(appPrefix, async function(){
