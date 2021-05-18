@@ -22,7 +22,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             if(!attrs.content){
                 return;
             }
-            elem.html( this.$compile('<span class="no-style">' + idiom.translate(attrs.content) + '</span>')(scope).html() );
+            elem.html( this.$compile('<span class="no-style">' + idiom.translate(attrs.content) + '</span>')(scope).text() );
         });
 
         attrs.$observe('attr', val => {
@@ -52,7 +52,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             if(!attrs.key){
                 return;
             }
-            elem.html( this.$compile('<span class="no-style">'+ idiom.translate(attrs.key) +'</span>')(scope).html() );
+            elem.html( this.$compile('<span class="no-style">'+ idiom.translate(attrs.key) +'</span>')(scope).text() );
         });
     }
 
@@ -72,7 +72,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * or
  *      &lt;input translate attrs="{placeholder:'your.placeholder.key', value:'another.i18n.key'}"></input&gt;
  */
- export function DirectiveFactory($compile:ICompileService) {
+export function DirectiveFactory($compile:ICompileService) {
 	return new Directive($compile);
 }
 DirectiveFactory.$inject = ["$compile"];

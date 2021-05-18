@@ -1,10 +1,12 @@
-import angular from "angular";
+import { IFilterFunction } from "angular";
+import { ConfigurationFrameworkFactory } from "ode-ts-client";
 
-/*
-.filter('i18n', function() {
-    return function(input:string) {
-        return idiom.translate(input);
-    };
-})
-;
-*/
+const idiom = ConfigurationFrameworkFactory.instance.idiom;
+
+const Filter:IFilterFunction = (input:string) => {
+    return idiom.translate(input);
+}
+
+export function FilterFactory() {
+    return Filter;
+}

@@ -12,3 +12,7 @@ export * as SharePanel from './share/share-panel.directive';
 
 /* Legacy (ported from infra-front) */
 export * as Translate from './i18n/translate.directive';
+export * as I18n from './i18n/i18n.directive';
+export * as I18nValue from './i18n/i18n-value.directive';
+export * as I18nPlaceholder from './i18n/i18n-placeholder.directive';
+export * as I18nFilter from './i18n/i18n.filter';
