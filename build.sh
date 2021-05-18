@@ -43,6 +43,14 @@ init () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install --production=false"
 }
 
+initDev () {
+  docker-compose run \
+    --rm \
+    -u "$USER_UID:$GROUP_GID" \
+    -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
+    node sh -c "npm install --production=false"
+}
+
 build () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm run build"
 }
@@ -52,6 +60,7 @@ watch () {
     --rm \
     -u "$USER_UID:$GROUP_GID" \
     -v $PWD/../$SPRINGBOARD:/home/node/springboard \
+    -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
     node sh -c "npm run watch --springboard=/home/node/springboard/assets"
 }
 
@@ -69,6 +78,9 @@ do
       ;;
     init)
       init
+      ;;
+    initDev)
+      initDev
       ;;
     build)
       build

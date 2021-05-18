@@ -9,3 +9,6 @@ export * as Toaster from './toaster/toaster.directive';
 export * as Modal from './modal/modal.directive';
 export * as PropsPanel from './props/props-panel.directive';
 export * as SharePanel from './share/share-panel.directive';
+
+/* Legacy (ported from infra-front) */
+export * as Translate from './i18n/translate.directive';

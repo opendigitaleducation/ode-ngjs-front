@@ -1,7 +1,6 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ISearchResults } from "ode-ts-client";
-import { Subscription } from "rxjs";
 import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
@@ -43,7 +42,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
         ctrl.model = odeExplorer.model;
 
-        let subscription:Subscription|null = ctrl.model.explorer.latestResources().subscribe({
+        let subscription = ctrl.model.explorer.latestResources().subscribe({
             next: resultset => { 
                 ctrl?.display(resultset.output);
                 scope.$apply();
@@ -53,7 +52,6 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         scope.$on('$destroy', (ev)=>{
             if( subscription ) {
                 subscription.unsubscribe();
-                subscription = null;
             }
         });
     }

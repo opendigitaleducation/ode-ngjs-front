@@ -1,3 +1,3 @@
 /* TODO */
-export * as LegacyModule from './LegacyModule';
-export * as ExplorerModule from './ExplorerModule';
+export * as IdiomModule from './i18n.module';
+export * as ExplorerModule from './explorer.module';

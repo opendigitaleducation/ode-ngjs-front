@@ -1,4 +1,4 @@
-import { App, framework, GetResourcesResult, IContext, IExplorerContext, IFolder, IResource, ISearchParameters, ResourceType } from "ode-ts-client";
+import { App, ExplorerFrameworkFactory, GetResourcesResult, IContext, IExplorerContext, IFolder, IResource, ISearchParameters, ResourceType } from "ode-ts-client";
 
 export class UiModel {
     app:App;
@@ -9,7 +9,7 @@ export class UiModel {
     constructor( app:App, resourceType:ResourceType ) {
         this.app = app;
         this.resourceType = resourceType;
-        this.explorer = framework.createContext( [resourceType], app );
+        this.explorer = ExplorerFrameworkFactory.instance.createContext( [resourceType], app );
     }
 
     async initialize() {

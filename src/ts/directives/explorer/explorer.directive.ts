@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, ILocationService, IScope, IWindowService } from "angular";
-import { App, ResourceType, IOrder, SORT_ORDER, framework, RESOURCE, ACTION } from "ode-ts-client";
+import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory } from "ode-ts-client";
 import { UiModel } from "../../models/ui.model";
 
 /* Controller for the directive */
@@ -42,7 +42,7 @@ export class Controller implements IController {
 
     onCreate():void {
         // TODO ajouter une méthode "create" à IExplorerContext, fortement typée plutôt qu'interroger le bus en direct.
-        framework.getBus().send(RESOURCE.BLOG, ACTION.CREATE, "test proto").then( res => {
+        ExplorerFrameworkFactory.instance.getBus().send(RESOURCE.BLOG, ACTION.CREATE, "test proto").then( res => {
             if( typeof res === "string" ) {
                 if( res.indexOf("#") < 0 ) {
                     // Angular-based routing

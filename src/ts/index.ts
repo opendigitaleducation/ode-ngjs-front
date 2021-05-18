@@ -9,6 +9,8 @@ export * from './services/index';
 
 export * from './modules/index';
 
+export * from './utils/index';
+
 /** Hack pour rendre compatible le module commonjs avec une balise <script> dans un navigateur. */
 declare var window:any;
 declare var module:any;
