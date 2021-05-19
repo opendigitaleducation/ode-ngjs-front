@@ -1,17 +1,19 @@
-// import { IAttributes, IController, IDirective, IScope } from "angular";
+import { IAttributes, IController, IDirective, IScope } from "angular";
+import { I18nService } from "../../services/i18n.service";
+import { UserService } from "../../services/user.service";
 
-// // Controller for the directive
-// export class Controller implements IController {
-//     constructor(/*me, lang, skin*/) {
-// 		this.me = model.me;
-// 		this.lang = lang;
-// 		this.skin = skin;
-// 		this.currentLanguage = currentLanguage;
-// 	}
-// 	me:any;
-// 	lang:any;
-// 	skin:any;
-// 	currentLanguage:string;
+// Controller for the directive
+export class Controller implements IController {
+    constructor(
+            private me:UserService,
+            private session:UserService,
+            private lang:I18nService/*, skin*/
+        ) {
+//		this.skin = skin;
+//		this.currentLanguage = currentLanguage;
+	}
+//	skin:any;
+//	currentLanguage:string;
 
 // 	nbNewMessages = 0;
 // 	rand = Math.random();
@@ -85,31 +87,31 @@
 // 	$scope.refreshAvatar();
 // 	$scope.currentURL = window.location.href;
 // }]
-// }
+}
 
-// /* Directive */
-// class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
-//     restrict = 'E';
-// 	transclude = true;
-// 	template = require('./navbar.directive.html').default;
-// 	scope = {
-// 		title: "?@"
-// 	};
-// 	bindToController = true;
-// 	controller = ['me', 'lang', Controller];
-// 	controllerAs = 'ctrl';
+/* Directive */
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+    restrict = 'E';
+//	replace = true; // requires a template with a single root HTTML element to work.
+	template = require('./navbar.directive.html').default;
+	scope = {
+		title: "@?"
+	};
+	bindToController = true;
+	controller = ['odeUser', 'odeSession', 'odeI18n', Controller];
+	controllerAs = 'ctrl';
 
-//     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
-// 		if( !controllers ) return;
-// 		const ctrl:Controller = controllers[0] as Controller;
-// 	}
-// }
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+		if( !controllers ) return;
+		const ctrl:Controller = controllers[0] as Controller;
+	}
+}
 
-// /** The navbar directive.
-//  *
-//  * Usage:
-//  *      &lt;ode-navbar title="Some text"></ode-navbar&gt;
-//  */
-// export function DirectiveFactory() {
-// 	return new Directive();
-// }
+/** The navbar directive.
+ *
+ * Usage:
+ *      &lt;ode-navbar title="Some text"></ode-navbar&gt;
+ */
+export function DirectiveFactory() {
+	return new Directive();
+}

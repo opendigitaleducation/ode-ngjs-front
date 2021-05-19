@@ -1,17 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 
-/* TODO finir si besoin
-// Controller for the directive
-export class Controller implements IController {
-    constructor() {
-        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.appname = null as unknown as string;
-    }
-    appname: string;
-
-}
-*/
-
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
@@ -21,22 +9,10 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		return attrs.templateUrl ? attrs.templateUrl : require('./portal.directive.lazy.html').default;
 	};
 	scope = {
-		appname:"@"
+		title:"@"
 	};
-	bindToController = true;
 
-/*TODO à ajouter si besoin	
-	controller = [Controller];
-	controllerAs = 'ctrl';
-
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
-		if( !controllers ) return;
-		const ctrl:Controller = controllers[0] as Controller;
-	}
-*/
-
-/*TODO finir le portage de la directive portal
-	require = ["odeSidebar", "^^odeExplorer"];
+/*TODO finir le portage de la directive portal (tracking)
 
 	compile(element:JQLite, attributes:IAttributes, transclude){
 		// Initialize any configured tracker
@@ -76,7 +52,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 /** The portal directive.
  *
  * Usage:
- *      &lt;ode-portal></ode-portal&gt;
+ *      &lt;ode-portal title="My app"></ode-portal&gt;
  * or
  *      &lt;ode-portal template-url="/platform/assets/themes/...."></ode-portal&gt;
  */
