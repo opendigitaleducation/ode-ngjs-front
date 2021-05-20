@@ -1,13 +1,13 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { I18nService } from "../../services/i18n.service";
+import { ConfigurationFrameworkFactory, IIdiom } from "ode-ts-client";
+import { SessionService } from "../../services/session.service";
 import { UserService } from "../../services/user.service";
 
 // Controller for the directive
 export class Controller implements IController {
     constructor(
             private me:UserService,
-            private session:UserService,
-            private lang:I18nService/*, skin*/
+            private session:SessionService/*, skin*/
         ) {
 //		this.skin = skin;
 //		this.currentLanguage = currentLanguage;
@@ -89,6 +89,11 @@ export class Controller implements IController {
 // }]
 }
 
+/* Customized scope for the directive. */
+interface Scope extends IScope {
+	lang?:IIdiom;
+}
+
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
@@ -98,12 +103,13 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		title: "@?"
 	};
 	bindToController = true;
-	controller = ['odeUser', 'odeSession', 'odeI18n', Controller];
+	controller = ['odeUser', 'odeSession', Controller];
 	controllerAs = 'ctrl';
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
+		scope.lang = ConfigurationFrameworkFactory.instance.Platform.idiom;
 	}
 }
 

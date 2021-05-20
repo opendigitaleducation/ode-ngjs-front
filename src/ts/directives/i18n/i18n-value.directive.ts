@@ -1,7 +1,7 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory } from "ode-ts-client";
 
-const idiom = ConfigurationFrameworkFactory.instance.idiom;
+const idiom = ConfigurationFrameworkFactory.instance.Platform.idiom;
 
 /*
 /* Directive */

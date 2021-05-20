@@ -1,9 +1,8 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory } from "ode-ts-client";
 
-const idiom = ConfigurationFrameworkFactory.instance.idiom;
+const idiom = ConfigurationFrameworkFactory.instance.Platform.idiom;
 
-/*
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {

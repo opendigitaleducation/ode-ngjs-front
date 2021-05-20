@@ -19,6 +19,3 @@ export class NotifyService {
         notify.message("success", message, timeout);
     }
 }
-
-type IServiceConstructor = (new (...args: any[]) => NotifyService);
-export const ServiceFactory:angular.Injectable<IServiceConstructor> = NotifyService;

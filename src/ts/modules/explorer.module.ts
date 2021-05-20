@@ -14,5 +14,5 @@ angular.module("odeExplorerModule", [])
 .directive("odePropsPanel", PropsPanel.DirectiveFactory)
 .directive("odeSharePanel", SharePanel.DirectiveFactory)
 
-.service("odeNotify", NotifyService.ServiceFactory)
+.service("odeNotify", NotifyService)
 ;

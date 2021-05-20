@@ -10,6 +10,6 @@ angular.module( "odeBase",
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 }])
-.service("odeSession", SessionService.ServiceFactory)
-.service("odeUser", UserService.ServiceFactory)
+.service("odeSession", SessionService)
+.service("odeUser", UserService)
 ;

@@ -14,5 +14,5 @@ angular.module("odeI18n", [])
 .directive('i18nPlaceholder', I18nPlaceholder.DirectiveFactory)
 .filter('i18n', I18nFilter.FilterFactory)
 
-.service("odeI18n", I18nService.ServiceFactory)
+.service("odeI18n", I18nService)
 ;

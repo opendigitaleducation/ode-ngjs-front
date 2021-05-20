@@ -1,10 +1,11 @@
 import angular from "angular";
-import { ConfigurationFrameworkFactory } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
 
 (()=>{
     const init = function() { 
         angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
-        ConfigurationFrameworkFactory.instance.initialize(true);
+        SessionFrameworkFactory.instance.initialize();
+        ConfigurationFrameworkFactory.instance.initialize();
         document.removeEventListener("DOMContentLoaded", init);
     }
     document.addEventListener("DOMContentLoaded", init);
