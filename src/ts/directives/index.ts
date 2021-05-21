@@ -20,3 +20,4 @@ export * as I18nFilter from './i18n/i18n.filter';
 /* New generation components */
 export * as Portal from './portal/portal.directive';
 export * as Navbar from './portal/navbar.directive';
+export * as WithTheme from './portal/with-theme.directive';
