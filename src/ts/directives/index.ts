@@ -17,6 +17,11 @@ export * as I18nValue from './i18n/i18n-value.directive';
 export * as I18nPlaceholder from './i18n/i18n-placeholder.directive';
 export * as I18nFilter from './i18n/i18n.filter';
 
+export * as Pulsar from './pulsar/pulsar.directive';
+export * as Popover from './popover/popover.directive';
+export * as PopoverContent from './popover/popover-content.directive';
+export * as PopoverOpener from './popover/popover-opener.directive';
+
 /* New generation components */
 export * as Portal from './portal/portal.directive';
 export * as Navbar from './portal/navbar.directive';

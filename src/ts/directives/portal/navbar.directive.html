@@ -20,7 +20,7 @@
 
 <!-- Theme 1D -->
 <header class="no-2d navbar navbar-light bg-white">
-    <a class="application__title d-desktop-none text-truncate" href="/welcome?token=[[ctrl.rand]]"
+    <a class="application__title d-desktop-none text-truncate" href="/welcome?token=[[ctrl.version]]"
         ng-bind-html="ctrl.title">
     </a>
     
@@ -35,7 +35,7 @@
                 <a 
                     href="/conversation/conversation" 
                     title="[[lang.translate('navbar.messages')]]" 
-                    ng-if="ctrl.me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
+                    ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
                 >
                     <i class="ic-conversation"><span class="new-mails" ng-if="ctrl.nbNewMessages">[[ctrl.nbNewMessages]]</span></i>
                 </a>    
@@ -75,17 +75,17 @@
     </a>
     
     <nav class="navigation">
-        <a class="button" href="/timeline/timeline?token=[[ctrl.rand]]">
+        <a class="button" href="/timeline/timeline?token=[[ctrl.version]]">
           <i class="ic-notifications d-desktop-none"></i>
           <span class="d-mobile-none"><i18n>portal.header.navigation.whatsnew</i18n></span>
         </a>
         
-        <a class="button" href="/userbook/annuaire?myClass&token=[[ctrl.rand]]">
+        <a class="button" href="/userbook/annuaire?myClass&token=[[ctrl.version]]">
           <i class="ic-userbook d-desktop-none"></i> 
           <span class="d-mobile-none"><i18n>portal.header.navigation.classMembers</i18n></span>
         </a>
         
-        <a class="button" href="/welcome?token=[[ctrl.rand]]">
+        <a class="button" href="/welcome?token=[[ctrl.version]]">
           <i class="ic-apps d-desktop-none"></i>
           <span class="d-mobile-none"><i18n>portal.header.navigation.myapps</i18n></span>
         </a>
@@ -94,7 +94,7 @@
 
 <!-- Theme 2D -->
 <header class="no-1d navbar navbar-dark bg-secondary">
-    <a class="d-mobile-none" href="/timeline/timeline?token=[[ctrl.rand]]">
+    <a class="d-mobile-none" href="/timeline/timeline?token=[[ctrl.version]]">
         <img class="logo" src="/assets/themes/[[ctrl.skin.skin]]/img/illustrations/logo.png" alt="Logo de l'ENT">
     </a>
     
@@ -107,7 +107,7 @@
             <a href="/timeline/timeline" title="lang.translate('navbar.home')]]"><i class="ic-home"></i></a>
         </div>
         
-        <div class="navigation__item" ng-if="ctrl.me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
+        <div class="navigation__item" ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
             <a href="/community" class="zero-mobile" title="[[lang.translate('navbar.community')]]">
                 <i class="ic-community"></i>
             </a>
@@ -125,13 +125,13 @@
                     <i class="ic-apps"></i>
                 </a>
                 
-                <popover-content class="d-none">
+                <popover-content>
                     <div class="content">
                         <div class="my-apps row">
-                            <div ng-if="ctrl.me.bookmarkedApps.length === 0">
+                            <div ng-if="me.bookmarkedApps.length === 0">
                                 <i18n>navbar.myapps.more</i18n>
                             </div>
-                            <div class="bookmarked-app" ng-repeat="app in ctrl.me.bookmarkedApps">
+                            <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
                                 <a href="[[app.address]]" target="[[app.target]]" title="[[ctrl.translatedDisplayName(app)]]">
                                     <i class="application [[app.icon]]" ng-if="app.icon.indexOf('/') === -1"></i>
                                     <img skin-src="[[app.icon]]" ng-if="app.icon.indexOf('/') !== -1" />
@@ -147,11 +147,11 @@
         </div>
         
         <div class="navigation__item">
-            <span ng-include="template.containers.portal.conversationUnread"></span>
+            <span ng-include="ctrl.conversationUnreadUrl"></span>
         </div>
         
         <!-- TODO
-        <div class="navigation__item" ng-if="ctrl.me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
+        <div class="navigation__item" ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
             <popover class="searchengine">
                 <a href="/searchengine" popover-opener ng-click="ctrl.openApps($event)" title="[[lang.translate('navbar.search')]]">
                     <i class="ic-search"></i>

@@ -1,17 +1,20 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IIdiom } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, IIdiom, SessionFrameworkFactory } from "ode-ts-client";
 import { SessionService } from "../../services/session.service";
 import { UserService } from "../../services/user.service";
 
 // Controller for the directive
 export class Controller implements IController {
     constructor(
+			private $scope:Scope,
             private me:UserService,
             private session:SessionService/*, skin*/
         ) {
 //		this.skin = skin;
 //		this.currentLanguage = currentLanguage;
 	}
+	conversationUnreadUrl?:String;
+
 //	skin:any;
 //	currentLanguage:string;
 
@@ -89,9 +92,18 @@ export class Controller implements IController {
 // }]
 }
 
-/* Customized scope for the directive. */
+/*
+ *	Customized scope for the directive.
+ *	Required for compatibility with old portal templates.
+ */
 interface Scope extends IScope {
 	lang?:IIdiom;
+	nbNewMessages?:number;
+	version?:string;
+	me?:{
+		hasWorkflow(right:string):boolean;
+		bookmarkedApps:[];
+	};
 }
 
 /* Directive */
@@ -103,13 +115,33 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		title: "@?"
 	};
 	bindToController = true;
-	controller = ['odeUser', 'odeSession', Controller];
+	controller = ['$scope','odeUser', 'odeSession', Controller];
 	controllerAs = 'ctrl';
+	require = ['odeNavbar'];
 
     link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
-		scope.lang = ConfigurationFrameworkFactory.instance.Platform.idiom;
+		const platform = ConfigurationFrameworkFactory.instance.Platform;
+
+		// Legacy code (angular templates in old format)
+		scope.lang = platform.idiom;
+		scope.nbNewMessages = 1;
+		scope.version = platform.deploymentTag;
+		scope.me = {
+			hasWorkflow(right:string):boolean {
+				return SessionFrameworkFactory.instance.session.hasWorkflow(right);
+			},
+			bookmarkedApps: []
+		};
+		platform.theme.onOverrideReady().then( overrides =>{
+			if( overrides.portal ) {
+				if(overrides.portal.indexOf('conversation-unread') !== -1){
+					ctrl.conversationUnreadUrl = '/assets/themes/' + platform.theme.skin + '/template/portal/conversation-unread.html?hash=' + platform.deploymentTag;
+					scope.$apply();
+				}
+			}
+		});
 	}
 }
 
