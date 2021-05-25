@@ -39,7 +39,7 @@ export class ThemeHelperService {
     setStyle( stylePath:string ) {
         const platform = ConfigurationFrameworkFactory.instance.Platform;
         if(stylePath && stylePath.startsWith("/")){
-            stylePath = platform.deploymentTag + stylePath;
+            stylePath = platform.cdnDomain + stylePath;
         }
         if(this.querySelect('#theme').length === 0) {
             const style = angular.element(
@@ -50,8 +50,7 @@ export class ThemeHelperService {
                     crossorigin="anonymous" />`
             );
             var favicon = angular.element(
-                `<link
-                    rel="icon"
+                `<link rel="icon"
                     href="${platform.theme.basePath}img/illustrations/favicon.ico" />`
             );
             style.on('load', e => {

@@ -15,7 +15,7 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
         let url = theme.themeUrl;
         for(let theme of conf.overriding){
             //replace theme by bootstrap version
-            if(theme.child==themeName && theme.bootstrapVersion){
+            if(theme.child===themeName && theme.bootstrapVersion){
                 url = `${this.helperSvc.CDN}/assets/themes/${theme.bootstrapVersion}/skins/${skinName}/`;
                 elem.addClass(theme.bootstrapVersion);//add class at root=>wrapped theme
                 this.helperSvc.loadOldWrappedTheme(theme.child, skinName);
