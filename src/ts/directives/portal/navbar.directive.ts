@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme } from "ode-ts-client";
 import { SessionService } from "../../services/session.service";
 import { UserService } from "../../services/user.service";
 
@@ -8,9 +8,10 @@ export class Controller implements IController {
     constructor(
 			private $scope:Scope,
             private me:UserService,
-            private session:SessionService/*, skin*/
+            private session:SessionService
         ) {
 	}
+	public skin?:ITheme;
 	public conversationUnreadUrl?:String;
 	public currentLanguage:string = "";
 	public username:string = "";
@@ -135,6 +136,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			this.getCurrentLanguage(),
 			platform.theme.onOverrideReady()
 		]).then( (values) => {
+			ctrl.skin = platform.theme;
 			ctrl.currentLanguage = values[0];
 
 			const overrides = values[1];
