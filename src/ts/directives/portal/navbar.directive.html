@@ -37,7 +37,7 @@
                     title="[[lang.translate('navbar.messages')]]" 
                     ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
                 >
-                    <i class="ic-conversation"><span class="new-mails" ng-if="ctrl.nbNewMessages">[[ctrl.nbNewMessages]]</span></i>
+                    <i class="ic-conversation"><span class="new-mails" ng-if="nbNewMessages">[[nbNewMessages]]</span></i>
                 </a>    
             </span>
         </div>
@@ -119,7 +119,6 @@
                     href="/welcome"
                     title="[[lang.translate('navbar.applications')]]" 
                     pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}" 
-                    ng-click="ctrl.openApps($event)"
                     popover-opener
                 >
                     <i class="ic-apps"></i>

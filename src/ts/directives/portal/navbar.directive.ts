@@ -10,79 +10,30 @@ export class Controller implements IController {
             private me:UserService,
             private session:SessionService/*, skin*/
         ) {
-//		this.skin = skin;
-		this.currentLanguage = "";
-		this.avatar = "no-avatar.svg";
-		this.username = "";
 	}
-	conversationUnreadUrl?:String;
+	public conversationUnreadUrl?:String;
+	public currentLanguage:string = "";
+	public username:string = "";
+	public avatar:string = "no-avatar.svg";
+	public messagerieLink:string = '/zimbra/zimbra';
 
-//	skin:any;
-	public currentLanguage:string;
-	public username:string;
-	public avatar:string;
-
-// 	rand = Math.random();
-//     messagerieLink = '/zimbra/zimbra';
-
-	refreshAvatar():Promise<void> {
-		const http = TransportFrameworkFactory.instance().http;
-
-		return http.get('/userbook/api/person', {requestName: "refreshAvatar"}).then( result => {
-			this.avatar = result.result['0'].photo;
-			if (!this.avatar || this.avatar === 'no-avatar.jpg' || this.avatar === 'no-avatar.svg') {
-				const basePath = ConfigurationFrameworkFactory.instance().Platform.theme.basePath;				
-                this.avatar = basePath + '/img/illustrations/no-avatar.svg';
-            }
-			this.username = result.result['0'].displayName;
-			//model.me.profiles = result.result['0'].type;	// FIXME : à déplacer dans ode-ts-client ?
-		});
+	refreshAvatar() {
+		const session = SessionFrameworkFactory.instance().session;
+		this.avatar = session.description.photo;
+		if (!this.avatar || this.avatar === 'no-avatar.jpg' || this.avatar === 'no-avatar.svg') {
+			const basePath = ConfigurationFrameworkFactory.instance().Platform.theme.basePath;				
+			this.avatar = basePath + '/img/illustrations/no-avatar.svg';
+		}
+		this.username = session.description.displayName;
 	};
 
-//     goToMessagerie(){
-//         console.log($scope.messagerieLink);
-//         http().get('/userbook/preference/zimbra').done(function(data){
-//             try{
-//                if( data.preference? JSON.parse(data.preference)['modeExpert'] && model.me.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|preauth') : false){
-//                         $scope.messagerieLink = '/zimbra/preauth';
-//                         window.open($scope.messagerieLink);
-//                     } else {
-//                         $scope.messagerieLink = '/zimbra/zimbra';
-//                         window.location.href = window.location.origin + $scope.messagerieLink;
-//                     }
-//                     console.log($scope.messagerieLink);
-//             } catch(e) {
-//                 $scope.messagerieLink = '/zimbra/zimbra';
-//             }
-//         })
-//     };
+	// FIXME What is the business logic here ?
+	// openApps(event){
+	// 	if( $(window).width() <= 700){
+	// 		event.preventDefault();
+	// 	}
+	// }
 
-// 	refreshMails(){
-// 	    if(model.me.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|view')){
-//             http().get('/zimbra/count/INBOX', { unread: true }).done(function(nbMessages){
-//                 $scope.nbNewMessages = nbMessages.count;
-//                 $scope.$apply('nbNewMessages');
-//             });
-
-//         }else{
-//             http().get('/conversation/count/INBOX', { unread: true }).done(function(nbMessages){
-//                 $scope.nbNewMessages = nbMessages.count;
-//                 $scope.$apply('nbNewMessages');
-//             });
-//         }
-
-// 	};
-
-// 	openApps(event){
-// 		if($(window).width() <= 700){
-// 			event.preventDefault();
-// 		}
-// 	}
-
-// 	http().get('/directory/userbook/' + model.me.userId).done(function(data){
-// 		model.me.userbook = data;
-// 		$scope.$apply('me');
-// 	});
 
 // 	skin.listThemes(function(themes){
 // 		$scope.themes = themes;
@@ -92,7 +43,6 @@ export class Controller implements IController {
 // 	$scope.$root.$on('refreshMails', $scope.refreshMails);
 
 // 	$scope.refreshMails();
-// 	$scope.refreshAvatar();
 // 	$scope.currentURL = window.location.href;
 // }]
 }
@@ -109,6 +59,11 @@ interface Scope extends IScope {
 		hasWorkflow(right:string):boolean;
 		bookmarkedApps:[];
 	};
+
+	messagerieLink?: string;
+	goToMessagerie?: () => void;
+	refreshMails?: () => void;
+	refreshAvatar?: () => void;
 }
 
 /* Directive */
@@ -128,6 +83,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 		const platform = ConfigurationFrameworkFactory.instance().Platform;
+		const http = TransportFrameworkFactory.instance().http;
 
 		// Legacy code (angular templates in old format)
 		scope.lang = platform.idiom;
@@ -139,6 +95,41 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			},
 			bookmarkedApps: []
 		};
+		scope.goToMessagerie = () => {
+			console.log(scope.messagerieLink);
+			http.get('/userbook/preference/zimbra').then( data => {
+				try{
+					if( data.preference? JSON.parse(data.preference)['modeExpert'] && scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|preauth') : false){
+							scope.messagerieLink = '/zimbra/preauth';
+							window.open(scope.messagerieLink);
+						} else {
+							scope.messagerieLink = '/zimbra/zimbra';
+							window.location.href = window.location.origin + scope.messagerieLink;
+						}
+						console.log(scope.messagerieLink);
+				} catch(e) {
+					scope.messagerieLink = '/zimbra/zimbra';
+				}
+			});
+		}
+		scope.refreshMails = () => {
+			if(scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|view')){
+				http.get('/zimbra/count/INBOX', { unread: true }).then( nbMessages => {
+					scope.nbNewMessages = nbMessages.count;
+					scope.$apply('nbNewMessages');
+				});
+	
+			} else {
+				http.get('/conversation/count/INBOX', { unread: true }).then( nbMessages => {
+					scope.nbNewMessages = nbMessages.count;
+					scope.$apply('nbNewMessages');
+				});
+			}
+		}
+		scope.refreshAvatar = () => {
+			ctrl.refreshAvatar();
+		}
+
 
 		Promise.all([
 			this.getCurrentLanguage(),
@@ -152,10 +143,8 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					ctrl.conversationUnreadUrl = '/assets/themes/' + platform.theme.skin + '/template/portal/conversation-unread.html?hash=' + platform.deploymentTag;
 				}
 			}
-
-			ctrl.refreshAvatar().then( () => {
-				scope.$apply();
-			});
+			ctrl.refreshAvatar();
+			scope.$apply();
 		});
 	}
 
