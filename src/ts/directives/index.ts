@@ -26,3 +26,4 @@ export * as PopoverOpener from './popover/popover-opener.directive';
 export * as Portal from './portal/portal.directive';
 export * as Navbar from './portal/navbar.directive';
 export * as WithTheme from './portal/with-theme.directive';
+export * as Logout from './portal/logout.directive';
