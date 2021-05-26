@@ -1,23 +1,26 @@
-// FIXME legacy stuff
-declare namespace notify {
-    let message: (t:"error"|"info"|"success", message:string, timeout?:number) => void;
-	let error: (message:string, timeout?:number) => void;
-	let info: (message:string, timeout?:number) => void;
-	let success: (message:string, timeout?:number) => void;
-};
+import { ConfigurationFrameworkFactory } from "ode-ts-client";
+
+const humane = require('humane-js');
+const lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
 
 export class NotifyService {
+    private message(type:"error"|"info"|"success", message:string, timeout?:number) {
+		message = lang.translate(message);
+		let options:any = { addnCls: 'humane-original-'+ type };
+		if(timeout != null)
+			options["timeout"] = timeout;
+		humane.spawn(options)(message);
+    }
+
 	error(message:string, timeout?:number):void {
-        notify.message("error", message, timeout);
+        this.message("error", message, timeout);
     }
 
 	info(message:string, timeout?:number):void {
-        notify.message("info", message, timeout);
+        this.message("info", message, timeout);
     }
 
 	success(message:string, timeout?:number):void {
-        notify.message("success", message, timeout);
+        this.message("success", message, timeout);
     }
-
-    
 }

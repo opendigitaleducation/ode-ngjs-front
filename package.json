@@ -30,7 +30,8 @@
     "angular": "1.7.9",
     "angular-route": "1.7.9",
     "angular-sanitize": "1.7.9",
-    "core-js": "^3.9.1"
+    "core-js": "^3.9.1",
+    "humane-js": "^3.2.2"
   },
   "devDependencies": {
     "@types/angular": "^1.7.4",
