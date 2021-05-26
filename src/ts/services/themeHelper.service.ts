@@ -4,7 +4,7 @@ import { ConfigurationFrameworkFactory } from "ode-ts-client";
 export class ThemeHelperService {
 
     get CDN() {
-        return ConfigurationFrameworkFactory.instance.Platform.cdnDomain;
+        return ConfigurationFrameworkFactory.instance().Platform.cdnDomain;
     }
 
     querySelect(selector:string):JQLite {
@@ -12,7 +12,7 @@ export class ThemeHelperService {
     }
 
     loadOldWrappedTheme( oldTheme:string, skinName:string ) {
-        const platform = ConfigurationFrameworkFactory.instance.Platform;
+        const platform = ConfigurationFrameworkFactory.instance().Platform;
         this.querySelect("#themeOld").remove();
         const style = angular.element(
             `<link rel="stylesheet" 
@@ -25,7 +25,7 @@ export class ThemeHelperService {
     }
 
     loadThemeJs( theme:string ) {
-        const platform = ConfigurationFrameworkFactory.instance.Platform;
+        const platform = ConfigurationFrameworkFactory.instance().Platform;
         this.querySelect("#themeJS").remove();
         const style = angular.element(
             `<script
@@ -37,7 +37,7 @@ export class ThemeHelperService {
     }
 
     setStyle( stylePath:string ) {
-        const platform = ConfigurationFrameworkFactory.instance.Platform;
+        const platform = ConfigurationFrameworkFactory.instance().Platform;
         if(stylePath && stylePath.startsWith("/")){
             stylePath = platform.cdnDomain + stylePath;
         }

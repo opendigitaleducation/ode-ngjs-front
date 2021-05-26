@@ -9,7 +9,7 @@ export class UiModel {
     constructor( app:App, resourceType:ResourceType ) {
         this.app = app;
         this.resourceType = resourceType;
-        this.explorer = ExplorerFrameworkFactory.instance.createContext( [resourceType], app );
+        this.explorer = ExplorerFrameworkFactory.instance().createContext( [resourceType], app );
     }
 
     async initialize() {

@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IIdiom, SessionFrameworkFactory } from "ode-ts-client";
+import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
 import { SessionService } from "../../services/session.service";
 import { UserService } from "../../services/user.service";
 
@@ -11,28 +11,33 @@ export class Controller implements IController {
             private session:SessionService/*, skin*/
         ) {
 //		this.skin = skin;
-//		this.currentLanguage = currentLanguage;
+		this.currentLanguage = "";
+		this.avatar = "no-avatar.svg";
+		this.username = "";
 	}
 	conversationUnreadUrl?:String;
 
 //	skin:any;
-//	currentLanguage:string;
+	public currentLanguage:string;
+	public username:string;
+	public avatar:string;
 
-// 	nbNewMessages = 0;
 // 	rand = Math.random();
 //     messagerieLink = '/zimbra/zimbra';
 
-// 	refreshAvatar(){
-// 		http().get('/userbook/api/person', {}, {requestName: "refreshAvatar"}).done(function(result){
-// 			$scope.avatar = result.result['0'].photo;
-// 			if (!$scope.avatar || $scope.avatar === 'no-avatar.jpg' || $scope.avatar === 'no-avatar.svg') {
-//                 $scope.avatar = skin.basePath + '/img/illustrations/no-avatar.svg';
-//             }
-// 			$scope.username = result.result['0'].displayName;
-// 			model.me.profiles = result.result['0'].type;
-// 			$scope.$apply();
-// 		});
-// 	};
+	refreshAvatar():Promise<void> {
+		const http = TransportFrameworkFactory.instance().http;
+
+		return http.get('/userbook/api/person', {requestName: "refreshAvatar"}).then( result => {
+			this.avatar = result.result['0'].photo;
+			if (!this.avatar || this.avatar === 'no-avatar.jpg' || this.avatar === 'no-avatar.svg') {
+				const basePath = ConfigurationFrameworkFactory.instance().Platform.theme.basePath;				
+                this.avatar = basePath + '/img/illustrations/no-avatar.svg';
+            }
+			this.username = result.result['0'].displayName;
+			//model.me.profiles = result.result['0'].type;	// FIXME : à déplacer dans ode-ts-client ?
+		});
+	};
 
 //     goToMessagerie(){
 //         console.log($scope.messagerieLink);
@@ -122,25 +127,44 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
-		const platform = ConfigurationFrameworkFactory.instance.Platform;
+		const platform = ConfigurationFrameworkFactory.instance().Platform;
 
 		// Legacy code (angular templates in old format)
 		scope.lang = platform.idiom;
-		scope.nbNewMessages = 1;
+		scope.nbNewMessages = 0;
 		scope.version = platform.deploymentTag;
 		scope.me = {
 			hasWorkflow(right:string):boolean {
-				return SessionFrameworkFactory.instance.session.hasWorkflow(right);
+				return SessionFrameworkFactory.instance().session.hasWorkflow(right);
 			},
 			bookmarkedApps: []
 		};
-		platform.theme.onOverrideReady().then( overrides =>{
+
+		Promise.all([
+			this.getCurrentLanguage(),
+			platform.theme.onOverrideReady()
+		]).then( (values) => {
+			ctrl.currentLanguage = values[0];
+
+			const overrides = values[1];
 			if( overrides.portal ) {
 				if(overrides.portal.indexOf('conversation-unread') !== -1){
 					ctrl.conversationUnreadUrl = '/assets/themes/' + platform.theme.skin + '/template/portal/conversation-unread.html?hash=' + platform.deploymentTag;
-					scope.$apply();
 				}
 			}
+
+			ctrl.refreshAvatar().then( () => {
+				scope.$apply();
+			});
+		});
+	}
+
+	getCurrentLanguage():Promise<string> {
+		return new Promise( (resolve, reject) => {
+			const bootstrapped = NotifyFrameworkFactory.instance().onEvent<BootstrappedNotice>( EVENT_NAME.BOOTSTRAPPED ).subscribe( ev => {
+				bootstrapped.unsubscribe();
+				resolve( SessionFrameworkFactory.instance().session.currentLanguage );
+			});
 		});
 	}
 }

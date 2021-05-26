@@ -42,7 +42,7 @@ export class Controller implements IController {
 
     onCreate():void {
         // TODO ajouter une méthode "create" à IExplorerContext, fortement typée plutôt qu'interroger le bus en direct.
-        ExplorerFrameworkFactory.instance.getBus().send(RESOURCE.BLOG, ACTION.CREATE, "test proto").then( res => {
+        ExplorerFrameworkFactory.instance().getBus().send(RESOURCE.BLOG, ACTION.CREATE, "test proto").then( res => {
             if( typeof res === "string" ) {
                 if( res.indexOf("#") < 0 ) {
                     // Angular-based routing

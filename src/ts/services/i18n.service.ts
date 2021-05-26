@@ -1,6 +1,6 @@
 import { ConfigurationFrameworkFactory } from "ode-ts-client";
 
-const idiom = ConfigurationFrameworkFactory.instance.Platform.idiom;
+const idiom = ConfigurationFrameworkFactory.instance().Platform.idiom;
 
 export class I18nService {
     translate( key:string ) {

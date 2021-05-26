@@ -18,4 +18,6 @@ export class NotifyService {
 	success(message:string, timeout?:number):void {
         notify.message("success", message, timeout);
     }
+
+    
 }

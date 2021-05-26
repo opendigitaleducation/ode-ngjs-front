@@ -4,8 +4,8 @@ import { ConfigurationFrameworkFactory, SessionFrameworkFactory } from "ode-ts-c
 (()=>{
     const init = function() { 
         angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
-        SessionFrameworkFactory.instance.initialize();
-        ConfigurationFrameworkFactory.instance.initialize( null, null ); // TODO: get version and CDN from mustache directive.
+        SessionFrameworkFactory.instance().initialize();
+        ConfigurationFrameworkFactory.instance().initialize( null, null ); // TODO: get version and CDN from mustache directive.
         document.removeEventListener("DOMContentLoaded", init);
     }
     document.addEventListener("DOMContentLoaded", init);
