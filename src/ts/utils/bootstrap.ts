@@ -3,10 +3,12 @@ import { ConfigurationFrameworkFactory, SessionFrameworkFactory } from "ode-ts-c
 
 (()=>{
     const init = function() { 
-        angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
         SessionFrameworkFactory.instance().initialize();
-        ConfigurationFrameworkFactory.instance().initialize( null, null ); // TODO: get version and CDN from mustache directive.
-        document.removeEventListener("DOMContentLoaded", init);
+         // TODO: get version and CDN from mustache directive.
+        ConfigurationFrameworkFactory.instance().initialize( null, null ).then( () => {
+            angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
+            document.removeEventListener("DOMContentLoaded", init);
+        });
     }
     document.addEventListener("DOMContentLoaded", init);
 })();
