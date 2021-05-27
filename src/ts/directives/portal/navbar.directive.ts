@@ -115,13 +115,13 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		}
 		scope.refreshMails = () => {
 			if(scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|view')){
-				http.get('/zimbra/count/INBOX', { unread: true }).then( nbMessages => {
+				http.get('/zimbra/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
 					scope.nbNewMessages = nbMessages.count;
 					scope.$apply('nbNewMessages');
 				});
 	
 			} else {
-				http.get('/conversation/count/INBOX', { unread: true }).then( nbMessages => {
+				http.get('/conversation/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
 					scope.nbNewMessages = nbMessages.count;
 					scope.$apply('nbNewMessages');
 				});
