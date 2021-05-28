@@ -26,8 +26,8 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
     }
 
     constructor( 
-            private helperSvc:ThemeHelperService
-        ) {}
+        private helperSvc:ThemeHelperService
+    ) {}
 }
 
 export function DirectiveFactory(odeThemeHelperService:ThemeHelperService) {

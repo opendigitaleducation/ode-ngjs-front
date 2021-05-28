@@ -2,7 +2,7 @@ import angular, { IInterpolateProvider } from "angular";
 import { SessionService, UserService } from "../services";
 
 /**
- * The "odeBase" angularjs module adds basic initialization to other modules.
+ * The "odeBase" angularjs module provides basic initialization features to other modules (apps).
  */
 angular.module( "odeBase", 
     ['ngSanitize', 'ngRoute'], 
