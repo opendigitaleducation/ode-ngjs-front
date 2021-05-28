@@ -1,5 +1,5 @@
 import angular from "angular";
-import { ConfigurationFrameworkFactory } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, IThemeDesc } from "ode-ts-client";
 
 export class ThemeHelperService {
 
@@ -7,7 +7,8 @@ export class ThemeHelperService {
         return ConfigurationFrameworkFactory.instance().Platform.cdnDomain;
     }
 
-    querySelect(selector:string):JQLite {
+    /* TODO : refactor, move to an AngularHelperService ? */
+    private querySelect(selector:string):JQLite {
         return angular.element(document.querySelectorAll(selector));
     }
 
@@ -36,7 +37,7 @@ export class ThemeHelperService {
         this.querySelect('body').append(style);
     }
 
-    setStyle( stylePath:string ) {
+    applyStyle( stylePath:string ) {
         const platform = ConfigurationFrameworkFactory.instance().Platform;
         if(stylePath && stylePath.startsWith("/")){
             stylePath = platform.cdnDomain + stylePath;
@@ -66,6 +67,15 @@ export class ThemeHelperService {
         else {
             this.querySelect('#theme').attr('href', stylePath + 'theme.css');
         }
+    }
+
+    listThemes():Promise<IThemeDesc[]> {
+        return ConfigurationFrameworkFactory.instance().Platform.theme.listThemes();
+    }
+
+    setTheme( theme:IThemeDesc ) {
+        this.applyStyle( theme.path );
+        ConfigurationFrameworkFactory.instance().Platform.theme.setDefaultTheme( theme );
     }
 
 }

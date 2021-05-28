@@ -22,7 +22,7 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
                 this.helperSvc.loadThemeJs(theme.bootstrapVersion)
             }
         }
-        this.helperSvc.setStyle(url);
+        this.helperSvc.applyStyle(url);
     }
 
     constructor( 
