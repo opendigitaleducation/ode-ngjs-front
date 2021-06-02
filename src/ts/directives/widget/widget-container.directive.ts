@@ -26,7 +26,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./widget-container.directive.html').default;
 	scope = {};
 	bindToController = true;
-	controller = ["odeWidget", Controller];
+	controller = ["odeWidgetService", Controller];
 	controllerAs = 'ctrl';
 	require = ["odeWidgetContainer"];
 

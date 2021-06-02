@@ -28,3 +28,4 @@ export * as Navbar from './portal/navbar.directive';
 export * as WithTheme from './portal/with-theme.directive';
 export * as Logout from './portal/logout.directive';
 export * as WidgetContainer from './widget/widget-container.directive';
+export * as Widget from './widget/widget.directive';

@@ -1,5 +1,5 @@
 import angular from "angular";
-import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer } from "../directives";
+import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget } from "../directives";
 import { ThemeHelperService, WidgetService } from "../services";
 
 /**
@@ -13,9 +13,10 @@ import { ThemeHelperService, WidgetService } from "../services";
 .directive("popover", Popover.DirectiveFactory)
 .directive("popoverContent", PopoverContent.DirectiveFactory)
 .directive("popoverOpener", PopoverOpener.DirectiveFactory)
+
 .directive("odeWidgetContainer", WidgetContainer.DirectiveFactory)
+.directive("odeWidget", Widget.DirectiveFactory)
 
-
-.service("odeThemeHelper", ThemeHelperService )
-.service("odeWidget", WidgetService )
+.service("odeThemeHelperService", ThemeHelperService )
+.service("odeWidgetService", WidgetService )
 ;

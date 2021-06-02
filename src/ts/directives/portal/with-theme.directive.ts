@@ -33,4 +33,4 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
 export function DirectiveFactory(odeThemeHelperService:ThemeHelperService) {
 	return new Directive(odeThemeHelperService);
 }
-DirectiveFactory.$inject=["odeThemeHelper"];
+DirectiveFactory.$inject=["odeThemeHelperService"];
