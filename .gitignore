@@ -1,4 +1,8 @@
 node_modules
 dist
+package.json
+package-lock.json
+.gradle
+deployment/
 *.tsbuildinfo
 lib

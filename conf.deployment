@@ -1,0 +1,5 @@
+{
+  "name":"%FULLY-QUALIFIED-VERSION%",
+  "type": "js",
+  "waitDeploy": true
+}

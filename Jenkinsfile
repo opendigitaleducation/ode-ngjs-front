@@ -6,8 +6,7 @@ pipeline {
     stage('Init') {
       steps {
         checkout scm
-        sh './build.sh clean'
-        sh './build.sh init'
+        sh './build.sh clean init'
       }
     }
     stage('Build') {
@@ -15,12 +14,17 @@ pipeline {
         sh "./build.sh build"
       }
     }
-    stage('Publish') {
+    stage('Publish NPM') {
       steps {
         configFileProvider([configFile(fileId: '.npmrc-infra-front', variable: 'NPMRC')]) {
           sh "cp $NPMRC .npmrc"
-          sh "./build.sh publish"
+          sh "./build.sh publishNPM"
         }
+      }
+    }
+    stage('Publish Nexus') {
+      steps {
+        sh './build.sh publishNexus'
       }
     }
   }

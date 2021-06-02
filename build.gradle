@@ -1,0 +1,34 @@
+plugins {
+  id 'java'
+  id 'scala'
+  id 'maven'
+  id 'maven-publish'
+}
+
+group = "${modowner}"
+version = "$version"
+
+//begin generateTemplate
+task generateDeployment(type: Copy)  {
+    from 'conf.deployment'
+    filter { line -> line.replaceAll('%FULLY-QUALIFIED-VERSION%', "${modowner}~${modname}~${version}") }
+    rename 'conf.deployment', "conf.json.template"
+    into "deployment/${modname}/"
+}
+task generateTemplate(type: Copy,dependsOn: 'generateDeployment') {
+  Map<String,String> extra = new HashMap(project.properties);
+  extra.keySet().each{
+      if(extra[it]!=null && extra[it] instanceof String){
+        extra[it] = extra[it].replace("%generateVersion%",new Date().format( 'yyyyMMddHHmm' ))
+      }
+  }
+  from(project.projectDir.toString()) {
+      include '*.template'
+      expand(extra)
+  }
+  into project.projectDir.toString()
+  rename { String fileName ->
+      fileName.replace(".template", "")
+  }
+}
+//end generateTemplate

@@ -1,0 +1,10 @@
+node_modules/
+.gitignore
+build.sh
+docker-compose.yml
+Jenkinsfile
+build/
+build.gradle
+gradle.properties
+conf.deployment
+package.json.template
