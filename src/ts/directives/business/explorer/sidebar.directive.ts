@@ -1,7 +1,7 @@
-import * as Explorer from '../explorer/explorer.directive';
+import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { GetResourcesResult } from "ode-ts-client";
-import { UiModel } from "../../models/ui.model";
+import { UiModel } from "../../../models/ui.model";
 import { FolderController } from "./sidebar-folder.directive";
 
 /* Controller for the directive */

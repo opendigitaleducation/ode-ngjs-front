@@ -1,7 +1,7 @@
-import * as Explorer from '../explorer/explorer.directive';
+import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { IFolder } from "ode-ts-client";
-import { UiModel } from "../../models/ui.model";
+import { UiModel } from "../../../models/ui.model";
 
 /* Controller for the directive */
 export class Controller implements IController {

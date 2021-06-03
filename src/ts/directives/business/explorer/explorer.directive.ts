@@ -1,6 +1,6 @@
 import { IAttributes, IController, IDirective, ILocationService, IScope, IWindowService } from "angular";
 import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory } from "ode-ts-client";
-import { UiModel } from "../../models/ui.model";
+import { UiModel } from "../../../models/ui.model";
 
 /* Controller for the directive */
 export class Controller implements IController {

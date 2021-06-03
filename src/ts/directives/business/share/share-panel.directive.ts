@@ -1,11 +1,11 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { IBehaviours } from "../../legacy/Behaviours";
-import { HttpPromisified } from "../../legacy/http";
-import { Idiom } from "../../legacy/idiom";
-import { Shareable, ShareVisible, SharePayload, ShareInfos, ShareAction } from "../../legacy/rights";
-import { UiModel } from "../../models/ui.model";
-import { NotifyService } from '../../services/notify.service';
+import { IBehaviours } from "../../../legacy/Behaviours";
+import { HttpPromisified } from "../../../legacy/http";
+import { Idiom } from "../../../legacy/idiom";
+import { Shareable, ShareVisible, SharePayload, ShareInfos, ShareAction } from "../../../legacy/rights";
+import { UiModel } from "../../../models/ui.model";
+import { NotifyService } from '../../../services/notify.service';
 
 // FIXME legacy stuff
 export const appPrefix: string = (window as any).appPrefix;

@@ -1,7 +1,7 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme } from "ode-ts-client";
-import { SessionService } from "../../services/session.service";
-import { UserService } from "../../services/user.service";
+import { SessionService } from "../../../services/session.service";
+import { UserService } from "../../../services/user.service";
 
 // Controller for the directive
 export class Controller implements IController {

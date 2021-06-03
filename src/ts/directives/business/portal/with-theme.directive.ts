@@ -1,6 +1,6 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory } from "ode-ts-client";
-import { ThemeHelperService } from "../../services/themeHelper.service";
+import { ThemeHelperService } from "../../../services/themeHelper.service";
 
 const theme = ConfigurationFrameworkFactory.instance().Platform.theme;
 

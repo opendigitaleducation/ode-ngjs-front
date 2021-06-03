@@ -1,8 +1,8 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
-import { UiModel } from "../../models/ui.model";
-import { NotifyService } from '../../services/notify.service';
+import { UiModel } from "../../../models/ui.model";
+import { NotifyService } from '../../../services/notify.service';
 
 /* Controller for the directive */
 export class Controller implements IController {
