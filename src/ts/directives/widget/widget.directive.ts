@@ -31,9 +31,11 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		const ctrl:Controller = controllers[0] as Controller;
 
 		this.templateUrl = ctrl.widget.platformConf.path;
-		TransportFrameworkFactory.instance().http.loadScript(ctrl.widget.platformConf.js, {disableNotifications:true}).then(
-			()=> {scope.$apply();}
-		);
+		TransportFrameworkFactory.instance().http.loadScript(
+			ctrl.widget.platformConf.js, {disableNotifications:true}
+		).then( ()=> {
+			scope.$apply();
+		});
 	}
 }
 
