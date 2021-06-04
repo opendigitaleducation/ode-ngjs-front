@@ -1,11 +1,12 @@
 import angular from "angular";
+import { NGJS_MODULE } from ".";
 import { DominoFolder, DominoItem, Explorer, SidebarFolder, Modal, ResourceList, SharePanel, Sidebar, Toaster, PropsPanel } from "../directives";
 import { NotifyService } from "../services";
 
 /**
  * The "odeExplorerModule" angularjs module is an all-in-one resources exploration toolkit.
  */
- angular.module("odeExplorerModule", [])
+ angular.module(NGJS_MODULE.EXPLORER, [])
 .directive("odeExplorer", Explorer.DirectiveFactory)
 .directive("odeSidebar", Sidebar.DirectiveFactory)
 .directive("odeSidebarFolder", SidebarFolder.DirectiveFactory)

@@ -4,10 +4,16 @@ module.exports = env => ({
   mode: "development",
   entry: {
     'ode-ngjs-front': './src/ts/index.ts',
+    'calendar-widget': { 
+      import:'./src/ts/widgets/calendar-widget/calendar-widget.ts',
+      filename:'widgets/[name]/[name].js',
+      dependOn: 'ode-ngjs-front'
+    }
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist', env.build_target),
+    clean: true
   },
   externals: {
     "angular": "angular",

@@ -1,11 +1,12 @@
 import angular from "angular";
+import { NGJS_MODULE } from ".";
 import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget } from "../directives";
 import { ThemeHelperService, WidgetService } from "../services";
 
 /**
  * The "odeUi" angularjs module provides many UX components (directives) and useful services.
  */
- angular.module("odeUi", [])
+ angular.module(NGJS_MODULE.UI, [])
 .directive("odePortal", Portal.DirectiveFactory)
 .directive("odeNavbar", Navbar.DirectiveFactory)
 .directive("withTheme", WithTheme.DirectiveFactory)

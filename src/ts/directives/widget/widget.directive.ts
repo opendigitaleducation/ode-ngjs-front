@@ -1,4 +1,4 @@
-import angular, { IAttributes, IController, IDirective, IScope } from "angular";
+import angular, { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
 import { IWidget, TransportFrameworkFactory, WidgetPosition } from "ode-ts-client";
 import { WidgetService } from "../../services";
 
@@ -16,8 +16,8 @@ export class Controller implements IController {
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
-	//template = require('./widget-container.directive.html').default;
-	templateUrl?:string=undefined;
+//	template?:string=undefined;
+//	templateUrl?:string=undefined;
 	scope = {
 		widget: "=odeWidget"
 	};
@@ -30,13 +30,23 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 
-		this.templateUrl = ctrl.widget.platformConf.path;
+//		this.template = require(ctrl.widget.platformConf.path.replace("/widgets/", "/ode-ngjs-front/widgets/")).default;
+
 		TransportFrameworkFactory.instance().http.loadScript(
-			ctrl.widget.platformConf.js, {disableNotifications:true}
-		).then( ()=> {
-			scope.$apply();
-		});
+			ctrl.widget.platformConf.js.replace("/widgets/", "/ode-ngjs-front/widgets/"), {disableNotifications:true}
+		).then( () => {
+			setTimeout( () => {
+				const htmlFragment=`<ode-${ctrl.widget.platformConf.name}>LOADING</ode-${ctrl.widget.platformConf.name}>`;
+				const compiled = this.$compile(htmlFragment)(scope);
+				elem.append( compiled );
+				scope.$apply();
+			}, 1000);
+		})
+		.catch( e => console.log(e) );
 	}
+
+    constructor(private $compile:ICompileService) {
+    }
 }
 
 /** The widget directive.
@@ -44,6 +54,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * Usage:
  *      &lt;div ode-widget="anIWidget"></div&gt;
  */
-export function DirectiveFactory() {
-	return new Directive();
+export function DirectiveFactory($compile:ICompileService) {
+	return new Directive($compile);
 }
+DirectiveFactory.$inject = ["$compile"];
