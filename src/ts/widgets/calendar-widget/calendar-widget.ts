@@ -1,5 +1,4 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { NGJS_MODULE } from "../../modules";
 
 /* Controller for the directive */
 class Controller implements IController {
@@ -25,15 +24,8 @@ class Directive implements IDirective {
  * Usage:
  *      &lt;ode-calendar-widget></ode-calendar-widget&gt;
  */
-function DirectiveFactory() {
+export function DirectiveFactory() {
 	return new Directive();
-}
-
-// Register this directive
-try{
-	angular.module(NGJS_MODULE.WIDGETS).directive( "odeCalendarWidget", DirectiveFactory );
-} catch(e){
-	console.log("Cannot register the calendar widget");
 }
 
 /*

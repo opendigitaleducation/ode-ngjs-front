@@ -30,19 +30,9 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 
-//		this.template = require(ctrl.widget.platformConf.path.replace("/widgets/", "/ode-ngjs-front/widgets/")).default;
-
-		TransportFrameworkFactory.instance().http.loadScript(
-			ctrl.widget.platformConf.js.replace("/widgets/", "/ode-ngjs-front/widgets/"), {disableNotifications:true}
-		).then( () => {
-			setTimeout( () => {
-				const htmlFragment=`<ode-${ctrl.widget.platformConf.name}>LOADING</ode-${ctrl.widget.platformConf.name}>`;
-				const compiled = this.$compile(htmlFragment)(scope);
-				elem.append( compiled );
-				scope.$apply();
-			}, 1000);
-		})
-		.catch( e => console.log(e) );
+		const htmlFragment=`<ode-${ctrl.widget.platformConf.name}>LOADING</ode-${ctrl.widget.platformConf.name}>`;
+		const compiled = this.$compile(htmlFragment)(scope);
+		elem.append( compiled );
 	}
 
     constructor(private $compile:ICompileService) {

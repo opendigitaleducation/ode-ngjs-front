@@ -1,13 +1,23 @@
-export const NGJS_MODULE = {
- BASE :      "odeBase"
-,I18N:       "odeI18n"
-,UI:         "odeUi"
-,WIDGETS:    "odeWidgets"
-,EXPLORER:   "odeExplorerModule"
-};
+import { odeBaseModule } from "./base.module";
+import { odeI18nModule } from "./i18n.module";
+import { odeUiModule } from "./ui.module";
+import { odeExplorerModule } from "./explorer.module";
+import { odeWidgetModule } from "./widgets.module";
 
-export * from './base.module';
-export * from './i18n.module';
-export * from './ui.module';
-export * from './widgets.module';
-export * from './explorer.module';
+export abstract class OdeModules {
+    static getBase():string {
+        return odeBaseModule().name;
+    };
+    static getI18n():string {
+        return odeI18nModule().name;
+    };
+    static getUi():string {
+        return odeUiModule().name;
+    };
+    static getWidgets():string {
+        return odeWidgetModule().name;
+    };
+    static getExplorer():string {
+        return odeExplorerModule().name;
+    };
+}
