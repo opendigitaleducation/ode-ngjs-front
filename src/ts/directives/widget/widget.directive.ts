@@ -1,5 +1,6 @@
 import angular, { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
 import { IWidget, TransportFrameworkFactory, WidgetPosition } from "ode-ts-client";
+import { WidgetLoader } from "../../modules/widgets.module";
 import { WidgetService } from "../../services";
 
 /* Controller for the directive */
@@ -26,16 +27,22 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ["odeWidget"];
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined) {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 
-		const htmlFragment=`<ode-${ctrl.widget.platformConf.name}>LOADING</ode-${ctrl.widget.platformConf.name}>`;
-		const compiled = this.$compile(htmlFragment)(scope);
-		elem.append( compiled );
+		this.widgetLoader( ctrl.widget.platformConf.name )
+		.then( () => {
+			const htmlFragment=`<ode-${ctrl.widget.platformConf.name}>LOADING</ode-${ctrl.widget.platformConf.name}>`;
+			const compiled = this.$compile(htmlFragment)(scope);
+			elem.append( compiled );
+		});
 	}
 
-    constructor(private $compile:ICompileService) {
+    constructor(
+		private $compile:ICompileService,
+		private widgetLoader:WidgetLoader
+		) {
     }
 }
 
@@ -44,7 +51,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * Usage:
  *      &lt;div ode-widget="anIWidget"></div&gt;
  */
-export function DirectiveFactory($compile:ICompileService) {
-	return new Directive($compile);
+export function DirectiveFactory($compile:ICompileService, widgetLoader:WidgetLoader) {
+	return new Directive($compile, widgetLoader);
 }
-DirectiveFactory.$inject = ["$compile"];
+DirectiveFactory.$inject = ["$compile","odeWidgetModuleLoader"];

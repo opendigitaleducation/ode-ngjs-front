@@ -24,9 +24,14 @@ class Directive implements IDirective {
  * Usage:
  *      &lt;ode-calendar-widget></ode-calendar-widget&gt;
  */
-export function DirectiveFactory() {
+function DirectiveFactory() {
 	return new Directive();
 }
+
+// THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
+// RESPECT THE NAMING CONVENTION BY EXPORING THE MODULE NAME :
+export const odeModuleName = "odeCalendarWidgetModule";
+angular.module( odeModuleName, []).directive( "odeCalendarWidget", DirectiveFactory );
 
 /*
 (function(){
