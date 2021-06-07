@@ -1,20 +1,21 @@
 import angular from "angular";
 import { ConfigurationFrameworkFactory, IThemeDesc } from "ode-ts-client";
+import { NgHelperService } from "./ngHelper.service";
 
 export class ThemeHelperService {
+    static $inject =["odeNgHelperService"];
+
+    constructor( 
+        private ngHelperSvc:NgHelperService
+    ) {}
 
     get CDN() {
         return ConfigurationFrameworkFactory.instance().Platform.cdnDomain;
     }
 
-    /* TODO : refactor, move to an AngularHelperService ? */
-    private querySelect(selector:string):JQLite {
-        return angular.element(document.querySelectorAll(selector));
-    }
-
     loadOldWrappedTheme( oldTheme:string, skinName:string ) {
         const platform = ConfigurationFrameworkFactory.instance().Platform;
-        this.querySelect("#themeOld").remove();
+        this.ngHelperSvc.querySelect("#themeOld").remove();
         const style = angular.element(
             `<link rel="stylesheet" 
                 type="text/css" 
@@ -22,19 +23,19 @@ export class ThemeHelperService {
                 id="themeOld"
                 crossorigin="anonymous" />`
         );
-        this.querySelect('head').append( style );
+        this.ngHelperSvc.querySelect('head').append( style );
     }
 
     loadThemeJs( theme:string ) {
         const platform = ConfigurationFrameworkFactory.instance().Platform;
-        this.querySelect("#themeJS").remove();
+        this.ngHelperSvc.querySelect("#themeJS").remove();
         const style = angular.element(
             `<script
                 type="text/javascript"
                 src="${platform.deploymentTag}/assets/themes/${theme}/js/theme.js?version=${platform.deploymentTag}"
                 id="themeJS" />`
         );
-        this.querySelect('body').append(style);
+        this.ngHelperSvc.querySelect('body').append(style);
     }
 
     applyStyle( stylePath:string ) {
@@ -42,7 +43,7 @@ export class ThemeHelperService {
         if(stylePath && stylePath.startsWith("/")){
             stylePath = platform.cdnDomain + stylePath;
         }
-        if(this.querySelect('#theme').length === 0) {
+        if(this.ngHelperSvc.querySelect('#theme').length === 0) {
             const style = angular.element(
                 `<link rel="stylesheet" 
                     type="text/css" 
@@ -55,17 +56,17 @@ export class ThemeHelperService {
                     href="${platform.theme.basePath}img/illustrations/favicon.ico" />`
             );
             style.on('load', e => {
-                //FIXME this.querySelect('body').show();
+                //FIXME this.ngHelperSvc.querySelect('body').show();
             });
-            this.querySelect('head')
+            this.ngHelperSvc.querySelect('head')
                 .append(style)
                 .append(favicon);
             setTimeout(function () {
-                //FIXME this.querySelect('body').show();
+                //FIXME this.ngHelperSvc.querySelect('body').show();
             }, 300);
         }
         else {
-            this.querySelect('#theme').attr('href', stylePath + 'theme.css');
+            this.ngHelperSvc.querySelect('#theme').attr('href', stylePath + 'theme.css');
         }
     }
 

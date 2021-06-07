@@ -17,6 +17,8 @@ export * as I18nValue from './components/i18n/i18n-value.directive';
 export * as I18nPlaceholder from './components/i18n/i18n-placeholder.directive';
 export * as I18nFilter from './components/i18n/i18n.filter';
 
+export * as AppTitle from './components/app-title/app-title.directive';
+export * as Assistant from './components/pulsar/assistant.directive';
 export * as Pulsar from './components/pulsar/pulsar.directive';
 export * as Popover from './components/popover/popover.directive';
 export * as PopoverContent from './components/popover/popover-content.directive';

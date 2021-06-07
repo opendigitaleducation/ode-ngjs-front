@@ -54,4 +54,4 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 export function DirectiveFactory($compile:ICompileService, widgetLoader:WidgetLoader) {
 	return new Directive($compile, widgetLoader);
 }
-DirectiveFactory.$inject = ["$compile","odeWidgetModuleLoader"];
+DirectiveFactory.$inject = ["$compile","odeWidgetLoader"];

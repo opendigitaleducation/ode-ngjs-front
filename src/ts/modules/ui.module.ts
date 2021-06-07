@@ -1,6 +1,6 @@
 import angular, { IModule } from "angular";
-import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget } from "../directives";
-import { ThemeHelperService, WidgetService } from "../services";
+import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget, AppTitle, Pulsar, Assistant } from "../directives";
+import { QuickstartService, ThemeHelperService, WidgetService } from "../services";
 
 const module = angular.module("odeUi", []);
 
@@ -12,15 +12,21 @@ const module = angular.module("odeUi", []);
     .directive("odePortal", Portal.DirectiveFactory)
     .directive("odeNavbar", Navbar.DirectiveFactory)
     .directive("withTheme", WithTheme.DirectiveFactory)
+
+    .directive("appTitle", AppTitle.DirectiveFactory)
     .directive("logout", Logout.DirectiveFactory)
     .directive("popover", Popover.DirectiveFactory)
     .directive("popoverContent", PopoverContent.DirectiveFactory)
     .directive("popoverOpener", PopoverOpener.DirectiveFactory)
+    .directive("assistant", Assistant.DirectiveFactory)
+    .directive("pulsar", Pulsar.DirectiveFactory)
+    
 
     .directive("odeWidgetContainer", WidgetContainer.DirectiveFactory)
     .directive("odeWidget", Widget.DirectiveFactory)
 
     .service("odeThemeHelperService", ThemeHelperService )
+    .service("QuickstartService", QuickstartService )
     .service("odeWidgetService", WidgetService )
     ;
  }

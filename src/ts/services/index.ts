@@ -5,3 +5,5 @@ export * from './session.service';
 export * from './user.service';
 export * from './widget.service';
 export * from './themeHelper.service';
+export * from './ngHelper.service';
+export * from './quickstart.service';

@@ -28,7 +28,7 @@ export type WidgetLoader = (widgetName:String)=>Promise<void>;
 //------------------------------------------------ Create an angular module and an external loader.
 const module = angular.module("odeWidgets", [])
 
-.factory('odeWidgetModuleLoader', ['$injector', function($injector:auto.IInjectorService) {
+.factory('odeWidgetLoader', ['$injector', function($injector:auto.IInjectorService) {
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
