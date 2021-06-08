@@ -1,8 +1,7 @@
 import angular, { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme } from "ode-ts-client";
-import { NgHelperService } from "../../../services";
-import { SessionService } from "../../../services/session.service";
-import { UserService } from "../../../services/user.service";
+import { ConfigurationFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { NgHelperService, QuickstartService } from "../../../services";
+import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 /* Local types */
 type PulsarInfos = {
@@ -20,7 +19,7 @@ type PulsarInfos = {
  *	Customized scope for the directive.
  *	Required for compatibility with old pulsar templates.
  */
- interface Scope extends IScope {
+interface Scope extends IScope {
 	me?:{
 		hasWorkflow(right:string):boolean;
 	};
@@ -37,15 +36,17 @@ type XPosition = "center"|"left"|"right";
 type YPosition = "center"|"top"|"bottom";
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 	restrict= 'A';
 	scope= true;
 
     link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
 		const idiom = ConfigurationFrameworkFactory.instance().Platform.idiom;
 		const http = TransportFrameworkFactory.instance().http;
-		const windowWidth = () => { return this.helperSvc.width(angular.element(window)); };
-		const windowHeight = () => { return this.helperSvc.height(angular.element(window)); };
+
+		if( !elem ) {
+			return;
+		}
 
 		// Legacy code (angular templates in old format)
 		scope.me = {
@@ -79,12 +80,11 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		scope.pulsarInfos = pulsarInfos;
 		scope.pulsarInfos.steps = [];
 
-		let pulsars = this.helperSvc.querySelect('[pulsar]');
-		this.helperSvc.each(pulsars, (index, element) => {
-			const e = angular.element(element);
-			let infos = e.scope().$eval( e.attr('pulsar'));
+		let pulsars = $('[pulsar]');
+		pulsars.each( (index, element) => {
+			let infos = angular.element(element).scope().$eval( $(element).attr('pulsar') as any );
 			infos.el = element;
-			scope.pulsarInfos.steps.push( infos );
+			scope.pulsarInfos.steps.push(infos);
 		});
 
 		if(typeof pulsarInfos !== 'object' || pulsarInfos.index === undefined){
@@ -119,8 +119,8 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 				yPosition = 'bottom';
 			}
 
-			const pulsarButton = this.$compile('<div class="pulsar-button"><div class="pulse"></div><div class="pulse2"></div><div class="pulse-spot"></div></div>')(scope);
-			this.helperSvc.querySelect('body').append( pulsarButton );
+			const pulsarButton = $('<div class="pulsar-button"><div class="pulse"></div><div class="pulse2"></div><div class="pulse-spot"></div></div>')
+			.appendTo('body');
 
 			if(pulsarInfos.className){
 				pulsarInfos.className.split(' ').forEach(function(cls){
@@ -141,46 +141,45 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					deltaY = parseInt(pulsarInfos.delta.split(' ')[1]);
 				}
 
-				let xPositions:{[p in XPosition]:number} = {
-					left: this.helperSvc.offset(elem).left - (pulsarSize + pulsarMarge),
-					right: this.helperSvc.offset(elem).left + this.helperSvc.width(elem) + pulsarMarge,
-					center: this.helperSvc.offset(elem).left + (this.helperSvc.width(elem) / 2) - pulsarSize / 2
+				const elemOffset = elem.offset() ?? {left:0, top:0};
+				const elemWidth = elem.width() ?? 0;
+				const elemHeigh = elem.height() ?? 0;
+				let xPositions = {
+					left: elemOffset.left - (pulsarSize + pulsarMarge),
+					right: elemOffset.left + elemWidth + pulsarMarge,
+					center: elemOffset.left + (elemWidth / 2) - pulsarSize / 2
 				};
 
-				let yPositions:{[p in YPosition]:number} = {
-					top: this.helperSvc.offset(elem).top,
-					bottom: this.helperSvc.offset(elem).top + this.helperSvc.height(elem) + pulsarMarge,
-					center: this.helperSvc.offset(elem).top + (this.helperSvc.height(elem) / 2) - pulsarSize / 2
+				let yPositions = {
+					top: elemOffset.top,
+					bottom: elemOffset.top + elemHeigh + pulsarMarge,
+					center: elemOffset.top + (elemHeigh / 2) - pulsarSize / 2
 				};
 
 				if(pulsarInfos.position === 'top center'){
-					yPositions.top = this.helperSvc.offset(elem).top - pulsarSize - pulsarMarge;
+					yPositions.top = elemOffset.top - pulsarSize - pulsarMarge;
 				}
 
+
 				if(pulsarButton.css('display') !== 'none'){
-					this.helperSvc.offset(
-						pulsarButton,
-						{left: xPositions[xPosition]+deltaX, top: yPositions[yPosition]+deltaY}
-					);
+					pulsarButton.offset({ left: xPositions[xPosition]+deltaX, top: yPositions[yPosition]+deltaY });
 				}
 
 				if(pulsarElement && pulsarElement.find('.arrow').length){
 
-					let left = xPositions[xPosition] - this.helperSvc.width(pulsarElement.find('.content')) - pulsarSize / 2;
+					let left = xPositions[xPosition] - (pulsarElement.children('.content').width()??0) - pulsarSize / 2
 					let top = yPositions[yPosition] - pulsarLayerMarge ;
 
-				// place pulsarElement // element
-
 					if(yPosition === 'top' && xPosition === 'center'){
-						top = yPositions[yPosition] - this.helperSvc.height(pulsarElement.find('.content')) - pulsarSize / 2;
+						top = yPositions[yPosition] - (pulsarElement.children('.content').height()??0) - pulsarSize / 2;
 					}
 					if(yPosition === 'center'){
-						top = yPositions[yPosition] - (this.helperSvc.height(pulsarElement.find('.content')) / 2);
+						top = yPositions[yPosition] - ((pulsarElement.children('.content').height()??0) / 2);
 
 						//top = yPositions[yPosition] - (pulsarElement.children('.content').width() / 2) + pulsarLayerMarge + pulsarMarge * 2;
 					}
 					if(xPosition === 'center'){
-						left = (xPositions[xPosition] - (this.helperSvc.width(pulsarElement.find('.content')) / 2)) -2;
+						left = (xPositions[xPosition] - ((pulsarElement.children('.content').width()??0) / 2)) -2;
 					}
 					if(yPosition === 'center' && xPosition === 'center'){
 						pulsarElement.addClass('middle');
@@ -199,17 +198,19 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 
 
 				// If pulsarElement position is cropped by browser:
+					const windowWidth = ($(window).width() ?? 0);
+					const windowHeight = ($(window).height() ?? 0);
 
 					var pulsarElementMarge = 15;
 
 					var oldTop = top;
 					var oldLeft = left
 
-					var maxX = oldLeft + (this.helperSvc.width(pulsarElement) + pulsarElementMarge);
-					var maxY = oldTop + (this.helperSvc.height(pulsarElement) + pulsarElementMarge);
+					var maxX = oldLeft + (pulsarElement.width() ?? 0) + pulsarElementMarge;
+					var maxY = oldTop + (pulsarElement.height() ?? 0) + pulsarElementMarge
 
-					var newLeft = windowWidth() - (this.helperSvc.width(pulsarElement) + pulsarElementMarge);
-					var newBottom = windowHeight() - (this.helperSvc.height(pulsarElement) + pulsarElementMarge);
+					var newLeft = windowWidth - ((pulsarElement.width() ?? 0) + pulsarElementMarge);
+					var newBottom = windowHeight - ((pulsarElement.height() ?? 0) + pulsarElementMarge);
 
 					var gapLeft = oldLeft - newLeft;
 					var gapRight = pulsarElementMarge - (oldLeft);
@@ -217,22 +218,22 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					var gapTop = pulsarElementMarge - (oldTop);
 
 					var arrow = pulsarElement.find('.arrow');
-					var arrowXpos = arrow.css("left"); // FIXME was arrow.position().left;
-					var arrowYpos = arrow.css("top");  // FIXME was arrow.position().top
+					var arrowXpos = arrow.position().left;
+					var arrowYpos = arrow.position().top;
 
 					//console.log('init posY ' + arrowYpos);
 
 					//// X CORRECT
 
 					//right
-					if(maxX > windowWidth()) {
+					if(maxX > windowWidth) {
 
-						left = windowWidth() - (this.helperSvc.width(pulsarElement) + pulsarElementMarge);
+						left = windowWidth - ((pulsarElement.width() ?? 0) + pulsarElementMarge);
 						if(xPosition === 'center'){
 							if(firstCycle){
 								arrow.css({left : arrowXpos + gapLeft, right : 'auto'});
 								firstCycle = false;
-								}
+							}
 						}
 					}
 					//left
@@ -243,14 +244,14 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 							if(firstCycle){
 								arrow.css({left : gapRight + pulsarLayerMarge, right : 'auto'});
 								firstCycle = false;
-								}
+							}
 						}
 					}
 
 					//// Y CORRECT
 
 					//bottom
-					if(maxY > windowHeight()){
+					if(maxY > windowHeight){
 						top = newBottom;
 						if(yPosition === 'bottom'){
 							if(firstCycle){
@@ -265,7 +266,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 
 						if(yPosition === 'center' && xPosition !== 'center'){
 							if(firstCycle){
-								arrow.css({top : (parseInt(arrowYpos) - gapTop), bottom : 'auto'});
+								arrow.css({top : (arrowYpos - gapTop), bottom : 'auto'});
 								firstCycle = false;
 
 								}
@@ -273,11 +274,11 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					}
 
 					// apply content box position
-					this.helperSvc.offset(pulsarElement, {
+					pulsarElement.offset({
 						left: left + deltaX,
 						top: top + deltaY
 					});
-				}
+			}
 				setTimeout(placePulsar, 100);
 			}
 			placePulsar();
@@ -285,11 +286,10 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 
 			var placeLayers = () => {
 				let pulsarHighlight;
-
-				angular.element('.pulsar-layer').remove();
+				$('.pulsar-layer').remove();
 
 				var check = '[pulsar-highlight=' + pulsarInfos.index +']';
-				var highlight = angular.element( "body" ).find(check);
+				var highlight = $( "body" ).find(check);
 				if(highlight.length !== 0){
 					pulsarHighlight = highlight;
 				}
@@ -298,56 +298,55 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					pulsarHighlight = elem;
 				}
 
-				const locEl = angular.element('<div class="pulsar-layer"></div>');
-				//FIXME with jquery... ?
-				// locEl
-				// 	.width(pulsarHighlight.outerWidth() + pulsarLayerMarge * 2)
-				// 	.height(pulsarHighlight.outerHeight() + pulsarLayerMarge *  2)
-				// 	.offset({ top: pulsarHighlight.offset().top - pulsarLayerMarge, left: pulsarHighlight.offset().left - pulsarLayerMarge, })
-				// 	.css({position: "absolute"})
-				// 	.hide()
-				// 	.appendTo('body')
-				// 	.fadeIn("slow");
+				 $('<div class="pulsar-layer"></div>')
+
+					.width((pulsarHighlight.outerWidth() ?? 0) + pulsarLayerMarge * 2)
+					.height((pulsarHighlight.outerHeight() ?? 0) + pulsarLayerMarge *  2)
+					.offset({ top: (pulsarHighlight?.offset()?.top ?? 0) - pulsarLayerMarge, left: (pulsarHighlight?.offset()?.left ?? 0) - pulsarLayerMarge, })
+					.css({position: "absolute"})
+					.hide()
+					.appendTo('body')
+					.fadeIn("slow");
 			};
 
 			pulsarButton.on('click', () => {
-				angular.element('body').css('pointer-events', 'none');
-				angular.element('body').on('scroll touchmove mousewheel', function(e){
-					e.preventDefault();
-					e.stopPropagation();
-					return false;
+				$('body').css('pointer-events', 'none');
+				$('body').on('scroll touchmove mousewheel', function(e){
+				  e.preventDefault();
+				  e.stopPropagation();
+				  return false;
 				})
 
 				scope.pulsarInfos.steps = [];
-				pulsars = angular.element('[pulsar]');
+				pulsars = $('[pulsar]');
 				//recup tt les pulsar
 
-				this.helperSvc.each(pulsars, (index, element) => {
+				pulsars.each(function(index, element){
 					//on recup les infos de chaque pulsar
-					let infos = angular.element(element).scope().$eval(angular.element(element).attr('pulsar'));
+					let infos = angular.element(element).scope().$eval( $(element).attr('pulsar') as any );
 					infos.el = element;
 					scope.pulsarInfos.steps.push(infos);
 				});
 
 				// create content box
-				const pulsarElement = angular.element('<pulsar></pulsar>')
+				pulsarElement = $('<pulsar></pulsar>')
 					.addClass(xPosition)
 					.addClass(yPosition);
 				if(pulsarInfos.className){
-					pulsarInfos.className.split(' ').forEach(function(cls){
-						pulsarElement.addClass(cls);
+					pulsarInfos.className.split(' ').forEach( cls => {
+						pulsarElement?.addClass(cls);
 					});
 				}
-				pulsarButton.css( 'display', 'none' );	// FIXME was .hide()
+				pulsarButton.hide();
 				placeLayers();
-				angular.element(window).on('resize.placeLayers', placeLayers);
+				$(window).on('resize.placeLayers', placeLayers);
 				//scroll voir hauteur document ou bloquer scroll
 				// ok pour xp on layers
 
 				http.get<string>('/infra/public/template/pulsar.html').then( html => {
-					pulsarElement.html( this.$compile(html)(scope).text() );
+					pulsarElement?.html( this.$compile(html)(scope).text() );
 				});
-				angular.element('body').append(pulsarElement);
+				$('body').append(pulsarElement);
 			});
 		}
 
@@ -355,7 +354,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			if(!pulsarButton){
 				return;
 			}
-			if(windowWidth() <= this.helperSvc.TABLET){
+			if($(window).width()??0 <= this.helperSvc.TABLET){
 				pulsarButton.css('display', 'none');
 			}
 			else if(pulsarButton.data('active')){
@@ -368,43 +367,41 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		const undraw = () => {
 			// chaque nextStep + end
 			pulsarElement?.find('button').css('pointer-events', 'none');
-			angular.element(window).off('resize.placeLayers');
-			//FIXME jquery ?
-			// pulsarButton.fadeOut('slow', function(){ pulsarButton.remove() });
-			// pulsarElement.fadeOut('slow', function(){ pulsarElement.remove() });
-			angular.element('.pulsar-layer').remove();
-			angular.element('body').off('scroll touchmove mousewheel');
-			angular.element('body').css('pointer-events', '');
+			$(window).off('resize.placeLayers');
+			pulsarButton?.fadeOut('slow', function(){ pulsarButton?.remove() });
+			pulsarElement?.fadeOut('slow', function(){ pulsarElement?.remove() });
+			$('.pulsar-layer').remove();
+			$('body').off('scroll touchmove mousewheel');
+			$('body').css('pointer-events', '');
 			firstCycle = true;
-			pulsarButton?.prop('data-active', false);
+			pulsarButton?.data('active', false);
 		}
 
 		scope.closePulsar = () => {
 			if(!pulsarElement || !pulsarButton){
-				return;
+				return
 			}
-			//FIXME jquery ?
-			// pulsarElement.fadeOut(0 , function(){ pulsarElement.remove() });
+			pulsarElement.fadeOut(0 , function(){ pulsarElement?.remove() });
 			pulsarButton.removeClass('hidden');
-			// angular.element('.pulsar-layer').fadeOut(0 , function(){ angular.element('.pulsar-layer').remove() });
-			angular.element('body').off('scroll touchmove mousewheel');
-			angular.element('body').css('pointer-events', '');
+			$('.pulsar-layer').fadeOut(0 , function(){ $('.pulsar-layer').remove() });
+			$('body').off('scroll touchmove mousewheel');
+			$('body').css('pointer-events', '');
 			firstCycle = true;
-			pulsarButton?.prop('data-active', false);
+			pulsarButton.data('active', false);
 
 		};
 		angular.element(document).on('click', (e) => {
 			if(
-				this.helperSvc.parents( angular.element(e.target), 'pulsar').length > 0 ||
-				this.helperSvc.parents( angular.element(e.target), '.pulsar-button').length > 0 ||
-				angular.element(e.target).hasClass('pulsar-button')
+				$(e.target).parents('pulsar').length > 0 ||
+				$(e.target).parents('.pulsar-button').length > 0 ||
+				$(e.target).hasClass('pulsar-button')
 			){
 				return;
 			}
 			scope.closePulsar();
 		});
 
-		scope.paintPulsar = function(){
+		scope.paintPulsar = () => {
 			paintPulsar();
 			pulsarButton?.triggerHandler('click');
 		};
@@ -417,69 +414,66 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 
 		scope.goTo = (step:PulsarInfos) => {
 			undraw();
-			quickstart.goToAppStep(step.index);
+			this.quickstartSvc.goToAppStep(step.index);
 			if(step.el) {
-				angular.element(step.el).scope().paintPulsar(); // FIXME voir doc de scope()
+				(angular.element(step.el).scope() as Scope).paintPulsar();
 			}
 
 		};
 
-		scope.next = function(){
-
+		scope.next = () => {
 			undraw();
-			let index = quickstart.nextAppStep();
-			if(_.findWhere(scope.pulsarInfos.steps, { index: index}) === undefined){
-				if(_.find(scope.pulsarInfos.steps, function(item){ return item.index > index}) !== undefined){
+			let index = this.quickstartSvc.nextAppStep();
+			if(scope.pulsarInfos.steps.find(item => item.index===index) === undefined){
+				if( scope.pulsarInfos.steps.find(item => item.index>index) !== undefined ) {
 					scope.next();
 				}
 				return;
 			}
 			for(let i = 0; i < scope.pulsarInfos.steps.length; i++){
 				let item = scope.pulsarInfos.steps[i];
-				if(item.index === index){
+				if(item.index === index && item.el){
 					if(angular.element(item.el).data('skip-pulsar')){
 						scope.next();
 						return;
 					}
-					angular.element(item.el).scope().paintPulsar();
+					(angular.element(item.el).scope() as Scope).paintPulsar();
 				}
 			}
 		};
 
-		scope.previous = function(){
+		scope.previous = () => {
 			undraw();
-			let index = quickstart.previousAppStep();
-			if(_.findWhere(scope.pulsarInfos.steps, { index: index}) === undefined){
-				if(_.find(scope.pulsarInfos.steps, function(item){ return item.index < index}) !== undefined){
+			let index = this.quickstartSvc.previousAppStep();
+			if(scope.pulsarInfos.steps.find(item => item.index===index) === undefined){
+				if(scope.pulsarInfos.steps.find(item => item.index<index) !== undefined){
 					scope.previous();
 				}
 				return;
 			}
 			for(let i = 0; i < scope.pulsarInfos.steps.length; i++){
 				let item = scope.pulsarInfos.steps[i];
-				if(item.index === index){
+				if(item.index === index && item.el){
 					if(angular.element(item.el).data('skip-pulsar')){
 						scope.previous();
 						return;
 					}
-					angular.element(item.el).scope().paintPulsar();
+					(angular.element(item.el).scope() as Scope).paintPulsar();
 				}
 			}
 		};
 
-		quickstart.load(function(){
-			if(quickstart.appIndex() !== pulsarInfos.index){
-				return;
+		this.quickstartSvc.load( () => {
+			if(this.quickstartSvc.appIndex() === pulsarInfos.index){
+				paintPulsar();
 			}
-
-			paintPulsar();
 		});
 	}
 
     constructor( 
+		private $compile:ICompileService,
         private helperSvc:NgHelperService,
-        private quickstartSvc:QuickstartService,
-		private $compile:ICompileService
+        private quickstartSvc:QuickstartService
     ) {}
 }
 
@@ -488,7 +482,11 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * Usage:
  *      &lt;a pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}"></a&gt;
  */
-export function DirectiveFactory(odeNgHelperService:NgHelperService, $compile:ICompileService) {
-	return new Directive(odeNgHelperService, $compile);
+export function DirectiveFactory(
+	$compile:ICompileService,
+	odeNgHelperService:NgHelperService, 
+	odeQuickstartService:QuickstartService
+	) {
+	return new Directive($compile, odeNgHelperService, odeQuickstartService);
 }
-DirectiveFactory.$inject=["odeNgHelperService","$compile"];
+DirectiveFactory.$inject=["$compile", "odeNgHelperService", "odeQuickstartService" ];

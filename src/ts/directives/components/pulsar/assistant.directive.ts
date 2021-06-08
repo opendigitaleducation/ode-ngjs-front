@@ -1,97 +1,103 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { NotifyService } from "../../services";
+import { NgHelperService, NotifyService, QuickstartService } from "../../../services";
+import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor(private notify:NotifyService) {
+    constructor(
+        private notify:NotifyService, 
+        public quickstart:QuickstartService
+        ) {
     }
+
+    show = { assistant: false };
+    steps:any;
+    token?:NodeJS.Timeout;
+    currentStep:any;
+
+    public hidePulsars = () => {
+        $('.pulsar-button').addClass('hidden');
+        this.token = setTimeout(this.hidePulsars, 50);
+        // cache TOUS les pulsars
+    }
+
+    private clearTimeout() {
+        if( this.token ) {
+            clearTimeout(this.token);
+        }        
+    }
+
+    goTo(step:any){
+        this.quickstart.goTo(step.index);
+        this.currentStep = this.quickstart.assistantIndex;
+    };
+
+    next(){
+        this.quickstart.nextAssistantStep();
+        this.currentStep = this.quickstart.assistantIndex;
+        if(!this.quickstart.assistantIndex){
+            this.show.assistant = false;
+            $('.pulsar-button').removeClass('hidden');
+            this.clearTimeout();
+        }
+    };
+
+    previous(){
+        this.quickstart.previousAssistantStep();
+        this.currentStep = this.quickstart.assistantIndex;
+    };
+
+    seeLater(){
+        this.show.assistant = false;
+        $('.pulsar-button').removeClass('hidden');
+        this.clearTimeout();
+        this.quickstart.seeAssistantLater();
+    };
+
+    closeAssistant(){
+        this.show.assistant = false;
+        $('.pulsar-button').removeClass('hidden');
+        this.clearTimeout();
+        this.quickstart.state.assistant = -1;
+        this.quickstart.save();
+    };    
 }
 
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	templateUrl = require("./assistant.directive.lazy.html").default;
-    scope = {
-    };
+    scope= true;
 	bindToController = true;
-	controller = ["odeNotify", Controller];
+	controller = ["odeNotify", "odeQuickstartService", Controller];
 	controllerAs = 'ctrl';
 	require = ['assistant'];
 
-    /**
-     * Link method for the directive.
-     * @see https://code.angularjs.org/1.7.9/docs/api/ng/service/$compile
-     * @param $scope scope
-     * @param $elem jqLite-wrapped element that this directive matches.
-     * @param $attr hash object with key-value pairs of normalized attribute names and their corresponding attribute values.
-     * @param controllers Array of "require"d controllers : [ngModelCtrl]
-     */
     link(scope:IScope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
         let ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
-        // TODO Manipulate the DOM here with this.$compile()
-        if($(window).width() <= ui.breakpoints.fatMobile){
-            return;
-        }
+        
+		if( !ctrl || this.helperSvc.viewport <= this.helperSvc.FAT_MOBILE ) {  /* TODO contrôle à appliquer à l'aide d'une directive ?*/
+			return;
+		}
 
-        scope.show = { assistant: false };
-
-        var token;
-        var hidePulsars = function(){
-            $('.pulsar-button').addClass('hidden');
-            token = setTimeout(hidePulsars, 50);
-            // cache TOUS les pulsars
-        }
-
-        quickstart.load(function(){
-            if(quickstart.state.assistant === -1 || quickstart.mySteps.length === 0){
-                return;
+        ctrl.quickstart.load( () => {
+            if( ctrl ) {
+                if(ctrl.quickstart.state.assistant === -1 || ctrl.quickstart.mySteps.length === 0){
+                    return;
+                }
+                ctrl.hidePulsars();
+                ctrl.show.assistant = true;
+                ctrl.currentStep = ctrl.quickstart.assistantIndex;
+                ctrl.steps = ctrl.quickstart.mySteps;
+                scope.$apply();
             }
-
-            hidePulsars();
-            scope.show.assistant = true;
-            scope.currentStep = quickstart.assistantIndex;
-            scope.steps = quickstart.mySteps;
-            scope.$apply();
         });
-
-        scope.goTo = function(step){
-            quickstart.goTo(step.index);
-            scope.currentStep = quickstart.assistantIndex;
-        };
-
-        scope.next = function(){
-            quickstart.nextAssistantStep();
-            scope.currentStep = quickstart.assistantIndex;
-            if(!quickstart.assistantIndex){
-                scope.show.assistant = false;
-                $('.pulsar-button').removeClass('hidden');
-                clearTimeout(token);
-            }
-        };
-
-        scope.previous = function(){
-            quickstart.previousAssistantStep();
-            scope.currentStep = quickstart.assistantIndex;
-        };
-
-        scope.seeLater = function(){
-            scope.show.assistant = false;
-            $('.pulsar-button').removeClass('hidden');
-            clearTimeout(token);
-            quickstart.seeAssistantLater();
-        };
-
-        scope.closeAssistant = function(){
-            scope.show.assistant = false;
-            $('.pulsar-button').removeClass('hidden');
-            clearTimeout(token);
-            quickstart.state.assistant = -1;
-            quickstart.save();
-        };
     }
 
     /* Constructor with Dependency Injection */
-    constructor(private $compile:ICompileService) {
+    constructor(
+        private helperSvc:NgHelperService
+        ) {
     }
 }
 
@@ -101,7 +107,9 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * Usage:
  *   &lt;assistant ></assistant&gt;
  */
-export function DirectiveFactory($compile:ICompileService) {
-	return new Directive($compile);
+export function DirectiveFactory(
+	odeNgHelperService:NgHelperService, 
+    ) {
+	return new Directive(odeNgHelperService);
 }
-DirectiveFactory.$inject = ["$compile"];
+DirectiveFactory.$inject = ["odeNgHelperService"];

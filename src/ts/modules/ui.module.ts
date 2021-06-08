@@ -26,7 +26,7 @@ const module = angular.module("odeUi", []);
     .directive("odeWidget", Widget.DirectiveFactory)
 
     .service("odeThemeHelperService", ThemeHelperService )
-    .service("QuickstartService", QuickstartService )
+    .service("odeQuickstartService", QuickstartService )
     .service("odeWidgetService", WidgetService )
     ;
  }

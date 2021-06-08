@@ -31,12 +31,15 @@
     "angular-route": "1.7.9",
     "angular-sanitize": "1.7.9",
     "core-js": "^3.9.1",
-    "humane-js": "^3.2.2"
+    "humane-js": "^3.2.2",
+    "jquery": "^3.5.1",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "@types/angular": "^1.7.4",
     "@types/angular-mocks": "^1.7.0",
     "@types/jasmine": "^3.6.4",
+    "@types/jquery": "^3.5.5",
     "angular-mocks": "^1.7.9",
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
