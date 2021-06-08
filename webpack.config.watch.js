@@ -12,6 +12,7 @@ module.exports = env => ({
   },
   externals: {
     "angular": "angular",
+    "jquery": "$",
     "ode-ts-client": 'window.entcore["ode-ts-client"]'
   },
   // @see https://github.com/TypeStrong/ts-loader#devtool--sourcemaps
