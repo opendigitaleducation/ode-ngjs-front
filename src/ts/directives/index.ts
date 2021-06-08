@@ -23,6 +23,7 @@ export * as Pulsar from './components/pulsar/pulsar.directive';
 export * as Popover from './components/popover/popover.directive';
 export * as PopoverContent from './components/popover/popover-content.directive';
 export * as PopoverOpener from './components/popover/popover-opener.directive';
+export * as Lightbox from './components/modal/lightbox.directive';
 
 /* New generation components */
 export * as Portal from './business/portal/portal.directive';

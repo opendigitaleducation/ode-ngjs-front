@@ -1,10 +1,10 @@
 import angular from "angular";
 
 export class NgHelperService {
-    /** Replacement for $(selector) a.k.a. jQuery(selector)  */
-    public querySelect(selector:string):JQLite {
-        return angular.element(document.querySelectorAll(selector));
-    }
+    // /** Replacement for $(selector) a.k.a. jQuery(selector)  */
+    // public querySelect(selector:string):JQLite {
+    //     return angular.element(document.querySelectorAll(selector));
+    // }
 
     /** Replacement for $.each() */
     public each( set:JQLite, cb:(index:number, elem:HTMLElement)=>void ) {

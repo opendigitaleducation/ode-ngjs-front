@@ -1,11 +1,10 @@
-import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
+import { IAttributes, IController, IDirective, IScope } from "angular";
 import { NgHelperService, NotifyService, QuickstartService } from "../../../services";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 /* Controller for the directive */
 export class Controller implements IController {
     constructor(
-        private notify:NotifyService, 
         public quickstart:QuickstartService
         ) {
     }
@@ -17,7 +16,7 @@ export class Controller implements IController {
 
     public hidePulsars = () => {
         $('.pulsar-button').addClass('hidden');
-        this.token = setTimeout(this.hidePulsars, 50);
+        //this.token = setTimeout(this.hidePulsars, 50);
         // cache TOUS les pulsars
     }
 
@@ -69,7 +68,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	templateUrl = require("./assistant.directive.lazy.html").default;
     scope= true;
 	bindToController = true;
-	controller = ["odeNotify", "odeQuickstartService", Controller];
+	controller = ["odeQuickstartService", Controller];
 	controllerAs = 'ctrl';
 	require = ['assistant'];
 
