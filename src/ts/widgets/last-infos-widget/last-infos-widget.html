@@ -1,0 +1,49 @@
+<!--Widget Actualités-->
+<div class="widget widget-news">
+	<div class="widget-header">
+		<div class="subtitle">
+			<a class="seemore" href="#" title="[['actualites.widget.see.all'|i18n]]"><i18n>actualites.widget.title</i18n>>
+				<span class="seemore-text">actualites.widget.see.more</span>
+			</a>
+		</div>
+		<div class="tools">
+			<a href="" class="tool tool-option" title="[['actualites.widget.options'|i18n]]">
+				<i class="fas fa-cog"></i>
+			</a>
+			<a href="" class="tool tool-position" title="[['actualites.widget.position'|i18n]]">
+				<i class="fas fa-arrows-alt"></i>
+			</a>
+		</div>
+	</div>
+	<div class="widget-body">
+		<a class="news-row"
+				ng-repeat="info in ctrl.infos track by info._id"
+				ng-href="/actualites#/view/thread/[[info.thread_id]]/info/[[info._id]]"
+				>
+			<div class="news-row-image">
+				<img ng-if="!info.thread_icon" skin-src="/img/illustrations/news.svg" class="new--icon" alt="[[info.thread_title]]" />
+				<img ng-if="info.thread_icon" ng-src="[[info.thread_icon]]?thumbnail=120x120" class="new--icon" alt="[[info.thread_title]]" />
+			</div>
+			<div class="news-row-text">
+				<span class="link d-block">[[info.title]]</span>
+				<span class="meta">[[info.relativeDate]] - [[info.username]]</span>
+			</div>
+		</a>
+	</div>
+</div>
+<!--End Widget Actualités-->
+
+<!-- Ancien template
+<div class="widget news">
+	<h1><i18n>actualites.widget.title</i18n></h1>
+	<div class="new">
+		<a class="cell-ellipsis" ng-repeat="info in widget.infos" ng-href="/actualites#/view/thread/[[info.thread_id]]/info/[[info._id]]" >
+			<img ng-if="!info.thread_icon" skin-src="/img/illustrations/news.svg" class="new--icon" />
+			<img ng-if="info.thread_icon" ng-src="[[info.thread_icon]]?thumbnail=120x120" class="new--icon" />
+			<span class="new--title" tooltip="[[info.tooltip]]">[[info.title]]</span>
+			<span class="new--info cell-ellipsis">[[info.relativeDate]] - [[info.username]]</span>
+		</a>
+		<p class="new--empty" ng-if="widget.infos === undefined || widget.infos.length === 0"><i18n>actualites.widget.empty</i18n></p>
+	</div>
+</div>
+-->

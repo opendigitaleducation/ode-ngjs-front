@@ -1,5 +1,6 @@
-import angular, { auto, IDirective, IDirectiveFactory, IModule } from "angular";
+import angular, { auto, IModule } from "angular";
 import Calendar = require("../widgets/calendar-widget/calendar-widget");
+import LastInfos = require("../widgets/last-infos-widget/last-infos-widget");
 
 // ============ /!\ IMPORTANT /!\ ============
 //
@@ -22,7 +23,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "calendar-widget";
+type KnownWidget = "calendar-widget" | "last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -32,20 +33,35 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
-            case "calendar-widget": 
-                await loadCalendarWidgetModule()
-                .then( mod => {
-                    $injector.loadNewModules( [mod] ); 
-                });
-            break;
+            case "calendar-widget": await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "last-infos-widget": await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             default: throw `Unknown widget "${widgetName}"`;
         }
     };
 }]);
 
+/** Dynamically load the "last-infos" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadLastInfosWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/last-infos-widget/last-infos-widget"],
+            function(require) {
+                var jsModule = <typeof LastInfos> require("../widgets/last-infos-widget/last-infos-widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/last-infos-widget/last-infos-widget"
+        );
+    });
+}
+
+/** Dynamically load the "calendar" widget, which is packaged as a separate entries thanks to require.ensure(). */
 function loadCalendarWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
-        // Dynamically load the widgets, which are packaged as a separate entries in webpack configuration.
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
         require.ensure(
             ["../widgets/calendar-widget/calendar-widget"],
