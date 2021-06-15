@@ -14,6 +14,20 @@ export class ThemeHelperService {
         return ConfigurationFrameworkFactory.instance().Platform.cdnDomain;
     }
 
+    toSkinUrl( url:string ):string {
+        const theme = angular.element(document.querySelectorAll("#theme"));
+        if(!theme.attr('href')) {
+            return "";
+        }
+        const path = ConfigurationFrameworkFactory.instance().Platform.theme.basePath;
+        if(url.indexOf('http://') === -1 && url.indexOf('https://') === -1 && url.indexOf('/workspace/') === -1){
+            return path + url;
+        } else {
+            return url;
+        }
+    }
+    
+
     loadOldWrappedTheme( oldTheme:string, skinName:string ) {
         const platform = ConfigurationFrameworkFactory.instance().Platform;
         $("#themeOld").remove();
