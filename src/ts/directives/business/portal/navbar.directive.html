@@ -149,16 +149,15 @@
             <span ng-include="ctrl.conversationUnreadUrl"></span>
         </div>
         
-        <!-- TODO
         <div class="navigation__item" ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
             <popover class="searchengine">
                 <a href="/searchengine" popover-opener ng-click="ctrl.openApps($event)" title="[[lang.translate('navbar.search')]]">
                     <i class="ic-search"></i>
                 </a>
-                <popover-content class="searchPortal" ng-controller="SearchPortal">
+                <popover-content class="searchPortal">
                     <div class="content searchContent">
                         <div class="search-text row">
-                            <input type="text" class="searchInput" name="mysearch" ng-model="mysearch"
+                            <input type="text" class="searchInput" name="mysearch" ng-model="ctrl.mysearch"
                                 ng-keyup="ctrl.launchSearch($event);" />
                             <button class="searchButton" ng-click="ctrl.launchSearch('link');">
                                 <i18n>ok</i18n>
@@ -168,7 +167,6 @@
                 </popover-content>
             </popover>
         </div>
-        -->
 
         <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item">
             <a 

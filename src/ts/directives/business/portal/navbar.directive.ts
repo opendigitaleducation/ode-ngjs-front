@@ -2,6 +2,7 @@ import { IAttributes, IController, IDirective, IScope } from "angular";
 import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme } from "ode-ts-client";
 import { SessionService } from "../../../services/session.service";
 import { UserService } from "../../../services/user.service";
+import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 // Controller for the directive
 export class Controller implements IController {
@@ -17,6 +18,7 @@ export class Controller implements IController {
 	public username:string = "";
 	public avatar:string = "no-avatar.svg";
 	public messagerieLink:string = '/zimbra/zimbra';
+	public mysearch:string = "";
 
 	refreshAvatar() {
 		const session = SessionFrameworkFactory.instance().session;
@@ -28,12 +30,22 @@ export class Controller implements IController {
 		this.username = session.description.displayName;
 	};
 
-	// FIXME What is the business logic here ?
-	// openApps(event){
-	// 	if( $(window).width() <= 700){
-	// 		event.preventDefault();
-	// 	}
-	// }
+	openApps(event:any){
+		const width = $(window).width()
+		if( typeof width === "number" && width <= 700){
+			event.preventDefault();
+		}
+	}
+
+	launchSearch(event:any) {
+		let words = this.mysearch;
+		if (event != "link") event.stopPropagation();
+		if ((event == "link" ||  event.keyCode == 13)) {
+			words = (!words || words === '') ? ' ' : words;
+			this.mysearch = "";
+			window.location.href = '/searchengine#/' + words;
+		}
+	};
 
 
 // 	skin.listThemes(function(themes){
