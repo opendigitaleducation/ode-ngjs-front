@@ -1,4 +1,5 @@
 import angular, { auto, IModule } from "angular";
+import DicoDeLaZone = require("../widgets/dicodelazone-widget/dicodelazone-widget");
 import Calendar = require("../widgets/calendar-widget/calendar-widget");
 import LastInfos = require("../widgets/last-infos-widget/last-infos-widget");
 
@@ -23,7 +24,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "calendar-widget" | "last-infos-widget";
+type KnownWidget = "dicodelazone-widget" | "calendar-widget" | "last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -33,6 +34,7 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
+            case "dicodelazone-widget": await loadDicoDeLaZoneWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "calendar-widget": await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "last-infos-widget": await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             default: throw `Unknown widget "${widgetName}"`;
@@ -74,6 +76,25 @@ function loadCalendarWidgetModule() {
                 reject();
             },
             "widgets/calendar-widget/calendar-widget"
+        );
+    });
+}
+
+/** Dynamically load the "dicodelazone" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadDicoDeLaZoneWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/dicodelazone-widget/dicodelazone-widget"],
+            function(require) {
+                var jsModule = <typeof DicoDeLaZone> require("../widgets/dicodelazone-widget/dicodelazone-widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/dicodelazone-widget/dicodelazone-widget"
         );
     });
 }
