@@ -2,7 +2,9 @@ import angular, { IModule } from "angular";
 import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget, AppTitle, Pulsar, Assistant, Lightbox, SmartBanner, Modal } from "../directives";
 import { QuickstartService, ThemeHelperService, WidgetService } from "../services";
 
-const module = angular.module("odeUi", []);
+const dndLists = require('angular-drag-and-drop-lists');
+
+const module = angular.module("odeUi", ['dndLists']);
 
 /**
  * The "odeUi" angularjs module provides many UX components (directives) and useful services.

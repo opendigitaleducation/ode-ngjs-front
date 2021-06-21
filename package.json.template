@@ -28,6 +28,7 @@
   ],
   "dependencies": {
     "angular": "1.7.9",
+    "angular-drag-and-drop-lists": "^2.1.0",
     "angular-route": "1.7.9",
     "angular-sanitize": "1.7.9",
     "core-js": "^3.9.1",
@@ -48,7 +49,7 @@
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^4.0.1",
-    "ode-ts-client": "^0.6.0-explorer.0",
+    "ode-ts-client": "^0.6.0-explorer",
     "rxjs": "^6.6.6",
     "terser-webpack-plugin": "^5.1.1",
     "ts-loader": "^8.0.18",

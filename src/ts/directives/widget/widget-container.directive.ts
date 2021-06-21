@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { IWidget, WidgetPosition } from "ode-ts-client";
+import { IWidget, WidgetFrameworkFactory, WidgetPosition } from "ode-ts-client";
 import { WidgetService } from "../../services";
 
 /* Controller for the directive */
@@ -12,11 +12,53 @@ export class Controller implements IController {
 	widgets?: IWidget[];
 
 	loadWidgets() {
-		this.widgets = this.widgetSvc.list().filter( w => w.userPref.position === this.position );
+		this.widgets = this.widgetSvc.list()
+			.filter( w => w.userPref.position === this.position )
+			.sort( (a,b) => {
+				return a.userPref.index < b.userPref.index
+					? -1 
+					: a.userPref.index === b.userPref.index ? 0 : 1;
+			});
+	}
+
+	updateAndSave() {
+		this.widgets?.forEach( (w,i) => {
+			w.userPref.index = i;
+		});
+		return WidgetFrameworkFactory.instance().saveUserPrefs();
 	}
 
 	checkPosition( widget:IWidget ) {
 		return widget.userPref?.position === this.position || (widget.userPref?.position==="left" && !this.position );
+	}
+
+	get allowedDndTypes():string[] {
+		return ['widget-'+this.position];
+	}
+
+	onDnDDrop(event:DragEvent, itemId:string, index:number, dropEffect:string) {
+		if( this.widgets && 0<=index && index<this.widgets.length ) {
+			const oldIdx = this.widgets.findIndex( (w) => {
+				return w.platformConf.id===itemId
+			});
+			if( oldIdx===-1 || oldIdx === index ) {
+				// No change.
+				return false;
+			}
+
+			const item = this.widgets[oldIdx];
+			this.widgets.splice( oldIdx, 1 );
+			if( index > 0 && index >= oldIdx) {
+				// Adjust new index since it has just changed.
+				index--;
+			}
+			this.widgets.splice( index, 0, item );
+
+			this.updateAndSave();
+
+			return true;
+		}
+		return false;
 	}
 }
 
