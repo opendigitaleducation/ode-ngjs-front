@@ -1,7 +1,15 @@
-import { IAttributes, IController, IDirective, IScope } from "angular";
+import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
+import { App, EVENT_NAME, LangChangedNotice, NotifyFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
+import moment from 'moment'; // FIXME : should we use moment anymore ?
+import { TrackingService } from "../../../services";
+
+interface PortalScope extends IScope {
+	app?:App;
+	title:string;
+}
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	transclude = true;
 	templateUrl(element:JQLite, attrs:IAttributes) {
@@ -9,10 +17,37 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		return attrs.templateUrl ? attrs.templateUrl : require('./portal.directive.lazy.html').default;
 	};
 	scope = {
-		title:"@"
+		app:"@?",
+		title:"@",
 	};
 
-/*TODO finir le portage de la directive portal (tracking)
+	link(scope:PortalScope, elem:JQLite, attrs:IAttributes) {
+		NotifyFrameworkFactory.instance().onEvent( EVENT_NAME.LANG_CHANGED ).subscribe( ev => {
+			const notice:LangChangedNotice = ev as LangChangedNotice;
+			if( notice && notice.newLanguage === 'fr' ) {
+				moment.updateLocale(notice.newLanguage, {
+					calendar: {
+						lastDay: '[Hier à] HH[h]mm',
+						sameDay: '[Aujourd\'hui à] HH[h]mm',
+						nextDay: '[Demain à] HH[h]mm',
+						lastWeek: 'dddd [dernier à] HH[h]mm',
+						nextWeek: 'dddd [prochain à] HH[h]mm',
+						sameElse: 'dddd LL'
+					}
+				});
+			}
+			else {
+				moment.lang(notice.newLanguage);
+			}
+		});
+
+		// Tracking
+		if( scope.app ) {
+			this.tracking.trackApp( scope.app );
+		}
+	}
+
+/*TODO finir le portage de la directive portal (RGPD)
 
 	compile(element:JQLite, attributes:IAttributes, transclude){
 		// Initialize any configured tracker
@@ -47,6 +82,12 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		};
 	}
 */
+
+	constructor( 
+		private $compile:ICompileService, 
+		private tracking:TrackingService 
+		) {}
+
 }
 
 /** The portal directive.
@@ -56,6 +97,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * or
  *      &lt;ode-portal template-url="/platform/assets/themes/...."></ode-portal&gt;
  */
-export function DirectiveFactory() {
-	return new Directive();
+export function DirectiveFactory($compile:ICompileService, tracking:TrackingService) {
+	return new Directive($compile,tracking);
 }
+DirectiveFactory.$inject=["$compile","odeTracking"];
