@@ -1,11 +1,12 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { IWidget, WidgetFrameworkFactory, WidgetPosition } from "ode-ts-client";
-import { WidgetService } from "../../services";
+import { NgHelperService, WidgetService } from "../../services";
 
 /* Controller for the directive */
 export class Controller implements IController {
     constructor(
-		public widgetSvc: WidgetService
+		public widgetSvc: WidgetService,
+		public helperSvc: NgHelperService
 		) {
     }
     position?: WidgetPosition;
@@ -34,6 +35,10 @@ export class Controller implements IController {
 
 	get allowedDndTypes():string[] {
 		return ['widget-'+this.position];
+	}
+
+	get isMobileView():boolean {
+		return this.helperSvc.viewport<992;
 	}
 
 	onDnDDrop(event:DragEvent, itemId:string, index:number, dropEffect:string) {
@@ -69,7 +74,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./widget-container.directive.html').default;
 	scope = {};
 	bindToController = true;
-	controller = ["odeWidgetService", Controller];
+	controller = ["odeWidgetService", "odeNgHelperService", Controller];
 	controllerAs = 'ctrl';
 	require = ["odeWidgetContainer"];
 
