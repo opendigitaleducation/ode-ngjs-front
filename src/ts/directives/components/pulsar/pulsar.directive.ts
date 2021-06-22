@@ -60,7 +60,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
 		const pulsarInfos:PulsarInfos = scope.$eval(attrs.pulsar);
 
-		if( !pulsarInfos.workflow || !scope.me.hasWorkflow(pulsarInfos.workflow) ) {
+		if( pulsarInfos.workflow && !scope.me.hasWorkflow(pulsarInfos.workflow) ) {
 			elem.removeAttr('pulsar'); // ne remonte pas dans liste steps
 			return;
 		}
