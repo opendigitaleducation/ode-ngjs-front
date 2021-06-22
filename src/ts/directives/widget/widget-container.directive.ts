@@ -37,7 +37,7 @@ export class Controller implements IController {
 	}
 
 	onDnDDrop(event:DragEvent, itemId:string, index:number, dropEffect:string) {
-		if( this.widgets && 0<=index && index<this.widgets.length ) {
+		if( this.widgets && 0<=index && index<=this.widgets.length ) {
 			const oldIdx = this.widgets.findIndex( (w) => {
 				return w.platformConf.id===itemId
 			});
@@ -56,6 +56,7 @@ export class Controller implements IController {
 
 			this.updateAndSave();
 
+			// return true when the function takes care of inserting the element, see doc https://github.com/marceljuenemann/angular-drag-and-drop-lists
 			return true;
 		}
 		return false;
