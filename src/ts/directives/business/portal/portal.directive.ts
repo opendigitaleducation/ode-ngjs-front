@@ -1,5 +1,5 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { App, EVENT_NAME, LangChangedNotice, NotifyFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
+import { App, NotifyFrameworkFactory } from "ode-ts-client";
 import moment from 'moment'; // FIXME : should we use moment anymore ?
 import { TrackingService } from "../../../services";
 
@@ -22,10 +22,9 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 	};
 
 	link(scope:PortalScope, elem:JQLite, attrs:IAttributes) {
-		NotifyFrameworkFactory.instance().onEvent( EVENT_NAME.LANG_CHANGED ).subscribe( ev => {
-			const notice:LangChangedNotice = ev as LangChangedNotice;
-			if( notice && notice.newLanguage === 'fr' ) {
-				moment.updateLocale(notice.newLanguage, {
+		NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+			if( lang === 'fr' ) {
+				moment.updateLocale(lang, {
 					calendar: {
 						lastDay: '[Hier à] HH[h]mm',
 						sameDay: '[Aujourd\'hui à] HH[h]mm',
@@ -37,7 +36,7 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 				});
 			}
 			else {
-				moment.lang(notice.newLanguage);
+				moment.lang( lang );
 			}
 		});
 

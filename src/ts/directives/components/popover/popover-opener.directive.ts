@@ -26,21 +26,25 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					popover.addClass("hidden");
 				});
 			}
-/*FIXME without jQuery
-			if(popover.offset().left + popover.width() > $(window).width()){
-				popover.addClass('right');
+			/*FIXME without jQuery */
+			const coords = popover.offset();
+			const w = popover.width() || 0;		const ww = $(window).width() || 0;
+			const h = popover.height() || 0;	const wh = $(window).width() || 0;
+			if( coords ) {
+				if(coords.left + w > ww){
+					popover.addClass('right');
+				}
+				if(coords.left < 0){
+					popover.addClass('left');
+				}
+				if(coords.top + h > wh){
+					popover.addClass('bottom');
+				}
 			}
-			if(popover.offset().left < 0){
-				popover.addClass('left');
-			}
-			if(popover.offset().top + popover.height() > $(window).height()){
-				popover.addClass('bottom');
-			}
-*/
 			popover.removeClass("hidden");
 		});
 
-			if(mouseEvent === 'mouseover') {
+		if(mouseEvent === 'mouseover') {
 			parentNode.on('mouseout', function (e) {
 				parentNode.triggerHandler('close');
 				popover.addClass("hidden");

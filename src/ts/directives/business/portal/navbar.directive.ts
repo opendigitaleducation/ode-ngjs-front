@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { BootstrappedNotice, ConfigurationFrameworkFactory, EVENT_NAME, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme, AppModel } from "ode-ts-client";
 import { SessionService } from "../../../services/session.service";
 import { UserService } from "../../../services/user.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
@@ -70,7 +70,7 @@ interface Scope extends IScope {
 	version?:string;
 	me?:{
 		hasWorkflow(right:string):boolean;
-		bookmarkedApps:[];
+		bookmarkedApps:AppModel[];
 	};
 
 	messagerieLink?: string;
@@ -143,10 +143,10 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			ctrl.refreshAvatar();
 		}
 
-
 		Promise.all([
 			this.getCurrentLanguage(),
-			platform.theme.onOverrideReady()
+			platform.theme.onOverrideReady(),
+			this.getBookmarks()
 		]).then( (values) => {
 			ctrl.skin = platform.theme;
 			ctrl.currentLanguage = values[0];
@@ -158,17 +158,23 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 				}
 			}
 			ctrl.refreshAvatar();
+
+			if( scope.me ) {
+				scope.me.bookmarkedApps = values[2];
+			}
+
 			scope.$apply();
 		});
 	}
 
 	getCurrentLanguage():Promise<string> {
-		return new Promise( (resolve, reject) => {
-			const bootstrapped = NotifyFrameworkFactory.instance().onEvent<BootstrappedNotice>( EVENT_NAME.BOOTSTRAPPED ).subscribe( ev => {
-				bootstrapped.unsubscribe();
-				resolve( SessionFrameworkFactory.instance().session.currentLanguage );
-			});
-		});
+		return NotifyFrameworkFactory.instance().onSessionReady().promise
+		.then( userInfo => SessionFrameworkFactory.instance().session.currentLanguage );
+	}
+
+	getBookmarks():Promise<AppModel[]> {
+		return NotifyFrameworkFactory.instance().onSessionReady().promise
+		.then( userInfo => ConfigurationFrameworkFactory.instance().User.bookmarkedApps );
 	}
 }
 

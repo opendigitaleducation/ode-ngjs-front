@@ -131,7 +131,7 @@
                                 <i18n>navbar.myapps.more</i18n>
                             </div>
                             <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
-                                <a href="[[app.address]]" target="[[app.target]]" title="[[ctrl.translatedDisplayName(app)]]">
+                                <a href="[[app.address]]" target="[[app.target]]" title="[[lang.translate(app.displayName)]]">
                                     <i class="application [[app.icon]]" ng-if="app.icon.indexOf('/') === -1"></i>
                                     <img skin-src="[[app.icon]]" ng-if="app.icon.indexOf('/') !== -1" />
                                 </a>

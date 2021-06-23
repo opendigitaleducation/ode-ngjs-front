@@ -2,10 +2,10 @@ import angular from "angular";
 import { ConfigurationFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
 
 (()=>{
-    const init = function() { 
-        SessionFrameworkFactory.instance().initialize();
-         // TODO: get version and CDN from mustache directive.
-        ConfigurationFrameworkFactory.instance().initialize( null, null ).then( () => {
+    const init = function() {
+        ConfigurationFrameworkFactory.instance().initialize( null, null )
+        .then( () => SessionFrameworkFactory.instance().initialize()) // TODO: get version and CDN from mustache directive.
+        .then( () => {
             angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
             document.removeEventListener("DOMContentLoaded", init);
         });
