@@ -1,4 +1,4 @@
-import angular, { IAttributes, IController, IDirective, IScope } from "angular";
+import angular, { IAttributes, IController, IDirective, IScope, IWindowService } from "angular";
 import { TransportFrameworkFactory } from "ode-ts-client";
 import moment from 'moment'; // FIXME : should we use moment anymore ?
 
@@ -94,7 +94,8 @@ class Controller implements IController {
 	};
 
 	public get canAddFeed():boolean {
-		return (this.channel.feeds.length < this.totalFeeds);
+		const ww = $(window).width();
+		return (this.channel.feeds.length < this.totalFeeds) && (typeof ww!=="number" || ww >= 992);
 	}
 	
 	openFeedEdition(index:number) {
@@ -188,13 +189,17 @@ class Controller implements IController {
 		}
 		return momentDate.lang('fr').format('dddd DD MMMM YYYY HH:mm');
 	};
+
+	constructor( 
+		private $window:IWindowService 
+		) {}
 }
 
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./rss-widget.widget.html').default;
-	controller = [Controller];
+	controller = ["$window",Controller];
 	controllerAs = 'ctrl';
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
