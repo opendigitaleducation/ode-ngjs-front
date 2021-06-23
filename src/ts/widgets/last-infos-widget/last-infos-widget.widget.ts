@@ -46,7 +46,7 @@ class Controller implements IController {
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
-	template = require('./last-infos-widget.html').default;
+	template = require('./last-infos-widget.widget.html').default;
 	controller = [Controller];
 	controllerAs = 'ctrl';
 

@@ -10,7 +10,7 @@ class Controller implements IController {
 /* Directive */
 class Directive implements IDirective {
     restrict = 'E';
-	template = require('./calendar-widget.html').default;
+	template = require('./calendar-widget.widget.html').default;
 	controller = [Controller];
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes): void {

@@ -1,0 +1,102 @@
+<div class="widget widget-rss">
+	<div class="widget-header">
+		<div class="subtitle"><i18n>rss.title</i18n></div>
+		<div class="tools">
+			<a href="" class="tool tool-option" title="[['rss.channel.config'|i18n]]"
+					ng-click="ctrl.display.edition = true">
+				<i class="fas fa-cog"></i>
+			</a>
+			<a href="" class="tool tool-position" title="Position du widget">
+				<i class="fas fa-arrows-alt"></i>
+			</a>
+		</div>
+	</div>
+
+	<div class="widget-body">
+		<div class="widget-empty-message link"
+				ng-if="ctrl.channel===undefined || ctrl.channel.feeds.length === 0">
+			<i18n>rss.channel.undefined</i18n>
+		</div>
+
+		<div class="widget-empty-message link"
+				ng-if="ctrl.channel && ctrl.channel.feeds.length > 0 && ctrl.feeds.length === 0">
+			<i18n>rss.channel.feed.no.result</i18n>
+		</div>
+
+		<div class="rss-feed" 
+				ng-if="ctrl.feeds !== undefined"
+				ng-repeat="feed in ctrl.feeds track by $index">
+			<div class="feed-title" ng-click="ctrl.showOrHideFeed($index)">[[feed.title]]</div>
+			<ul class="list" ng-show="ctrl.display.selectedFeed === [[$index]]">
+				<li class="item link" ng-repeat="item in feed.Items track by $index">
+					<a href="[[item.link]]" target="_blank">
+						<div class="title">[[item.title]]</div>
+						<div class="meta">[[ctrl.formatDate(item.pubDate)]]</div>
+						<div class="meta" ng-bind-html="item.description"></div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<ode-modal visible="ctrl.display.edition" on-close="ctrl.display.edition = false">
+	<ode-modal-title>
+		<h2>
+			<i18n ng-if="!ctrl.display.feedEdition">rss.channel.feed.list</i18n>
+			<i18n ng-if="ctrl.display.feedEdition">rss.channel.feed.edit</i18n>
+		</h2>
+	</ode-modal-title>
+	
+	<ode-modal-body>
+		<div class="twelve cell rss-config">
+			<div ng-if="!ctrl.display.feedEdition">
+				<span feeds-list ng-if="ctrl.channel.feeds.length === 0"><i18n>rss.channel.undefined</i18n></span>
+				<table class="list-view twelve feeds-content" ng-if="ctrl.channel.feeds.length > 0">
+					<thead>
+						<tr>
+							<th><i18n>rss.channel.feed.title</i18n></th>
+							<th><i18n>rss.channel.feed.show</i18n></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="feed in ctrl.channel.feeds track by $index" ng-class="{ selected : ctrl.display.feedEdition && $index === ctrl.selectedFeedIndex }">
+							<td ng-click="ctrl.openFeedEdition([$index])">[[ctrl.channel.feeds[$index].title]]</td>
+							<td ng-click="ctrl.openFeedEdition([$index])">[[ctrl.channel.feeds[$index].show]]</td>
+							<td class="one cell">
+								<i class="close" ng-click="ctrl.removeFeed([$index])"></i>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div ng-if="ctrl.canAddFeed">
+					<button class="right-magnet cancel" ng-click="ctrl.openFeedEdition()" translate content="rss.channel.feed.add"></button>
+				</div>
+			</div>
+
+			<div ng-if="ctrl.display.feedEdition">
+				<article class="twelve cell">
+					<div class="row">
+						<label class="three cell"><i18n>rss.channel.feed.title</i18n></label>
+						<input class="eight cell" placeholder="Saisissez le titre du nouveau flux RSS" type="text" ng-model="ctrl.selectedFeed.title" />
+					</div>
+					<div class="row">
+						<label class="three cell"><i18n>rss.channel.feed.url</i18n></label>
+						<input class="eight cell" placeholder="Saisissez l'Url du nouveau flux RSS" type="text" ng-model="ctrl.selectedFeed.link" />
+					</div>
+					<div class="row">
+						<label class="three cell"><i18n>rss.channel.feed.show</i18n></label>
+						<select class="one cell" ng-options="n for n in ctrl.showValues" ng-model="ctrl.selectedFeed.show"></select>
+					</div>
+				</article>
+				<div class="row">
+					<button class="right-magnet" ng-click="ctrl.saveFeed()" translate content="rss.channel.feed.save"></button>
+					<button class="right-magnet cancel" ng-click="ctrl.closeFeedEdition()" translate content="rss.channel.feed.cancel"></button>
+				</div>
+			</div>
+
+		</div>
+	</ode-modal-body>
+</ode-modal>

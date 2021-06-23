@@ -1,7 +1,9 @@
 import angular, { auto, IModule } from "angular";
-import DicoDeLaZone = require("../widgets/dicodelazone-widget/dicodelazone-widget");
-import Calendar = require("../widgets/calendar-widget/calendar-widget");
-import LastInfos = require("../widgets/last-infos-widget/last-infos-widget");
+import MyApps = require("../widgets/my-apps/my-apps.widget");
+import CarnetDeBord = require("../widgets/carnet-de-bord/carnet-de-bord.widget");
+import DicoDeLaZone = require("../widgets/dicodelazone-widget/dicodelazone-widget.widget");
+import Calendar = require("../widgets/calendar-widget/calendar-widget.widget");
+import LastInfos = require("../widgets/last-infos-widget/last-infos-widget.widget");
 
 // ============ /!\ IMPORTANT /!\ ============
 //
@@ -24,7 +26,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "dicodelazone-widget" | "calendar-widget" | "last-infos-widget";
+type KnownWidget = "my-apps" | "carnet-de-bord" | "dicodelazone-widget" | "calendar-widget" | "last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -34,6 +36,8 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
+            case "my-apps":  await loadMyAppsWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "carnet-de-bord":  await loadCarnetDeBordWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "dicodelazone-widget": await loadDicoDeLaZoneWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "calendar-widget": await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "last-infos-widget": await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
@@ -42,21 +46,59 @@ const module = angular.module("odeWidgets", [])
     };
 }]);
 
-/** Dynamically load the "last-infos" widget, which is packaged as a separate entries thanks to require.ensure(). */
-function loadLastInfosWidgetModule() {
+/** Dynamically load the "my-apps" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadMyAppsWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
         require.ensure(
-            ["../widgets/last-infos-widget/last-infos-widget"],
+            ["../widgets/my-apps/my-apps.widget"],
             function(require) {
-                var jsModule = <typeof LastInfos> require("../widgets/last-infos-widget/last-infos-widget");
+                var jsModule = <typeof MyApps> require("../widgets/my-apps/my-apps.widget");
                 resolve( jsModule.odeModuleName );
             },
             function(error) {
                 console.log(error);
                 reject();
             },
-            "widgets/last-infos-widget/last-infos-widget"
+            "widgets/my-apps/my-apps.widget"
+        );
+    });
+}
+
+/** Dynamically load the "carnet-de-bord/carnet-de-bord" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadCarnetDeBordWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/carnet-de-bord/carnet-de-bord.widget"],
+            function(require) {
+                var jsModule = <typeof CarnetDeBord> require("../widgets/carnet-de-bord/carnet-de-bord.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/carnet-de-bord/carnet-de-bord.widget"
+        );
+    });
+}
+
+/** Dynamically load the "last-infos" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadLastInfosWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/last-infos-widget/last-infos-widget.widget"],
+            function(require) {
+                var jsModule = <typeof LastInfos> require("../widgets/last-infos-widget/last-infos-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/last-infos-widget/last-infos-widget.widget"
         );
     });
 }
@@ -66,16 +108,16 @@ function loadCalendarWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
         require.ensure(
-            ["../widgets/calendar-widget/calendar-widget"],
+            ["../widgets/calendar-widget/calendar-widget.widget"],
             function(require) {
-                var jsModule = <typeof Calendar> require("../widgets/calendar-widget/calendar-widget");
+                var jsModule = <typeof Calendar> require("../widgets/calendar-widget/calendar-widget.widget");
                 resolve( jsModule.odeModuleName );
             },
             function(error) {
                 console.log(error);
                 reject();
             },
-            "widgets/calendar-widget/calendar-widget"
+            "widgets/calendar-widget/calendar-widget.widget"
         );
     });
 }
@@ -85,16 +127,16 @@ function loadDicoDeLaZoneWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
         require.ensure(
-            ["../widgets/dicodelazone-widget/dicodelazone-widget"],
+            ["../widgets/dicodelazone-widget/dicodelazone-widget.widget"],
             function(require) {
-                var jsModule = <typeof DicoDeLaZone> require("../widgets/dicodelazone-widget/dicodelazone-widget");
+                var jsModule = <typeof DicoDeLaZone> require("../widgets/dicodelazone-widget/dicodelazone-widget.widget");
                 resolve( jsModule.odeModuleName );
             },
             function(error) {
                 console.log(error);
                 reject();
             },
-            "widgets/dicodelazone-widget/dicodelazone-widget"
+            "widgets/dicodelazone-widget/dicodelazone-widget.widget"
         );
     });
 }

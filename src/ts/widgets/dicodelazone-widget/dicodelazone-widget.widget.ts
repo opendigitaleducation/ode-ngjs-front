@@ -10,7 +10,7 @@ class Controller implements IController {
 /* Directive */
 class Directive implements IDirective {
     restrict = 'E';
-	template = require('./dicodelazone-widget.html').default;
+	template = require('./dicodelazone-widget.widget.html').default;
 	controller = [Controller];
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes): void {

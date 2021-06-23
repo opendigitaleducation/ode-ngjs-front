@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme, AppModel } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme, IWebApp } from "ode-ts-client";
 import { SessionService } from "../../../services/session.service";
 import { UserService } from "../../../services/user.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
@@ -70,7 +70,7 @@ interface Scope extends IScope {
 	version?:string;
 	me?:{
 		hasWorkflow(right:string):boolean;
-		bookmarkedApps:AppModel[];
+		bookmarkedApps:IWebApp[];
 	};
 
 	messagerieLink?: string;
@@ -172,7 +172,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		.then( userInfo => SessionFrameworkFactory.instance().session.currentLanguage );
 	}
 
-	getBookmarks():Promise<AppModel[]> {
+	getBookmarks():Promise<IWebApp[]> {
 		return NotifyFrameworkFactory.instance().onSessionReady().promise
 		.then( userInfo => ConfigurationFrameworkFactory.instance().User.bookmarkedApps );
 	}

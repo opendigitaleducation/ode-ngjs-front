@@ -1,0 +1,30 @@
+<div class="widget widget-applications">
+	<div class="widget-header">
+		<div class="subtitle"><i18n>my-apps</i18n></div>
+
+		<div class="tools">
+			<a href="" class="tool tool-option" title="Options du widget">
+				<i class="fas fa-cog"></i>
+			</a>
+			<a href="" class="tool tool-position" title="Position du widget">
+				<i class="fas fa-arrows-alt"></i>
+			</a>
+		</div>
+	</div>
+
+	<div class="widget-body">
+		
+		<div class="widget-empty-message link" ng-if="ctrl.apps.length===0">
+			<i18n>navbar.myapps.more</i18n>
+		</div>
+
+		<ul class="application-list" ng-if="ctrl.apps.length>0">
+			<li class="application-item"
+					ng-repeat="app in ctrl.apps">
+				<a href="[[app.address]]" target="[[app.target]]" title="[['app.displayName'|i18n]]">
+					<i class="ic-app wiki color-app-[[ctrl.getCssType(app)]]"></i>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
