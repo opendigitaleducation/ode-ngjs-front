@@ -3,8 +3,8 @@
 		<div class="subtitle"><i18n>bookmark.widget.title</i18n></div>
 		<div class="tools">
 			<a href="" class="tool tool-option" title="[['bookmark.widget.manage.bookmarks'|i18n]]"
-					ng-if="ctrl."
-					ng-click="ctrl.display.manage = true">
+					ng-if="ctrl.canManage"
+					ng-click="ctrl.display.manage = ctrl.canManage">
 				<i class="fas fa-cog"></i>
 			</a>
 			<a href="" class="tool tool-position" title="Position du widget">

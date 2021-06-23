@@ -95,11 +95,15 @@ class Bookmark implements IBookmark {
 	}
 	
 	toJSON() {
-		var json = {
-				name : this.name,
-				url : this.url
-			};
-		return json;
+		return {
+			name : this.name,
+			url : this.url
+		};
+	}
+
+	public get canManage():boolean {
+		const ww = $(window).width();
+		return (typeof ww!=="number" || ww >= 992);
 	}
 }
 
