@@ -48,9 +48,8 @@
 		</ul>
 	</div>
 
-    <lightbox show="ctrl.showLightbox" on-close="ctrl.showLightbox=false">
-        <div ng-init="ctrl.currentContentType.getContent(currentEleve)">
-
+    <ode-modal visible="ctrl.showLightbox" on-close="ctrl.showLightbox=false">
+        <ode-modal-title>
             <h2>
                 <span translate content="[[widget.currentContentType.lightboxTitle]]"></span>
 
@@ -59,7 +58,9 @@
                     [[ctrl.getCurrentTag('Prenom')]]
                 </span>
             </h2>
+        </ode-modal-title>
 
+        <ode-modal-body>
             <article>
                 <div ng-repeat="item in ctrl.currentContentType.full">
 
@@ -106,9 +107,9 @@
 
                 </div>
             </article>
-
-        </div>
-    </lightbox>	
+        </ode-modal-body>
+        
+    </ode-modal>	
 
 </div>
 <!--End Widget Dashboard-->
