@@ -34,7 +34,7 @@
             <span>
                 <a 
                     href="/conversation/conversation" 
-                    title="[[lang.translate('navbar.messages')]]" 
+                    i18n-title="navbar.messages" 
                     ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
                 >
                     <i class="ic-conversation"><span class="new-mails" ng-if="nbNewMessages">[[nbNewMessages]]</span></i>
@@ -43,7 +43,7 @@
         </div>
         
         <div class="navigation__item">
-            <a href="/userbook/mon-compte" title="[[lang.translate('navbar.myaccount')]]">
+            <a href="/userbook/mon-compte" i18n-title="navbar.myaccount">
                 <i class="ic-avatar"></i>
             </a>
         </div>
@@ -51,7 +51,7 @@
         <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item">
             <a 
                 href=""
-                title="[[lang.translate('navbar.help')]]" 
+                i18n-title="navbar.help" 
                 pulsar="{ index: 6, i18n: 'portal.pulsar.help', position: 'bottom center'}" 
             >
                 <i18n>help.icon</i18n>
@@ -59,7 +59,7 @@
         </div>
         
         <div class="navigation__item">
-            <a href="" logout title="[[lang.translate('navbar.disconnect')]]">
+            <a href="" logout i18n-title="navbar.disconnect">
                 <i class="ic-disconnect"></i>
             </a>
         </div>
@@ -104,11 +104,11 @@
     
     <nav class="navigation">
         <div class="navigation__item">
-            <a href="/timeline/timeline" title="[[lang.translate('navbar.home')]]"><i class="ic-home"></i></a>
+            <a href="/timeline/timeline" i18n-title="navbar.home"><i class="ic-home"></i></a>
         </div>
         
         <div class="navigation__item" ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
-            <a href="/community" class="zero-mobile" title="[[lang.translate('navbar.community')]]">
+            <a href="/community" class="zero-mobile" i18n-title="navbar.community">
                 <i class="ic-community"></i>
             </a>
         </div>
@@ -117,7 +117,7 @@
             <popover>
                 <a 
                     href="/welcome"
-                    title="[[lang.translate('navbar.applications')]]" 
+                    i18n-title="navbar.applications" 
                     pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}" 
                     popover-opener
                 >
@@ -131,7 +131,7 @@
                                 <i18n>navbar.myapps.more</i18n>
                             </div>
                             <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
-                                <a href="[[app.address]]" target="[[app.target]]" title="[[lang.translate(app.displayName)]]">
+                                <a href="[[app.address]]" target="[[app.target]]" i18n-title="app.displayName">
                                     <i class="application [[app.icon]]" ng-if="app.icon.indexOf('/') === -1"></i>
                                     <img skin-src="[[app.icon]]" ng-if="app.icon.indexOf('/') !== -1" />
                                 </a>
@@ -151,7 +151,7 @@
         
         <div class="navigation__item" ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
             <popover class="searchengine">
-                <a href="/searchengine" popover-opener ng-click="ctrl.openApps($event)" title="[[lang.translate('navbar.search')]]">
+                <a href="/searchengine" popover-opener ng-click="ctrl.openApps($event)" i18n-title="navbar.search">
                     <i class="ic-search"></i>
                 </a>
                 <popover-content class="searchPortal">
@@ -171,7 +171,7 @@
         <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item">
             <a 
                 href=""
-                title="[[lang.translate('navbar.help')]]" 
+                i18n-title="navbar.help" 
                 pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}" 
             >
                 <i18n>help.icon</i18n>
@@ -182,7 +182,7 @@
             <a 
                 href="/userbook/mon-compte" 
                 class="avatar" 
-                title="[[lang.translate('navbar.myaccount')]]" 
+                i18n-title="navbar.myaccount" 
                 pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}"
             >
                 <img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
@@ -190,7 +190,7 @@
         </div>
         
         <div class="navigation__item">
-            <a href="" logout title="[[lang.translate('navbar.disconnect')]]">
+            <a href="" logout i18n-title="navbar.disconnect">
                 <i class="ic-disconnect"></i>
             </a>
         </div>

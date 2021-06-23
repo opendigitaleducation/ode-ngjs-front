@@ -1,17 +1,12 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory } from "ode-ts-client";
-
-const idiom = ConfigurationFrameworkFactory.instance().Platform.idiom;
+import { I18nBase } from "./I18nBase";
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict='E';
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
-        elem.html( this.$compile('<span class="no-style">'+ idiom.translate(elem.text().trim()) +'</span>')(scope).text() );
-    }
-
-    constructor(private $compile:ICompileService) {
+        elem.html( this.$compile('<span class="no-style">'+ this.idiom.translate(elem.text().trim()) +'</span>')(scope).text() );
     }
 }
 

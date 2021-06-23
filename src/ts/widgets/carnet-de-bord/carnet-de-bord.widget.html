@@ -3,10 +3,10 @@
 	<div class="widget-header">
 		<div class="subtitle"><i18n>logBook.title</i18n></div>
 		<div class="tools">
-			<a href="" class="tool tool-option" title="[['logBook.widget.options'|i18n]]">
+			<a href="" class="tool tool-option" i18n-title="logBook.widget.options">
 				<i class="fas fa-cog"></i>
 			</a>
-			<a href="" class="tool tool-position" title="[['logBook.widget.position'|i18n]]">
+			<a href="" class="tool tool-position" i18n-title="logBook.widget.position">
 				<i class="fas fa-arrows-alt"></i>
 			</a>
 		</div>
@@ -83,7 +83,7 @@
                     <h4 ng-if="item.subsections && item.pageUrl">
                         <a target="_blank" href="[[widget.structureAddress]]/[[widget.userStatus()]].html?page=[[ item.pageUrl ]]">
                             [[ item.value ]]
-                            <i class="new-tab right-magnet" title="[['logBook.target.tooltip']]|i18n"></i>
+                            <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
                         </a>
                     </h4>
 
@@ -94,7 +94,7 @@
 
                             <a ng-if="subsection.pageUrl" target="_blank" href="[[widget.structureAddress]]/[[widget.userStatus()]].html?page=[[ subsection.pageUrl ]]">
                                 <b>[[ subsection.header ]]
-                                    <i class="new-tab right-magnet" tooltip="[['logBook.target.tooltip']]|i18n"></i>
+                                    <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
                                 </b>
                             </a>
 

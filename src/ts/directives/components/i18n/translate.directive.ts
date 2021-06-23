@@ -1,10 +1,8 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory } from "ode-ts-client";
-
-const idiom = ConfigurationFrameworkFactory.instance().Platform.idiom;
+import { I18nBase } from "./I18nBase";
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
     replace = true;
 
@@ -22,14 +20,14 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             if(!attrs.content){
                 return;
             }
-            elem.html( this.$compile('<span class="no-style">' + idiom.translate(attrs.content) + '</span>')(scope).text() );
+            elem.html( this.$compile('<span class="no-style">' + this.idiom.translate(attrs.content) + '</span>')(scope).text() );
         });
 
         attrs.$observe('attr', val => {
             if(!attrs.attr){
                 return;
             }
-            var compiled = this.$compile('<span>' + idiom.translate(attrs[attrs.attr]) + '</span>')(scope);
+            var compiled = this.$compile('<span>' + this.idiom.translate(attrs[attrs.attr]) + '</span>')(scope);
             setTimeout(function(){
                 elem.attr(attrs.attr, compiled.text());
             }, 10);
@@ -41,7 +39,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             }
             var attrObj = scope.$eval(attrs.attrs);
             for(var prop in attrObj){
-                const compiled = this.$compile('<span>'+ idiom.translate(attrObj[prop]) +'</span>')(scope);
+                const compiled = this.$compile('<span>'+ this.idiom.translate(attrObj[prop]) +'</span>')(scope);
                 setTimeout(function(){
                     elem.attr(prop, compiled.text());
                 }, 0);
@@ -52,12 +50,8 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             if(!attrs.key){
                 return;
             }
-            elem.html( this.$compile('<span class="no-style">'+ idiom.translate(attrs.key) +'</span>')(scope).text() );
+            elem.html( this.$compile('<span class="no-style">'+ this.idiom.translate(attrs.key) +'</span>')(scope).text() );
         });
-    }
-
-    /* Constructor with Dependency Injection */
-    constructor(private $compile:ICompileService) {
     }
 }
 

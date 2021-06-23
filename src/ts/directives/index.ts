@@ -14,6 +14,7 @@ export * as SharePanel from './business/share/share-panel.directive';
 export * as Translate from './components/i18n/translate.directive';
 export * as I18n from './components/i18n/i18n.directive';
 export * as I18nValue from './components/i18n/i18n-value.directive';
+export * as I18nTitle from './components/i18n/i18n-title.directive';
 export * as I18nPlaceholder from './components/i18n/i18n-placeholder.directive';
 export * as I18nFilter from './components/i18n/i18n.filter';
 
