@@ -215,5 +215,5 @@ function DirectiveFactory() {
 
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORING THE MODULE NAME :
-export const odeModuleName = "odeRssWidgetWidgetModule";
-angular.module( odeModuleName, []).directive( "odeRssWidgetWidget", DirectiveFactory );
+export const odeModuleName = "odeRssWidgetModule";
+angular.module( odeModuleName, []).directive( "odeRssWidget", DirectiveFactory );

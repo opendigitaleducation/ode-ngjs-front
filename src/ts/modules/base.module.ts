@@ -1,5 +1,5 @@
 import angular, { IInterpolateProvider, IModule } from "angular";
-import { NgHelperService, NotifyService, SessionService, UserService, TrackingService } from "../services";
+import { NgHelperService, NotifyService, SessionService, UserService, TrackingService, notify } from "../services";
 
 const module = angular.module("odeBase", 
     ['ngSanitize', 'ngRoute'], 
@@ -14,6 +14,7 @@ const module = angular.module("odeBase",
  */
 export function odeBaseModule():IModule {
     return module
+    .value( "notify", notify)
     .service("odeNotify", NotifyService)
     .service("odeNgHelperService", NgHelperService )
     .service("odeSession", SessionService)

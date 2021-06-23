@@ -6,7 +6,7 @@ const module = angular.module("odeI18n", []);
 
 /**
  * The "odeI18n" angularjs module is a replacement for the legacy infra-front's 'idiom' functionality, 
- * and many other directives/filters using it : <i18n>, {{key|i18n}}, <input i18nPlaceholder> and <input i18nValue>.
+ * and many other directives/filters using it : <i18n>, {{key|i18n}}, <input i18n-placeholder="key"> and <input i18n-value="key">.
  */
 export function odeI18nModule():IModule {
     return module

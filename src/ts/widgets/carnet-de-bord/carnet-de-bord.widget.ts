@@ -353,8 +353,8 @@ function DirectiveFactory() {
 
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORING THE MODULE NAME :
-export const odeModuleName = "odeCarnetDeBordWidgetModule";
-angular.module( odeModuleName, []).directive( "odeCarnetDeBordWidget", DirectiveFactory );
+export const odeModuleName = "odeCarnetDeBordModule";
+angular.module( odeModuleName, []).directive( "odeCarnetDeBord", DirectiveFactory );
 
 /*
 var widget = model.widgets.findWidget("carnet-de-bord");

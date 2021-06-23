@@ -1,4 +1,6 @@
 import angular, { auto, IModule } from "angular";
+import BookmarkWidget = require("../widgets/bookmark-widget/bookmark-widget.widget");
+import RssWidget = require("../widgets/rss-widget/rss-widget.widget");
 import MyApps = require("../widgets/my-apps/my-apps.widget");
 import CarnetDeBord = require("../widgets/carnet-de-bord/carnet-de-bord.widget");
 import DicoDeLaZone = require("../widgets/dicodelazone-widget/dicodelazone-widget.widget");
@@ -26,7 +28,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "my-apps" | "carnet-de-bord" | "dicodelazone-widget" | "calendar-widget" | "last-infos-widget";
+type KnownWidget = "bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -36,8 +38,10 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
-            case "my-apps":  await loadMyAppsWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "carnet-de-bord":  await loadCarnetDeBordWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "bookmark-widget": await loadBookmarkWidgetWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "rss-widget": await loadRssWidgetWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "my-apps": await loadMyAppsWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "carnet-de-bord": await loadCarnetDeBordWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "dicodelazone-widget": await loadDicoDeLaZoneWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "calendar-widget": await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "last-infos-widget": await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
@@ -45,6 +49,44 @@ const module = angular.module("odeWidgets", [])
         }
     };
 }]);
+
+/** Dynamically load the "bookmark-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadBookmarkWidgetWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/bookmark-widget/bookmark-widget.widget"],
+            function(require) {
+                var jsModule = <typeof BookmarkWidget> require("../widgets/bookmark-widget/bookmark-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/bookmark-widget/bookmark-widget.widget"
+        );
+    });
+}
+
+/** Dynamically load the "rss-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadRssWidgetWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/rss-widget/rss-widget.widget"],
+            function(require) {
+                var jsModule = <typeof RssWidget> require("../widgets/rss-widget/rss-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/rss-widget/rss-widget.widget"
+        );
+    });
+}
 
 /** Dynamically load the "my-apps" widget, which is packaged as a separate entries thanks to require.ensure(). */
 function loadMyAppsWidgetModule() {

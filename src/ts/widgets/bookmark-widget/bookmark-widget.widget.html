@@ -1,0 +1,116 @@
+<div class="widget widget-bookmarks">
+	<div class="widget-header">
+		<div class="subtitle"><i18n>bookmark.widget.title</i18n></div>
+		<div class="tools">
+			<a href="" class="tool tool-option" title="[['bookmark.widget.manage.bookmarks'|i18n]]"
+					ng-click="ctrl.display.manage = true">
+				<i class="fas fa-cog"></i>
+			</a>
+			<a href="" class="tool tool-position" title="Position du widget">
+				<i class="fas fa-arrows-alt"></i>
+			</a>
+		</div>
+	</div>
+
+	<div class="widget-body">
+		<div class="widget-empty-message link" ng-if="ctrl.bookmarks.length === 0">
+			<i18n>bookmark.widget.empty</i18n>
+		</div>
+
+		<ul class="bookmark-list" ng-if="!ctrl.bookmarks.isEmpty()">
+			<li class="bookmark-item"
+					ng-repeat="bookmark in ctrl.bookmarks | orderBy:'name'">
+				<a class="link" href="[[bookmark.url]]" target="_blank">[[bookmark.name]]</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<ode-modal show="ctrl.display.manage" on-close="ctrl.display.manage = false">
+	<ode-modal-title>
+		<h2><i18n>bookmark.widget.manage.title</i18n></h2>
+	</ode-modal-title>
+
+	<ode-modal-body>
+		<div ng-if="ctrl.bookmarks.length === 0">
+			<i18n>bookmark.widget.empty</i18n>
+			<button class="bookmark right-magnet" ng-click="ctrl.newBookmark()"><i18n>bookmark.widget.new.bookmark</i18n></button>
+		</div>
+
+		<table class="list-view" ng-if="ctrl.bookmarks.length !== 0">
+			<thead>
+				<tr>
+					<th><i18n>bookmark.widget.managetable.name</i18n></th>
+					<th><i18n>bookmark.widget.managetable.url</i18n></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="bookmark in ctrl.bookmarks" ng-class="{ selected : ctrl.editedBookmark && bookmark._id === ctrl.editedBookmark._id }">
+					<td ng-click="ctrl.editBookmark(bookmark)">[[bookmark.name]]</td>
+					<td ng-click="ctrl.editBookmark(bookmark)">[[bookmark.url]]</td>
+					<td class="bookmark-widget drop-line" ng-click="ctrl.deleteBookmark(bookmark)"></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr ng-if="!angular.isDefined(ctrl.createdBookmark)">
+					<td><button class="bookmark" ng-click="ctrl.newBookmark()"><i18n>bookmark.widget.new.bookmark</i18n></button></td>
+				</tr>
+			</tfoot>
+		</table>
+
+		<hr class="row"/>
+
+		<article ng-if="angular.isDefined(ctrl.createdBookmark)">
+			<h3><i18n>bookmark.widget.createform.title</i18n></h3>
+			<p>
+				<label>
+					<i18n>bookmark.widget.createform.name</i18n>
+					<input type="text" ng-model="ctrl.createdBookmark.name" />
+				</label>
+			</p>
+			<p>
+				<label>
+					<i18n>bookmark.widget.createform.url</i18n>
+					<input type="text" ng-model="ctrl.createdBookmark.url" />
+				</label>
+			</p>
+		</article>
+		
+		<article ng-if="angular.isDefined(ctrl.editedBookmark)">
+			<h3><i18n>bookmark.widget.edit.bookmark</i18n></h3>
+			<p>
+				<label>
+					<i18n>bookmark.widget.editform.name</i18n>
+					<input type="text" ng-model="ctrl.editedBookmark.name" />
+				</label>
+			</p>
+			<p>
+				<label>
+					<i18n>bookmark.widget.editform.url</i18n>
+					<input type="text" ng-model="ctrl.editedBookmark.url" />
+				</label>
+			</p>
+		</article>
+	</ode-modal-body>
+
+	<ode-modal-footer>
+		<div ng-if="angular.isDefined(ctrl.createdBookmark)">
+			<button class="btn btn-primary" ng-click="ctrl.createBookmark()">
+				<i18n>bookmark.widget.createform.save</i18n>
+			</button>
+			<button class="btn btn-light text-primary" ng-click="ctrl.cancelCreate()">
+				<i18n>bookmark.widget.createform.cancel</i18n>
+			</button>
+		</div>
+
+		<div ng-if="angular.isDefined(ctrl.editedBookmark)">
+			<button class="btn btn-primary" ng-click="ctrl.updateBookmark()">
+				<i18n>bookmark.widget.editform.save</i18n>
+			</button>
+			<button class="btn btn-light text-primary" ng-click="ctrl.cancelEdit()">
+				<i18n>bookmark.widget.editform.cancel</i18n>
+			</button>
+		</div>
+	</ode-modal-footer>
+</ode-modal>
