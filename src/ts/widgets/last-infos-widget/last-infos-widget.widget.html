@@ -16,6 +16,12 @@
 		</div>
 	</div>
 	<div class="widget-body">
+		
+		<div class="widget-empty-message link"
+				ng-if="ctrl.infos === undefined || ctrl.infos.length === 0">
+			<i18n>actualites.widget.empty</i18n>
+		</div>
+
 		<a class="news-row"
 				ng-repeat="info in ctrl.infos track by info._id"
 				ng-href="/actualites#/view/thread/[[info.thread_id]]/info/[[info._id]]"
