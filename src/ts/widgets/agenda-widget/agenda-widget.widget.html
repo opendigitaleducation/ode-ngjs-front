@@ -1,0 +1,43 @@
+ <div class="widget-header">
+	<div class="subtitle">
+		<a class="seemore" href="/calendar" title="Voir tout l'agenda"><i18n>calendar.widget.title</i18n>
+			<span class="seemore-text"><i18n>calendar.widget.see.more</i18n></span>
+		</a>
+	</div>
+	<div class="tools">
+		<!--
+		<a href="" class="tool tool-option" title="Options du widget">
+			<i class="fas fa-cog"></i>
+		</a>
+		-->
+		<a href="" class="tool tool-position" title="Position du widget" dnd-handle>
+			<i class="fas fa-arrows-alt"></i>
+		</a>
+	</div>
+</div>
+
+<div class="widget-body">
+
+	<div class="widget-empty-message link"
+			ng-if="ctrl.userEvents === undefined || ctrl.userEvents.length === 0">
+		<i18n>calendar.widget.empty</i18n>
+	</div>
+
+	<ul class="day-list"
+			ng-if="ctrl.userEvents !== undefined && ctrl.userEvents.length >= 0">
+		<li class="day-item"
+				ng-repeat="group in ctrl.dayGroups">
+			<div class="day-item-title">
+				{{group}}
+			</div>
+			<ul class="moment-list">
+				<li class="moment-item"
+						ng-repeat="event in ctrl.userEvents | filter:{displayedGroup: group}">
+					<span class="icon"><i class="fas fa-calendar-alt"></i></span>
+					<span class="hour">event.displayedDate</span>
+					<span class="link"><a href="#">[[event.title]]</a></span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
