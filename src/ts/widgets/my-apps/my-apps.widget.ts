@@ -37,6 +37,6 @@ function DirectiveFactory() {
 }
 
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
-// RESPECT THE NAMING CONVENTION BY EXPORING THE MODULE NAME :
+// RESPECT THE NAMING CONVENTION BY EXPORTING THE MODULE NAME :
 export const odeModuleName = "odeMyAppsModule";
 angular.module( odeModuleName, []).directive( "odeMyApps", DirectiveFactory );
