@@ -1,0 +1,20 @@
+<div class="row">
+    <input type="text" ng-model="ctrl.search" i18n-placeholder="search" autocomplete="off" />
+    <!-- TODO
+    <div data-drop-down class="drop-down">
+        <div>
+            <ul class="ten cell right-magnet">
+                <li class="block-container" ng-repeat="option in match | limitTo:limit" ng-model="option">
+                    <a class="cell right-spacing" ng-class="{'sharebookmark': option.type === 'sharebookmark'}">
+                        <i class="add-favorite cell" ng-if="option.type === 'sharebookmark'"></i>
+                        [[option.toString()]]
+                    </a>
+                    <em ng-if="option.structureName" class="top-spacing-twice low-importance">[[option.structureName]]</em>
+                    <em class="top-spacing-twice low-importance">[[translate(option.profile)]] </em>
+                </li>
+                <li class="display-more block-container" ng-show="limit < match.length" ng-click="increaseLimit()">[[translate('seemore')]]</li>
+            </ul>
+        </div>
+    </div>
+    -->
+</div>

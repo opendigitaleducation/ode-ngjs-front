@@ -21,9 +21,11 @@
  <div class="widget-header">
 	<div class="subtitle"><i18n>dico.title</i18n></div>
 	<div class="tools">
+		<!--
 		<a href="" class="tool tool-option" title="Options du widget">
 			<i class="fas fa-cog"></i>
 		</a>
+		-->
 		<a href="" class="tool tool-position" title="Position du widget" dnd-handle>
 			<i class="fas fa-arrows-alt"></i>
 		</a>
@@ -32,6 +34,14 @@
 
 <div class="widget-body">
 	<div class="widget-empty-message link">
-		Test de drag'n'drop
+		<p class="small-text"><i18n>dico.definition<i18n></p>
+		<div class="content">
+			<ode-autocomplete
+				class="dicodelazone__input"
+				options="ctrl.suggestions"
+				ng-model="ctrl.selectedWord"
+				ng-change="ctrl.openDefinition()">
+			</ode-autocomplete>
+		</div>
 	</div>
 </div>
