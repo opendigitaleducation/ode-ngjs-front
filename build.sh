@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -gt 2 ]; then
+if [ "$#" -lt 1 ]; then
   echo "Usage: $0 <clean|init|localDep|build|install|watch>"
   echo "Example: $0 clean"
   echo "Example: $0 init"
@@ -51,11 +51,16 @@ init () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install --production=false"
 }
 
+# Install local dependencies as tarball (installing as folder creates symlinks which won't resolve in the docker container)
 localDep () {
-  docker-compose run --rm \
-    -u "$USER_UID:$GROUP_GID" \
-    -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
-    node sh -c "npm install --no-save /home/node/ode-ts-client"
+  if [ -e $PWD/../ode-ts-client ]; then
+    rm -rf ode-ts-client.tar ode-ts-client.tar.gz
+    mkdir ode-ts-client.tar && mkdir ode-ts-client.tar/dist \
+      && cp -R $PWD/../ode-ts-client/dist $PWD/../ode-ts-client/package.json ode-ts-client.tar
+    tar cfzh ode-ts-client.tar.gz ode-ts-client.tar
+    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install --no-save ode-ts-client.tar.gz"
+    rm -rf ode-ts-client.tar ode-ts-client.tar.gz
+  fi
 }
 
 build () {
@@ -67,7 +72,6 @@ build () {
 watch () {
   docker-compose run --rm \
     -u "$USER_UID:$GROUP_GID" \
-    -v $PWD/../ode-ts-client:/home/node/ode-ts-client \
     -v $PWD/../$SPRINGBOARD:/home/node/springboard \
     node sh -c "npm run watch --watch_springboard=/home/node/springboard"
 }
