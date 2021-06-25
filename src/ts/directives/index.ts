@@ -33,5 +33,6 @@ export * as Portal from './business/portal/portal.directive';
 export * as Navbar from './business/portal/navbar.directive';
 export * as WithTheme from './business/portal/with-theme.directive';
 export * as Logout from './business/portal/logout.directive';
+export * as Recorder from './business/media/recorder.directive'
 export * as WidgetContainer from './widget/widget-container.directive';
 export * as Widget from './widget/widget.directive';
