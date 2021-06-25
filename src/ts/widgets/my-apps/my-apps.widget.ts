@@ -19,6 +19,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./my-apps.widget.html').default;
 	controller = [Controller];
 	controllerAs = 'ctrl';
+    require = ['odeMyApps'];
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;

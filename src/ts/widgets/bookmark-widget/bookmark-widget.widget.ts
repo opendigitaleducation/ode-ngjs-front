@@ -187,6 +187,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./bookmark-widget.widget.html').default;
 	controller = [Controller];
 	controllerAs = 'ctrl';
+	require = ['odeBookmarkWidget'];
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
@@ -203,7 +204,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	}
 }
 
-/** The rss-widget widget. */
+/** The bookmark-widget widget. */
 function DirectiveFactory() {
 	return new Directive();
 }

@@ -313,6 +313,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./carnet-de-bord.widget.html').default;
 	controller = ["odeThemeHelperService", Controller];
 	controllerAs = 'ctrl';
+    require = ['odeCarnetDeBord'];
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
