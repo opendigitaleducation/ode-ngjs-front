@@ -95,7 +95,7 @@ class Controller implements IController {
 
 	public get canAddFeed():boolean {
 		const ww = $(window).width();
-		return (this.channel.feeds.length < this.totalFeeds) && (typeof ww!=="number" || ww >= 992);
+		return (this.channel && this.channel.feeds.length < this.totalFeeds) && (typeof ww!=="number" || ww >= 992);
 	}
 	
 	openFeedEdition(index:number) {
