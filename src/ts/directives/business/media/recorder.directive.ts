@@ -109,7 +109,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         format: '@',
         onUpload: '&'
     };
-	controller = ["odeRecorder", Controller];
+	controller = [Controller];
 	controllerAs = 'ctrl';
 	require = ['odeRecorder'];
 
