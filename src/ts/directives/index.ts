@@ -31,7 +31,8 @@ export * as Autocomplete from './components/autocomplete/autocomplete.directive'
 /* New generation components */
 export * as Portal from './business/portal/portal.directive';
 export * as Navbar from './business/portal/navbar.directive';
-export * as WithTheme from './business/portal/with-theme.directive';
+export * as WithTheme from './business/theme/with-theme.directive';
+export * as SkinSrc from './business/theme/skin-src.directive';
 export * as Logout from './business/portal/logout.directive';
 export * as Recorder from './business/media/recorder.directive'
 export * as WidgetContainer from './widget/widget-container.directive';
