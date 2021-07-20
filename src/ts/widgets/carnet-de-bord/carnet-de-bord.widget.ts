@@ -1,6 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import moment from "moment";
-import { ConfigurationFrameworkFactory, ILastInfosModel, IUserDescription, IUserInfo, LastInfosWidget, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, ILastInfosModel, IUserDescription, IUserInfo, LastInfosWidget, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
 import { ThemeHelperService } from "../../services";
 
 interface IExtendedLastInfosModel extends ILastInfosModel {
@@ -351,6 +351,14 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 function DirectiveFactory() {
 	return new Directive();
 }
+
+// Preload translations
+NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+	switch( lang ) {
+		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
+		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+	}
+});
 
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORTING THE MODULE NAME :

@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { TransportFrameworkFactory } from "ode-ts-client";
+import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
 import moment from 'moment'; // FIXME : should we use moment anymore ?
 
 type ResourceMetadata = {
@@ -129,6 +129,14 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 function DirectiveFactory() {
 	return new Directive();
 }
+
+// Preload translations
+NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+	switch( lang ) {
+		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
+		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+	}
+});
 
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORTING THE MODULE NAME :

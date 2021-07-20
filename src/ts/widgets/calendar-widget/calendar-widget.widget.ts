@@ -1,4 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
+import { ConfigurationFrameworkFactory, NotifyFrameworkFactory } from "ode-ts-client";
 
 /* Controller for the directive */
 class Controller implements IController {
@@ -27,6 +28,14 @@ class Directive implements IDirective {
 function DirectiveFactory() {
 	return new Directive();
 }
+
+// Preload translations
+NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+	switch( lang ) {
+		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
+		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+	}
+});
 
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORTING THE MODULE NAME :
