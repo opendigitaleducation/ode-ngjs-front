@@ -19,7 +19,7 @@ type RecorderType = "audio" | "video";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    _recorder?:IAnyRecorder;
+    _recorder:IAnyRecorder = audio_recorder;    // Defaults to audio recorder
 
     setRecorder( type:RecorderType ) {
         if( type==="audio" ) {
@@ -29,21 +29,22 @@ export class Controller implements IController {
         }
     }
 
-    get recorder():IAnyRecorder|undefined {
+    get recorder():IAnyRecorder {
         return this._recorder;
     }
 
-    get isCompatible()      { return audio_recorder.isCompatible() /* && video_recorder.isCompatible()*/; }
+    get isAudioCompatible()      { return audio_recorder.isCompatible() /* && video_recorder.isCompatible()*/; }
+    get isVideoCompatible()      { return /* video_recorder.isCompatible()*/ false; }
 
-    get isIdle()            { return this.recorder?.status === 'idle'; }
-    get isPreparing()       { return this.recorder?.status === 'preparing'; }
-    get isRecording()       { return this.recorder?.status === 'recording'; }
-    get isSuspended()       { return this.recorder?.status === 'suspended'; }
-    get isPaused()          { return this.recorder?.status === 'paused'; }
-    get isPlaying()         { return this.recorder?.status === 'playing'; }
-    get isStopped()         { return this.recorder?.status === 'stop'; }
-    get isEncoding()        { return this.recorder?.status === 'encoding'; }
-    get isUploading()       { return this.recorder?.status === 'uploading'; }
+    get isIdle()            { return !this.recorder || this.recorder.status === 'idle'; }
+    get isPreparing()       { return this.recorder.status === 'preparing'; }
+    get isRecording()       { return this.recorder.status === 'recording'; }
+    get isSuspended()       { return this.recorder.status === 'suspended'; }
+    get isPaused()          { return this.recorder.status === 'paused'; }
+    get isPlaying()         { return this.recorder.status === 'playing'; }
+    get isStopped()         { return this.recorder.status === 'stop'; }
+    get isEncoding()        { return this.recorder.status === 'encoding'; }
+    get isUploading()       { return this.recorder.status === 'uploading'; }
 
     get showActionButtons() { return this.recorder && this.recorder.elapsedTime > 0 && !this.isStopped; }
 
@@ -103,7 +104,7 @@ interface Scope extends IScope {
 
 /* Directive */
 class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
-    restrict = 'E';
+    restrict = 'EA';
 	template = require("./recorder.directive.html").default;
     scope = {
         format: '@',

@@ -1,14 +1,14 @@
 <!-- illustration -->
 <div ng-class="{ 'd-none': !ctrl.isIdle }">
-    <img class="img-fluid" src="/assets/images/record.png" alt="">
+    <img class="img-fluid" skin-src="/img/illustrations/recorder-audio.svg" alt="">
 </div>
 
-<div ng-if="!ctrl.isCompatible">
+<div ng-if="!ctrl.isAudioCompatible && !ctrl.isVideoCompatible">
 	<p><i18n>recorder.not.supported</i18n></p>
 </div>
 
 <!-- audio button -->
-<div ng-class="{ 'd-none': !ctrl.isIdle || !ctrl.isCompatible }">
+<div ng-class="{ 'd-none': !ctrl.isIdle || !ctrl.isAudioCompatible }">
     <a class="btn-circle" href="#" i18n-title="embed.audio.title"
             ng-click="ctrl.switchAudioRecord()">
         <i class="fas fa-microphone"></i>
@@ -16,14 +16,14 @@
 </div>
 
 <!-- video button -->
-<div class="d-none">
+<div ng-class="{ 'd-none': !ctrl.isIdle || !ctrl.isVideoCompatible }">
     <a class="btn-circle" href="#">
         <i class="fas fa-video"></i>
     </a>
 </div>
 
 <!-- audio recorder -->
-<div ng-class="{ 'd-none': ctrl.isVideo || ctrl.isIdle || ctrl.isStopped || !ctrl.isCompatible }">
+<div ng-class="{ 'd-none': ctrl.isVideo || ctrl.isIdle || ctrl.isStopped || !ctrl.isAudioCompatible }">
     <div ng-if="ctrl.showActionButtons">
 
         <div class="recorder--timer" 
