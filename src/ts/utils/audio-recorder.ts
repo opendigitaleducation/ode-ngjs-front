@@ -1,13 +1,18 @@
 import moment from 'moment'; // FIXME : should we use moment anymore ?
 import { notify } from "../services/notify.service";
 import { ConfigurationFrameworkFactory, TransportFrameworkFactory } from 'ode-ts-client';
+import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 declare const Zlib: any;
 
 let _zlib:any = null;
 async function getZlib() {
     if (!_zlib) {
-        _zlib = await TransportFrameworkFactory.instance().http.getScript('/infra/public/js/zlib.min.js');
+		_zlib = await $.ajax('/infra/public/js/zlib.min.js',{
+			dataType:"script"
+		});
+        //_zlib = await TransportFrameworkFactory.instance().http.getScript('/infra/public/js/zlib.min.js');
+		//console.log(Zlib);
     }
     return _zlib;
 }
