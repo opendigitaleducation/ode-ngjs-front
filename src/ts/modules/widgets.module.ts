@@ -31,7 +31,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "record-me"|"agenda-widget"|"qwant-widget"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
+type KnownWidget = "record-me"|"agenda-widget"|"qwant"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -43,7 +43,7 @@ const module = angular.module("odeWidgets", [])
         switch( widgetName ) {
             case "record-me": await loadRecordMeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "agenda-widget": await loadAgendaWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "qwant-widget": await loadQwantWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case "qwant": await loadQwantWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "bookmark-widget": await loadBookmarkWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "rss-widget": await loadRssWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "my-apps": await loadMyAppsWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
