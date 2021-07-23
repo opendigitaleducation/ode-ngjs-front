@@ -1,6 +1,11 @@
 import angular from "angular";
 import { ConfigurationFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
 
+/* 
+ * This code bootstraps angular on the current web page.
+ * >>>> Your page must declare an angularJS module named "app" <<<<<
+ * @see ../modules/index 
+ */
 (()=>{
     const init = function() {
         ConfigurationFrameworkFactory.instance().initialize( null, null )

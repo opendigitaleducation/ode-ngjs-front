@@ -9,6 +9,9 @@ const model = {
 
 const http = TransportFrameworkFactory.instance().http;
 
+/**
+ * Service dedicated to the &lt;assistant> directive
+ */
 export class QuickstartService {
 	app: string = "";
 	steps:{[s:string]:number} = {};

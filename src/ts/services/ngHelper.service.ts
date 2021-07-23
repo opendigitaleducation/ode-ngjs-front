@@ -1,5 +1,9 @@
 import angular from "angular";
 
+/** 
+ * This service was intended to be a jQuery minimal replacement, tailored to our needs. 
+ * This would be a pain to maintain => thinking about integrating another lib instead.
+ */
 export class NgHelperService {
     // /** Replacement for $(selector) a.k.a. jQuery(selector)  */
     // public querySelect(selector:string):JQLite {

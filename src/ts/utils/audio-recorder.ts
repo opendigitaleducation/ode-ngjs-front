@@ -28,6 +28,10 @@ const resolvedNavigatorModules = {
 	AudioContext: (window as any).AudioContext || (window as any).webkitAudioContext,
 }
 
+
+/**
+ * Utility class to record audio files, with no dependencies on angularJS.
+ */
 export var audio_recorder = (function () {
     var lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
 	var context:AudioContext,

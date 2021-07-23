@@ -1,6 +1,11 @@
 import { ConfigurationFrameworkFactory } from "ode-ts-client";
 const humane = require('humane-js');
 
+/**
+ * This service can display on-screen notifications to the user.
+ * 3 levels of attention available : error (in red), info (neutral color), success (green)
+ * Based on humane-js
+ */
 export class NotifyService {
     private message(type:"error"|"info"|"success", message:string, timeout?:number) {
 		message = ConfigurationFrameworkFactory.instance().Platform.idiom.translate(message);
