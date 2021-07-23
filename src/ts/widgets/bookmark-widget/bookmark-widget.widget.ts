@@ -59,6 +59,9 @@ class Bookmark implements IBookmark {
 	
 		return http().postJson<IBookmark,IBookmark>('/bookmark', this)
 		.then( response => {
+			if( http().latestResponse.status !== 200 ) {
+				throw "Rejected bookmark";
+			}
 			return this.flatCopy( response );
 		})
 		.catch( e => {
@@ -99,11 +102,6 @@ class Bookmark implements IBookmark {
 			name : this.name,
 			url : this.url
 		};
-	}
-
-	public get canManage():boolean {
-		const ww = $(window).width();
-		return (typeof ww!=="number" || ww >= 992);
 	}
 }
 
@@ -165,6 +163,14 @@ class Controller implements IController {
 	newBookmark() {
 		this.createdBookmark = new Bookmark( {url: "http://", name:""} );
 		this.cancelEdit();
+	}
+
+	isCreatingBookmark() {
+		return angular.isDefined(this.createdBookmark);
+	}
+
+	isEditingBookmark() {
+		return angular.isDefined(this.editedBookmark);
 	}
 	
 	editBookmark(bookmark:IBookmark) {

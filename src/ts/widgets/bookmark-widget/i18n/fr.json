@@ -1,5 +1,5 @@
 {
-    "bookmark-widget": "Signets",
+    "bookmark-widget": "Liens utiles",
     "bookmark.widget.bad.request.invalid.url": "L'addresse saisie est invalide.",
     "bookmark.widget.createform.cancel": "Annuler",
     "bookmark.widget.createform.name": "Nom",
@@ -11,13 +11,15 @@
     "bookmark.widget.editform.name": "Nom",
     "bookmark.widget.editform.save": "Enregistrer",
     "bookmark.widget.editform.url": "Adresse",
-    "bookmark.widget.empty": "Aucun signet",
+    "bookmark.widget.empty": "Gardez à portée de main les sites web que vous utilisez souvent.",
     "bookmark.widget.form.name.is.empty": "Le champ 'nom' est obligatoire",
     "bookmark.widget.form.url.is.empty": "Le champ 'adresse' est obligatoire",
+    "bookmark.widget.manage.empty": "Aucun signet",
     "bookmark.widget.manage.bookmarks": "Gérer les signets",
     "bookmark.widget.manage.title": "Gérer les signets",
     "bookmark.widget.managetable.name": "Nom",
     "bookmark.widget.managetable.url": "Adresse",
     "bookmark.widget.new.bookmark": "Nouveau signet",
-    "bookmark.widget.title": "Signets"
+    "bookmark.widget.title": "Liens utiles",
+    "bookmark.widget.position": "Position du widget"
 }
