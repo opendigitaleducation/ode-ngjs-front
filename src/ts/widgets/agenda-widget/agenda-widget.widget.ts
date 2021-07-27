@@ -46,7 +46,8 @@ type DisplayedEvent = IAgendaEvent & IDisplayedEventData;
 class Controller implements IController {
 	public userEvents:DisplayedEvent[] = [];
 	public dayGroups:string[] = [];
-	readonly numberEvents = 5;
+	/** Maximum number of events displayed by the widget. */
+	readonly MAX_EVENTS_DISPLAYED = 5;
 
 	private dateToMoment(date:string) {
 		var numberHoursLag = moment(moment(date)
@@ -79,7 +80,7 @@ class Controller implements IController {
 			return null;
 		})
 		.then( filterOn => {
-			return filterOn===null? [] : TransportFrameworkFactory.instance().http.get<IAgendaEvent[]>('/calendar/events/widget?' + filterOn + '&nb=' + this.numberEvents);
+			return filterOn===null? [] : TransportFrameworkFactory.instance().http.get<IAgendaEvent[]>('/calendar/events/widget?' + filterOn + '&nb=' + this.MAX_EVENTS_DISPLAYED);
 		});
 	}
 

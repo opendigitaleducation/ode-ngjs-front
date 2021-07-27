@@ -36,7 +36,7 @@
 					<li class="moment-item"
 							ng-repeat="event in ctrl.userEvents | filter:{displayedGroup: group}">
 						<span class="icon"><i class="fas fa-calendar-alt"></i></span>
-						<span class="hour">event.displayedDate</span>
+						<span class="hour" ng-if="!event.allday">[[event.displayedDate]]</span>
 						<span class="link"><a href="#">[[event.title]]</a></span>
 					</li>
 				</ul>
