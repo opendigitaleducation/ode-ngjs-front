@@ -1,23 +1,26 @@
 <!--Widget Dashboard-->
 <div class="widget-dashboard">
+
 	<div class="widget-header">
 		<div class="subtitle"><i18n>logBook.title</i18n></div>
 		<div class="tools">
-			<a href="" class="tool tool-option" i18n-title="logBook.widget.options">
-				<i class="fas fa-cog"></i>
-			</a>
 			<a href="" class="tool tool-position" i18n-title="logBook.widget.position">
 				<i class="fas fa-arrows-alt"></i>
 			</a>
 		</div>
 	</div>
 	<div class="widget-body">
+        <div class="widget-empty-message" ng-if="ctrl.errorMsg">
+            <span class="info" translate content="[[ctrl.errorMsg.error]]"></span>
+        </div>
+    
 		<div class="dashboard-choice"
-				ng-if="ctrl.description.profiles.indexOf('Relative') >= 0 && ctrl.eleves.length > 1 && ctrl.structures"
+				ng-if="ctrl.me.type=='PERSRELELEVE' && ctrl.eleves.length > 1 && ctrl.structures"
 			>
 			<a href="" class="avatar-link"
 					ng-repeat="eleve in ctrl.eleves"
 					ng-click="ctrl.getEleve($index)"
+                    ng-class="{'active': eleve===ctrl.currentEleve}"
 				>
 				<img ng-src="ctrl.getAvatar($index)"/>
 				<span>[[ ctrl.getTag('Prenom', $index) ]]</span>
@@ -25,23 +28,19 @@
 		</div>
 
 		<ul class="dashboard-list">
-			<li class="item link-discret" ng-if="ctrl.structures.length===0">
-				<p class="info" translate content="[[widget.errorMsg.error]]"></p>
-			</li>
-
 			<li class="item link-discret delay"
 					ng-repeat="contentType in ctrl.contentTypes"
-					ng-class="{'empty': !contentType.compact }"
+					ng-if="contentType.compact"
 					ng-click="ctrl.openLightBox(contentType)">
 				<a href="#" class="item-inner">
 					<div class="left">
 						<div class="icon">
-							<i class="ic-[[contentType.icon]]"></i>
+							<i class="[[contentType.icon]]"></i>
 						</div>
 					</div>
 					<div class="right">
 						<div class="label" translate content="logBook.[[contentType.title]]"></div>
-						<div class="info meta">le 08/02/2021 - 8h30</div>
+						<div class="info meta">[[contentType.compact]]</div>
 					</div>
 				</a>
 			</li>
@@ -51,7 +50,7 @@
     <ode-modal visible="ctrl.showLightbox" on-close="ctrl.showLightbox=false">
         <ode-modal-title>
             <h2>
-                <span translate content="[[widget.currentContentType.lightboxTitle]]"></span>
+                <span translate content="[[ctrl.currentContentType.lightboxTitle]]"></span>
 
                 <span ng-if="ctrl.me.type !== 'ELEVE' ">
                     <i18n>logBook.of</i18n>
@@ -71,7 +70,7 @@
                     <p ng-if="!item.subsections && item.pageUrl">
                         <a target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
                             <span>•</span>[[ item.value ]]
-                            <i class="new-tab right-magnet" tooltip="logBook.target.tooltip"></i>
+                            <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
                         </a>
                     </p>
 
@@ -81,7 +80,7 @@
                         [[ item.value ]]
                     </h4>
                     <h4 ng-if="item.subsections && item.pageUrl">
-                        <a target="_blank" href="[[widget.structureAddress]]/[[widget.userStatus()]].html?page=[[ item.pageUrl ]]">
+                        <a target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
                             [[ item.value ]]
                             <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
                         </a>
@@ -92,7 +91,7 @@
 
                             <b ng-if="!subsection.pageUrl">[[ subsection.header ]]</b>
 
-                            <a ng-if="subsection.pageUrl" target="_blank" href="[[widget.structureAddress]]/[[widget.userStatus()]].html?page=[[ subsection.pageUrl ]]">
+                            <a ng-if="subsection.pageUrl" target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ subsection.pageUrl ]]">
                                 <b>[[ subsection.header ]]
                                     <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
                                 </b>

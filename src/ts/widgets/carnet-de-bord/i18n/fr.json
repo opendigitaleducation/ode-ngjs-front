@@ -31,7 +31,7 @@
     "pronote.uri.error": "L'adresse du serveur Pronote n’est pas correctement renseignée dans la console d’administration de l’ENT.",
     "pronote.access.error": "Problème de connexion au serveur Pronote",
     "pronote.connection.error": "Problème de connexion au serveur Pronote",
-    "logBook.widget.options": "Options du widget",
-    "logBook.widget.position": "Position du widget"
+    "logBook.widget.position": "Position du widget",
+    "logBook.widget.nodata": "Aucune donnée disponible."
 
 }
