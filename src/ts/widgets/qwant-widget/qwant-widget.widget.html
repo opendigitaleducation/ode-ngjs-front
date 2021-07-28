@@ -15,19 +15,27 @@
 	</div>
 
 	<div class="widget-body">
-		<div class="widget-empty-message link">
-			<form method="GET" target="_blank" action="https://www.qwant.com">
-				<div class="row">
-					<div class="twelve cell centered-text">
-						<a href="https://www.qwant.com" target="_blank"> <img src="/assets/widgets/qwant/logo-qwant.svg" alt="Qwant" style="width: 75px"></a>
+		<div class="widget-empty-message">
+			<div class="row row-cols-1 align-items-center">
+				<div class="mb-3">
+					<a href="https://www.qwant.com" target="_blank"><img src="/assets/widgets/qwant/logo-qwant.svg" alt="Qwant" style="width: 75px"></a>
+				</div>
+			</div>
+			<form method="GET" target="_blank" action="https://www.qwant.com" autocomplete="off">
+				<div class="row row-cols-1 align-items-center">
+					<label class="sr-only" for="inputQwantQ" translate content="search"></label>
+					<div class="input-group mb-2">
+						<input type="text" id="inputQwantQ" class="form-control" name="q" maxlength="255" i18n-placeholder="search" value="" /> <input type="hidden" name="l" value="fr" />
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary"><i class="ic-search"></i></button>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="twelve cell form">
-						<input type="text" class="twelve cell" name="q" size="31" maxlength="255" i18n-placeholder="search" value="" /> <input type="hidden" name="l" value="fr" />
-						<button><i class="search"></i></button>
-					</div>
-				</div>
+				<!-- div class="form-group">
+					<input type="text" class="form-control-plaintext" name="q" maxlength="255" i18n-placeholder="search" value="" /> <input type="hidden" name="l" value="fr" />
+					<button class="btn btn-outline-primary m-1"><i class="ic-search"></i></button>
+				</div -->
 			</form>
 		</div>
 	</div>
