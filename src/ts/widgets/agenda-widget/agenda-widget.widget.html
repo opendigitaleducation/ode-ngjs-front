@@ -2,17 +2,12 @@
 <div class="widget-calendar">
 	<div class="widget-header">
 		<div class="subtitle">
-			<a class="seemore" href="/calendar" title="Voir tout l'agenda"><i18n>calendar.widget.title</i18n>
+			<a class="seemore" href="/calendar" i18n-title="calendar.widget.see.all"><i18n>calendar.widget.title</i18n>
 				<span class="seemore-text"><i18n>calendar.widget.see.more</i18n></span>
 			</a>
 		</div>
 		<div class="tools">
-			<!--
-			<a href="" class="tool tool-option" title="Options du widget">
-				<i class="fas fa-cog"></i>
-			</a>
-			-->
-			<a href="" class="tool tool-position" title="Position du widget" dnd-handle>
+			<a href="" class="tool tool-position" i18n-title="calendar.widget.position" dnd-handle>
 				<i class="fas fa-arrows-alt"></i>
 			</a>
 		</div>
@@ -37,7 +32,7 @@
 							ng-repeat="event in ctrl.userEvents | filter:{displayedGroup: group}">
 						<span class="icon"><i class="fas fa-calendar-alt"></i></span>
 						<span class="hour" ng-if="!event.allday">[[event.displayedDate]]</span>
-						<span class="link"><a href="#">[[event.title]]</a></span>
+						<span class="link"><a href="/calendar">[[event.title]]</a></span>
 					</li>
 				</ul>
 			</li>

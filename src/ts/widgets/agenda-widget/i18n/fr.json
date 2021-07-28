@@ -4,5 +4,8 @@
     "calendar.widget.empty": "Aucun événement prévu",
     "calendar.next.events": "Prochains événements",
     "calendar.access.module": "Vers module Agenda",
-    "calendar.widget.see.more": "voir plus"
+    "calendar.widget.see.more": "voir plus",
+    "calendar.widget.see.all": "Voir tout l'agenda",
+    "calendar.widget.position": "Position du widget"
+
 }
