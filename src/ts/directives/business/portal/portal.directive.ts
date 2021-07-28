@@ -5,7 +5,7 @@ import { TrackingService } from "../../../services";
 
 interface PortalScope extends IScope {
 	app?:App;
-	title:string;
+	name:string;
 }
 
 /* Directive */
@@ -18,7 +18,7 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 	};
 	scope = {
 		app:"@?",
-		title:"@",
+		name:"@",
 	};
 
 	link(scope:PortalScope, elem:JQLite, attrs:IAttributes) {
@@ -92,7 +92,7 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 /** The portal directive.
  *
  * Usage:
- *      &lt;ode-portal title="My app"></ode-portal&gt;
+ *      &lt;ode-portal app="myappkey" name="My app"></ode-portal&gt;
  * or
  *      &lt;ode-portal template-url="/platform/assets/themes/...."></ode-portal&gt;
  */
