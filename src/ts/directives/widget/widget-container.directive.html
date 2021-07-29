@@ -1,9 +1,9 @@
 <div dnd-list 
-        dnd-allowed-types="{{ctrl.allowedDndType}}"
+        dnd-allowed-types="ctrl.allowedDndTypes"
         dnd-drop="ctrl.onDnDDrop(event, item, index, dropEffect)">
     <div class="widget"
         ng-repeat="widget in ctrl.widgets" ode-widget="widget"
-        dnd-draggable="widget.platformConf.id" dnd-type="{{ctrl.allowedDndType}}" 
+        dnd-draggable="widget.platformConf.id" dnd-type="ctrl.position" 
         dnd-nodrag dnd-disable-if="ctrl.isMobileView">
     </div>
 </div>

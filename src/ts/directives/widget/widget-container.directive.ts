@@ -34,7 +34,7 @@ export class Controller implements IController {
 	}
 
 	get allowedDndTypes():string[] {
-		return ['widget-'+this.position];
+		return [''+this.position];
 	}
 
 	get isMobileView():boolean {
