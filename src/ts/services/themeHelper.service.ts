@@ -14,6 +14,18 @@ export class ThemeHelperService {
         return ConfigurationFrameworkFactory.instance().Platform.cdnDomain;
     }
 
+    async getBootstrapThemePath():Promise<string> {
+        const theme = ConfigurationFrameworkFactory.instance().Platform.theme.themeName;
+        const conf = await ConfigurationFrameworkFactory.instance().Platform.theme.getConf();
+        for( let override of conf.overriding ) {
+            if( override.child === theme ) {
+                return `${this.CDN}/assets/themes/${override.bootstrapVersion}`;
+            }
+        }
+        return `${this.CDN}/assets/themes/${theme}`;
+    }
+
+    /* Extracted from an old code base. */
     toSkinUrl( url:string ):string {
         const theme = angular.element(document.querySelectorAll("#theme"));
         if(!theme.attr('href')) {

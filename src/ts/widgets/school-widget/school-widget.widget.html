@@ -1,0 +1,60 @@
+<div class="widget-school">
+	<div class="widget-body">
+		<div class="header" ng-style="ctrl.getWidgetStyle()">
+			<div class="name">{{ctrl.me.firstName}}&nbsp;{{ctrl.me.lastName}}</div>
+
+			<div ng-class="{dropdown: ctrl.hasManySchools}">
+                <a class="btn btn-outline-light" href="#" role="button" id="ddSchoolWidgetSchool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+				    ng-class="{'dropdown-toggle': ctrl.hasManySchools}">
+				  {{ctrl.selectedSchool.name}}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="ddSchoolWidgetSchool"
+				     ng-if="ctrl.hasManySchools">
+                  <a class="dropdown-item" href="#" 
+					 ng-repeat="school in ctrl.description.schools"
+				  	 ng-click="ctrl.setSelectedSchool($index)">{{school.name}}</a>
+                </div>
+            </div>
+
+			<!-- div class="avatar-list">
+				<a href="" class="avatar-link">
+					<img src="https://picsum.photos/100/100" alt="">
+				</a>
+				<a href="" class="avatar-link">
+					<img src="https://picsum.photos/100/100" alt="">
+				</a>
+				<a href="" class="avatar-link">
+					<img src="https://picsum.photos/100/100" alt="">
+				</a>
+				<a href="" class="avatar-link">
+					<img src="https://picsum.photos/100/100" alt="">
+				</a>
+			</div -->
+		</div>
+		<div class="button-list">
+			<!-- Students -->
+			<a href="/userbook/annuaire#/myClass" class="btn btn-alt"
+				ng-if="ctrl.isStudent"
+				translate content="school.widget.my.classroom"></a>
+			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-alt-outline" 
+				ng-if="ctrl.isStudent"
+				translate content="school.widget.my.team"></a>
+
+			<!-- Teachers -->
+			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-alt"
+				ng-if="ctrl.isTeacher"
+				translate content="school.widget.my.classrooms"></a>
+			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-alt-outline"
+				ng-if="ctrl.isTeacher"
+				translate content="school.widget.school.team"></a>
+
+			<!-- Relatives -->
+			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-alt-outline"
+				ng-if="ctrl.isRelative"
+				translate content="school.widget.school.team"></a>
+			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-alt-outline"
+				ng-if="ctrl.isRelative"
+				translate content="school.widget.school.managers"></a>
+		</div>
+	</div>
+</div>
