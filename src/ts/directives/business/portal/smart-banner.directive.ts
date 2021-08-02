@@ -59,8 +59,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         scope.init = async () => {
             try {
                 const data = await http.get('/conf/smartBanner').then( data => { 
-                //if 200 ok=> display banner
-                if( http.latestResponse.status==200 && data!==null) {
+                    //if 200 ok=> display banner
+                    if( http.latestResponse.status==200 && data!==null) {
                         return data;
                     }
                     return null;
@@ -77,11 +77,11 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
                     scope.icon = lang.translate("smartbanner.icon.uri");
                     if (scope.showBanner) {
                         if (/Android/i.test(navigator.userAgent)) {
-                            scope.store = lang.translate("smartbanner.android.store")
-                            scope.appRef = lang.translate("smartbanner.android.uri")
+                            scope.store = lang.translate("smartbanner.android.store");
+                            scope.appRef = lang.translate("smartbanner.android.uri");
                         } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                            scope.store = lang.translate("smartbanner.ios.store")
-                            scope.appRef = lang.translate("smartbanner.ios.uri")
+                            scope.store = lang.translate("smartbanner.ios.store");
+                            scope.appRef = lang.translate("smartbanner.ios.uri");
                         } else {
                             scope.showBanner = false;
                         }
