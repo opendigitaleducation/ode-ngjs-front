@@ -45,7 +45,11 @@ class Directive implements IDirective {
 /** The ode-modal directive.
  *
  * Usage:
- *      &lt;ode-modal context="instance of IExplorerContext" ></ode-modal&gt;
+ *      &lt;ode-modal>
+ *        &lt;ode-modal-title>Your HTML title here</ode-modal-title>
+ *        &lt;ode-modal-body>Your HTML content here</ode-modal-body>
+ *        &lt;ode-modal-footer>Your HTML footer here</ode-modal-footer>
+ * 		</ode-modal&gt;
  */
 export function DirectiveFactory() {
 	return new Directive();
