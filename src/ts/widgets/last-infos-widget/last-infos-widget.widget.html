@@ -2,18 +2,13 @@
 <div class="widget-news">
 	<div class="widget-header">
 		<div class="subtitle">
-			<a class="seemore" href="/actualites" i18n-title="actualites.widget.see.all">
+			<a class="seemore" href="/actualites" i18n-title="actualites.widget.see.all" dnd-nodrag>
 				<i18n>actualites.widget.title</i18n>
 				<span class="seemore-text"><i18n>actualites.widget.see.more</i18n></span>
 			</a>
 		</div>
-		<div class="tools">
-			<a href="" class="tool tool-position" i18n-title="actualites.widget.position">
-				<i class="fas fa-arrows-alt"></i>
-			</a>
-		</div>
 	</div>
-	<div class="widget-body">
+	<div class="widget-body" dnd-nodrag>
 		
 		<div class="widget-empty-message link"
 				ng-if="ctrl.infos === undefined || ctrl.infos.length === 0">

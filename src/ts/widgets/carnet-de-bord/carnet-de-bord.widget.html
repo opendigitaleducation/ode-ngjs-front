@@ -1,15 +1,10 @@
 <!--Widget Dashboard-->
 <div class="widget-dashboard">
-
 	<div class="widget-header">
 		<div class="subtitle"><i18n>logBook.title</i18n></div>
-		<div class="tools">
-			<a href="" class="tool tool-position" i18n-title="logBook.widget.position">
-				<i class="fas fa-arrows-alt"></i>
-			</a>
-		</div>
 	</div>
-	<div class="widget-body">
+    
+	<div class="widget-body" dnd-nodrag>
         <div class="widget-empty-message" ng-if="ctrl.errorMsg">
             <span class="info" translate content="[[ctrl.errorMsg.error]]"></span>
         </div>

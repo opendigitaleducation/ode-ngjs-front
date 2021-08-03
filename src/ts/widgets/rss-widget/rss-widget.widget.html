@@ -8,13 +8,10 @@
 					ng-click="ctrl.display.edition = true">
 				<i class="fas fa-cog"></i>
 			</a>
-			<a href="" class="tool tool-position" title="Position du widget">
-				<i class="fas fa-arrows-alt"></i>
-			</a>
 		</div>
 	</div>
 
-	<div class="widget-body">
+	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message link"
 				ng-if="ctrl.channel===undefined || ctrl.channel.feeds.length === 0">
 			<i18n>rss.channel.undefined</i18n>
