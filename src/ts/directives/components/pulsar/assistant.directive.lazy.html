@@ -1,28 +1,402 @@
-<lightbox show="show.assistant" on-close="ctrl.closeAssistant()">
-    <div class="logo-quickstart"></div>
-    <a class="ignore" ng-click="ctrl.closeAssistant()"><i18n>ignore</i18n></a>
+<style>
+assistant {
+  z-index: 100001 !important;
+  position: relative
+}
 
+assistant i[class$="-large"] {
+  font-family: "generic-icons";
+  font-style: normal;
+  font-weight: normal;
+}
+/* Icones.
+   HTML fragment from springboard may contain these classes. */
+assistant i[class$="-large"]::before        { color: #e13a3a; }
+assistant i.absences-large::before          {  content: "\e80b"; }
+assistant i.actualites-large::before        {  content: "\e85b";  color: #4bafd5}
+assistant i.admin-large::before             {  content: '\e81a';  color: #ecbe30}
+assistant i.agenda-large::before            {  content: "\e83c";  color: #ecbe30}
+assistant i.archive-large::before           {  content: "\e81d";  color: #ecbe30}
+assistant i.blog-large::before              {  content: '\e809';  color:#1a22a2;}
+assistant i.bookmark-empty-large::before    {  content: '\e888' }
+assistant i.cahier-textes-large::before,
+assistant i.cahier-de-texte-large::before   {  content: "\e86f";  color: #46bfaf}
+assistant i.calendar-large::before          {  content: '\e834';  color: #ecbe30}
+assistant i.conversation-large::before      {  content: "\e804";  color: #ecbe30}
+assistant i.chat-large::before              {  content: "\e817";}
+assistant i.cns-large::before               {  content: '\e88a';  color: #46bfaf}
+assistant i.collaborativeeditor-large::before {  content: "\e829";  color: #4bafd5}
+assistant i.collaborative-wall-large::before {  content: "\e800";  color: #46bfaf}
+assistant i.community-large::before         {  content: '\e814';  color: #763294}
+assistant i.competences-large::before       {  content: "\e927";}
+assistant i.conversation-large::before      {  content:'\e804';  color:#ecbe30;}
+assistant i.directory-large::before         {  content: '\e811';  color: #46bfaf}
+assistant i.edumedia-large::before          {  content: "\e887";  color: #4bafd5}
+assistant i.esidoc-large::before            {  content: "\e826";  color: #763294}
+assistant i.exercizer-large::before         {  content:'\e833';    color:#763294;}
+assistant i.forum-large::before             {  content: '\e81e';  color: #4bafd5}
+assistant i.lesitetv-large::before          {  content: "\e87a";  color: #ecbe30}
+assistant i.library-large::before           {  color: #ecbe30}
+assistant i.maxicours-large::before         {  content: '\e818';  color: #b930a2}
+assistant i.mindmap-large::before           {  content: "\e859";  color: #4bafd5}
+assistant i.my-network-large::before        {  content: '\e82e';  color: #1a22a2}
+assistant i.note-large::before              {  content: '\e806';  color: #ecbe30}
+assistant i.notes-large::before             {  content: '\e806';}
+assistant i.pad-large::before               {  content: "\e829";  color: #4bafd5}
+assistant i.pages-large::before             {  content: "\e876";}
+assistant i.parametrage-large::before       {  content: "\e92f";}
+assistant i.paths-large::before             {  content: "\e94d";  color: #FF8500}
+assistant i.pearltrees-large::before        {  content: "\e933";  color: #4bafd5}
+assistant i.poll-large::before              {  content: '\e832';  color: #4bafd5}
+assistant i.rack-large::before              {  content: "\e80d";}
+assistant i.rbs-large::before               {  content: '\e80e';  color: #b930a2}
+assistant i.scolarite-large::before         {  content: "\e802";  color: #4bafd5}
+assistant i.scrap-book-large::before,
+assistant i.scrapbook-large::before         {  content: "\e8d4";  color: #46bfaf}
+assistant i.schoolbook-large::before        {  content: "\e91e";  color: #46bfaf}
+assistant i.settings-class-large::before    {  content: "\e942";  color: #ecbe30}
+assistant i.sharebigfiles-large::before     {  content: "\e8cb";  color: #763294}
+assistant i.statistics-large::before,
+assistant i.stats-large::before             {  content: '\e810';  color: #763294}
+assistant i.suitcase-large::before          {  content: '\e88b';}
+assistant i.support-large::before           {  content: "\e835";  color: #46bfaf}
+assistant i.timelinegenerator-large::before {  content: '\e819';  color: #ecbe30}
+assistant i.timeline-large::before          {  content: '\e82b'}
+assistant i.userbook-large::before,
+assistant i.visioconf-large::before         {  content: "\e957";  color: #763294}
+assistant i.wiki-large::before              {  content: '\e813';  color: #763294}
+assistant i.workspace-large::before         {  content: "\e81b";}
 
-    <div class="reduce-block-eight">
-        <div ng-include="currentStep.path" class="block-container"></div>
+assistant button.close {
+  display: none
+}
 
-        <div class="row">
-            <nav class="dots">
-                <ul>
-                    <li ng-repeat="step in steps" class="dot" ng-click="ctrl.goTo(step)" ng-class="{ active: step.index === currentStep.index }"></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="row">
-            <button ng-click="ctrl.seeLater()" class="cancel zero-mobile"><i18n>quickstart.see.later</i18n></button>
-            <div class="right-magnet">
-                <button class="right-magnet" ng-click="ctrl.next()" ng-if="currentStep.index !== 0 && currentStep.index !== steps.length -1"><i18n>next</i18n></button>
-                <button class="right-magnet" ng-click="ctrl.next()" ng-if="currentStep.index === 0"><i18n>quickstart.discover</i18n></button>
-                <button class="right-magnet" ng-click="ctrl.next()" ng-if="currentStep.index === steps.length - 1"><i18n>quickstart.done</i18n></button>
-                <button class="cancel right-magnet" ng-click="ctrl.previous()" ng-if="currentStep.index !== 0"><i18n>previous</i18n></button>
+assistant .ignore {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+assistant ode-modal .modal-content {
+  border: 20px solid #4bafd5 !important;
+}
+
+assistant ode-modal .centered-text {
+  text-align: center !important;
+  justify-content: center;
+}
+
+assistant ode-modal .flex-row {
+  display: flex;
+  position: relative;
+}
+
+assistant nav.dots ul {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 10px;
+  padding: 0;
+}
+assistant nav.dots li.dot {
+  list-style-type: none;
+  margin: 0 10px;
+}
+assistant nav.dots li.dot:not([disabled]) {
+  cursor: pointer;
+}
+assistant nav.dots li.dot::before {
+  content: " ";
+  display: block;
+  width: 17px;
+  height: 17px;
+  background: transparent;
+  border: 2px solid #c9ced5;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transition: all 250ms ease;
+}
+assistant nav.dots li.dot.active::before {
+  background: #FF8500
+}
+assistant nav.dots li.dot:hover::before {
+  border-color: #4bafd5
+}
+assistant nav.dots li.dot.active:hover::before {
+  border-color: #FF8500;
+  background: transparent
+}
+
+@media screen and (max-width: 800px) {
+  body assistant div.modal>div.modal-content {
+    top:30px;
+    width: calc(100% - 40px);
+    height: auto;
+    min-height: auto;
+    overflow: hidden;
+    padding: 50px 0 10px !important
+  }
+
+  body assistant div.modal>div.modal-content button.cancel.zero {
+    display: block
+  }
+}
+@media (min-width: 1200px) {
+    assistant .modal-xl {
+        max-width: 800px !important;
+    }
+}
+assistant ode-modal .container img {
+  max-width: 100%;
+}
+assistant ode-modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+assistant ode-modal .modal-content {
+  padding: 50px !important;
+  padding-bottom: 30px !important;
+  box-sizing: border-box;
+  border: 10px solid #4bafd5 !important;
+}
+
+assistant ode-modal h1 {
+  color: #4bafd5 !important;
+}
+
+assistant ode-modal .modal-content .logo-quickstart {
+  background-image: url(../../img/logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center
+}
+
+assistant ode-modal .modal-content iframe {
+  width: calc(100% - 20px)
+}
+
+assistant ode-modal .modal-content h1+p {
+  margin-top: 45px
+}
+
+assistant ode-modal .modal-content h4 {
+  margin: 50px 0 20px;
+  text-align: center
+}
+
+assistant ode-modal .modal-content p {
+  line-height: 25px
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(2) {
+  animation-delay: .25s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(3) {
+  animation-delay: .375s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(4) {
+  animation-delay: .5s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(5) {
+  animation-delay: .625s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(6) {
+  animation-delay: .75s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(7) {
+  animation-delay: .875s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(8) {
+  animation-delay: 1s
+}
+
+assistant ode-modal .modal-content .apps .container:nth-child(9) {
+  animation-delay: 1.125s
+}
+
+assistant ode-modal .modal-content .apps .container {
+  width: 150px;
+  margin: 0 10px;
+  transform: scale(0);
+  animation-duration: 0.4s;
+  animation-name: bounce-pop-out;
+  animation-fill-mode: forwards
+}
+
+assistant ode-modal .modal-content .apps i {
+  font-size: 65px
+}
+
+assistant ode-modal .modal-content .apps i.small {
+  font-size: 40px;
+  padding: 5px
+}
+
+assistant ode-modal .modal-content .apps legend {
+  color: #000;
+  margin: 20px auto 0;
+  font-size: 13px
+}
+
+assistant ode-modal .modal-content iframe {
+  position: absolute;
+  height: 100%
+}
+
+assistant ode-modal .modal-content .ratio-block {
+  width: 100%;
+  padding-bottom: 56%;
+  background: transparent
+}
+
+assistant ode-modal .modal-content .multi-apps {
+  position: relative;
+  height: 100px;
+  width: 125px
+}
+
+assistant ode-modal .modal-content .multi-apps i {
+  position: absolute;
+  font-size: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 3px;
+  line-height: 50px;
+  box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.26)
+}
+
+assistant ode-modal .modal-content .multi-apps i:before {
+  color: #fff
+}
+
+assistant ode-modal .modal-content .multi-apps i.collaborative-wall-large {
+  background: #46bfaf;
+  bottom: 0;
+  right: 0;
+  transform: scale(0.8)
+}
+
+assistant ode-modal .modal-content .multi-apps i.rack-large {
+  background: #e13a3a;
+  top: -10px;
+  left: 3px;
+  transform: scale(0.5)
+}
+
+assistant ode-modal .modal-content .multi-apps i.timelinegenerator-large {
+  background: #ecbe30;
+  top: -14px;
+  right: 3px;
+  transform: scale(0.6)
+}
+
+assistant ode-modal .modal-content .multi-apps i.rbs-large {
+  background: #b930a2;
+  left: -15px;
+  bottom: 13px;
+  transform: scale(0.4)
+}
+
+assistant ode-modal .modal-content .multi-apps i.exercizer-large {
+  background: #763294;
+  left: 8px;
+  bottom: -6px;
+  transform: scale(0.7)
+}
+
+assistant ode-modal .modal-content .multi-apps i.dotsx3-h {
+  background: #4bafd5;
+  left: 37px;
+  bottom: 33px
+}
+
+@media screen and (max-width: 800px) {
+  body assistant div.modal>div.modal-content .logo-quickstart {
+    height:45px;
+    width: 110px;
+    margin-top: -45px;
+    margin-left: 10px
+  }
+
+  body assistant div.modal>div.modal-content h1 {
+    font-weight: bold;
+    margin-top: 8px
+  }
+
+  body assistant div.modal>div.modal-content h4 {
+    font-weight: normal;
+    margin: 20px 0 30px;
+    font-size: 15px;
+    padding: 0 15px;
+    line-height: 18px
+  }
+
+  body assistant div.modal>div.modal-content h4+hr {
+    display: none
+  }
+}
+
+@media screen and (max-width: 550px) {
+  body assistant div.modal>div.modal-content .multi-apps {
+    transform:scale(0.8);
+    transform-origin: top left
+  }
+}
+
+@media screen and (max-width: 420px) {
+  body assistant div.modal>div.modal-content .apps .container {
+    width:80px
+  }
+
+  body assistant div.modal>div.modal-content .apps i {
+    font-size: 45px
+  }
+
+  body assistant div.modal>div.modal-content .apps legend {
+    font-size: 12px
+  }
+}
+</style>
+
+<ode-modal visible="ctrl.show.assistant" on-close="ctrl.closeAssistant()">
+    <ode-modal-title>
+        <div class="logo-quickstart"></div>
+        <a class="ignore" ng-click="ctrl.closeAssistant()"><i18n>ignore</i18n></a>
+    </ode-modal-title>
+
+    <ode-modal-body>
+        <div class="">
+            <div ng-include="ctrl.currentStep.path" class=""></div>
+
+            <div class="">
+                <nav class="dots">
+                    <ul>
+                        <li ng-repeat="step in ctrl.steps" class="dot" ng-click="ctrl.goTo(step)" ng-class="{ active: step.index === ctrl.currentStep.index }"></li>
+                    </ul>
+                </nav>
             </div>
-            <button ng-click="ctrl.seeLater()" class="cancel zero"><i18n>quickstart.see.later</i18n></button>
         </div>
-    </div>
+    </ode-modal-body>
 
-</lightbox>
+    <ode-modal-footer>
+        <button ng-click="ctrl.seeLater()" class="btn btn-outline-primary bg-light text-primary"><i18n>quickstart.see.later</i18n></button>
+        <div class="">
+            <button class="btn btn-outline-primary" ng-click="ctrl.previous()" ng-if="ctrl.currentStep.index !== 0"><i18n>previous</i18n></button>
+            <button class="btn btn-primary" ng-click="ctrl.next()" ng-if="ctrl.currentStep.index !== 0 && ctrl.currentStep.index !== ctrl.steps.length -1"><i18n>next</i18n></button>
+            <button class="btn btn-primary" ng-click="ctrl.next()" ng-if="ctrl.currentStep.index === 0"><i18n>quickstart.discover</i18n></button>
+            <button class="btn btn-primary" ng-click="ctrl.next()" ng-if="ctrl.currentStep.index === ctrl.steps.length - 1"><i18n>quickstart.done</i18n></button>
+        </div>
+    </ode-modal-footer>
+
+</ode-modal>
