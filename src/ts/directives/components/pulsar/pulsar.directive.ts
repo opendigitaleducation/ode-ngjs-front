@@ -119,7 +119,18 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 				yPosition = 'bottom';
 			}
 
-			const pulsarButton = $('<div class="pulsar-button"><div class="pulse"></div><div class="pulse2"></div><div class="pulse-spot"></div></div>')
+			// FIXME: embedded CSS
+			if( ! document.querySelector("style#pulsar-css") ) {
+				$( require('./pulsar.directive.html').default ).appendTo('body');
+			}
+
+			const pulsarButton = $(`
+				<div class="pulsar-button">
+					<div class="pulse"></div>
+					<div class="pulse2"></div>
+					<div class="pulse-spot"></div>
+				</div>
+			`)
 			.appendTo('body');
 
 			if(pulsarInfos.className){
@@ -143,7 +154,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
 				const elemOffset = elem.offset() ?? {left:0, top:0};
 				const elemWidth = elem.width() ?? 0;
-				const elemHeigh = elem.height() ?? 0;
+				const elemHeight = elem.height() ?? 0;
+				//console.log( "elemOffset="+ elemOffset.toString() +", elemWidth ="+elemWidth.toString() +", elemHeight="+elemHeight.toString() );
 				let xPositions = {
 					left: elemOffset.left - (pulsarSize + pulsarMarge),
 					right: elemOffset.left + elemWidth + pulsarMarge,
@@ -152,8 +164,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
 				let yPositions = {
 					top: elemOffset.top,
-					bottom: elemOffset.top + elemHeigh + pulsarMarge,
-					center: elemOffset.top + (elemHeigh / 2) - pulsarSize / 2
+					bottom: elemOffset.top + elemHeight + pulsarMarge,
+					center: elemOffset.top + (elemHeight / 2) - pulsarSize / 2
 				};
 
 				if(pulsarInfos.position === 'top center'){
@@ -344,7 +356,10 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 				// ok pour xp on layers
 
 				http.get<string>('/infra/public/template/pulsar.html').then( html => {
-					pulsarElement?.html( this.$compile(html)(scope).text() );
+					let tmp = $(html);
+					tmp.find('button').addClass('btn btn-primary');
+					let scoped = this.$compile(tmp)(scope);
+					pulsarElement?.html( scoped as any );
 				});
 				$('body').append(pulsarElement);
 			});
