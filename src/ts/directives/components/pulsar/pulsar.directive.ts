@@ -124,7 +124,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 				$( require('./pulsar.directive.html').default ).appendTo('body');
 			}
 
-			const pulsarButton = $(`
+			pulsarButton = $(`
 				<div class="pulsar-button">
 					<div class="pulse"></div>
 					<div class="pulse2"></div>
@@ -135,7 +135,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
 			if(pulsarInfos.className){
 				pulsarInfos.className.split(' ').forEach(function(cls){
-					pulsarButton.addClass(cls);
+					pulsarButton?.addClass(cls);
 				});
 			}
 
@@ -173,8 +173,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 				}
 
 
-				if(pulsarButton.css('display') !== 'none'){
-					pulsarButton.offset({ left: xPositions[xPosition]+deltaX, top: yPositions[yPosition]+deltaY });
+				if(pulsarButton?.css('display') !== 'none'){
+					pulsarButton?.offset({ left: xPositions[xPosition]+deltaX, top: yPositions[yPosition]+deltaY });
 				}
 
 				if(pulsarElement && pulsarElement.find('.arrow').length){
@@ -349,7 +349,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 						pulsarElement?.addClass(cls);
 					});
 				}
-				pulsarButton.hide();
+				pulsarButton?.hide();
 				placeLayers();
 				$(window).on('resize.placeLayers', placeLayers);
 				//scroll voir hauteur document ou bloquer scroll
@@ -439,15 +439,13 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 		scope.next = () => {
 			undraw();
 			let index = this.quickstartSvc.nextAppStep();
-			if(scope.pulsarInfos.steps.find(item => item.index===index) === undefined){
+			let item = scope.pulsarInfos.steps.find(item => item.index===index);
+			if( item === undefined){
 				if( scope.pulsarInfos.steps.find(item => item.index>index) !== undefined ) {
 					scope.next();
 				}
-				return;
-			}
-			for(let i = 0; i < scope.pulsarInfos.steps.length; i++){
-				let item = scope.pulsarInfos.steps[i];
-				if(item.index === index && item.el){
+			} else {
+				if(item.el){
 					if(angular.element(item.el).data('skip-pulsar')){
 						scope.next();
 						return;
