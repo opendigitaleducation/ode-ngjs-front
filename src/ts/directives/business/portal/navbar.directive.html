@@ -19,7 +19,7 @@
 -->
 
 <!-- Theme 1D -->
-<header class="no-2d navbar navbar-light bg-white">
+<header class="no-2d navbar navbar-light bg-white" ng-if="ctrl.is1D">
     <a class="application__title d-desktop-none text-truncate" href="/welcome?token=[[ctrl.version]]"
         ng-bind-html="ctrl.title">
     </a>
@@ -52,7 +52,7 @@
             <a 
                 href=""
                 i18n-title="navbar.help" 
-                pulsar="{ index: 6, i18n: 'portal.pulsar.help', position: 'bottom center'}" 
+                pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}" 
             >
                 <i18n>help.icon</i18n>
             </a>
@@ -93,7 +93,7 @@
 </div>
 
 <!-- Theme 2D -->
-<header class="no-1d navbar navbar-dark bg-secondary">
+<header class="no-1d navbar navbar-dark bg-secondary" ng-if="ctrl.is2D">
     <a class="d-mobile-none" href="/timeline/timeline?token=[[ctrl.version]]">
         <img class="logo" src="/assets/themes/[[ctrl.skin.skin]]/img/illustrations/logo.png" alt="Logo de l'ENT">
     </a>

@@ -20,6 +20,9 @@ export class Controller implements IController {
 	public messagerieLink:string = '/zimbra/zimbra';
 	public mysearch:string = "";
 
+	public is1D:boolean = false;
+	public is2D:boolean = false;
+
 	refreshAvatar() {
 		const session = SessionFrameworkFactory.instance().session;
 		this.avatar = session.description.photo;
@@ -146,9 +149,12 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		Promise.all([
 			this.getCurrentLanguage(),
 			platform.theme.onOverrideReady(),
-			this.getBookmarks()
+			this.getBookmarks(),
+			platform.theme.onFullyReady() // required for getting school degree
 		]).then( (values) => {
 			ctrl.skin = platform.theme;
+			ctrl.is1D = platform.theme.is1D;
+			ctrl.is2D = platform.theme.is2D;
 			ctrl.currentLanguage = values[0];
 
 			const overrides = values[1];
