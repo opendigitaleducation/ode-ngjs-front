@@ -1,0 +1,20 @@
+<ode-modal visible="ctrl.display.showAuthenticatedConnectorLightbox" on-close="ctrl.onClose()">
+    <ode-modal-title>
+        <h3><i18n>apps.authenticatedConnector.lightbox.title</i18n></h3>
+    </ode-modal-title>
+
+    <ode-modal-body>
+        <div class="info vertical-spacing-twice">
+            <i18n>apps.authenticatedConnector.lightbox.content</i18n>
+        </div>
+    </ode-modal-body>
+
+    <ode-modal-footer>
+        <button class="horizontal-spacing" ng-click="ctrl.onConfirm()">
+            <i18n>confirm</i18n>
+        </button>
+        <button class="horizontal-spacing" ng-click="ctrl.onClose()">
+            <i18n>cancel</i18n>
+        </button>
+    </ode-modal-footer>
+</ode-modal>
