@@ -15,5 +15,8 @@
     "rss.channel.feed.url": "Adresse du flux",
     "rss.channel.refresh": "Rafra&icirc;chir",
     "rss.channel.undefined": "Aucun flux configuré",
-    "rss.title": "RSS"
+    "rss.title": "RSS",
+    "rss.channel.feed.title.placeholder": "Saisissez le titre du nouveau flux RSS",
+    "rss.channel.feed.url.placeholder": "Saisissez l'Url du nouveau flux RSS",
+    "rss.widget.empty.info": "Ajoutez un flux RSS pour voir vos derniers articles"
 }

@@ -14,7 +14,7 @@
 	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message link"
 				ng-if="ctrl.channel===undefined || ctrl.channel.feeds.length === 0">
-			<i18n>rss.channel.undefined</i18n>
+			<i18n>rss.widget.empty.info</i18n>
 		</div>
 
 		<div class="widget-empty-message link"
@@ -39,7 +39,7 @@
 	</div>
 </div>
 
-<ode-modal visible="ctrl.display.edition" on-close="ctrl.display.edition = false">
+<ode-modal visible="ctrl.display.edition" on-close="ctrl.display.edition = false" >
 	<ode-modal-title>
 		<h2>
 			<i18n ng-if="!ctrl.display.feedEdition">rss.channel.feed.list</i18n>
@@ -48,57 +48,68 @@
 	</ode-modal-title>
 	
 	<ode-modal-body>
-		<div class="twelve cell rss-config">
-			<div ng-if="!ctrl.display.feedEdition">
-				<span feeds-list ng-if="ctrl.channel.feeds.length === 0"><i18n>rss.channel.undefined</i18n></span>
-				<table class="list-view twelve feeds-content" ng-if="ctrl.channel.feeds.length > 0">
-					<thead>
-						<tr>
-							<th><i18n>rss.channel.feed.title</i18n></th>
-							<th><i18n>rss.channel.feed.show</i18n></th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="feed in ctrl.channel.feeds track by $index" ng-class="{ selected : ctrl.display.feedEdition && $index === ctrl.selectedFeedIndex }">
-							<td ng-click="ctrl.openFeedEdition([$index])">[[ctrl.channel.feeds[$index].title]]</td>
-							<td ng-click="ctrl.openFeedEdition([$index])">[[ctrl.channel.feeds[$index].show]]</td>
-							<td class="one cell">
-								<i class="close" ng-click="ctrl.removeFeed([$index])">&nbsp;</i>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+		<div ng-if="!ctrl.display.feedEdition">
+			<p ng-if="ctrl.channel.feeds.length === 0"><i18n>rss.channel.undefined</i18n></p>
 
-				<div ng-if="ctrl.canAddFeed">
-					<button class="right-magnet cancel" ng-click="ctrl.openFeedEdition()" translate content="rss.channel.feed.add"></button>
-				</div>
-			</div>
-
-			<div ng-if="ctrl.display.feedEdition">
-				<article class="twelve cell">
-					<div class="row">
-						<label class="three cell"><i18n>rss.channel.feed.title</i18n></label>
-						<input class="eight cell" placeholder="Saisissez le titre du nouveau flux RSS" type="text" ng-model="ctrl.selectedFeed.title" />
-					</div>
-					<div class="row">
-						<label class="three cell"><i18n>rss.channel.feed.url</i18n></label>
-						<input class="eight cell" placeholder="Saisissez l'Url du nouveau flux RSS" type="text" ng-model="ctrl.selectedFeed.link" />
-					</div>
-					<div class="row">
-						<label class="three cell"><i18n>rss.channel.feed.show</i18n></label>
-						<select class="one cell" ng-options="n for n in ctrl.showValues" ng-model="ctrl.selectedFeed.show"></select>
-					</div>
-				</article>
-				<div class="row">
-					<button class="right-magnet" ng-click="ctrl.saveFeed()" translate content="rss.channel.feed.save"></button>
-					<button class="right-magnet cancel" ng-click="ctrl.closeFeedEdition()" translate content="rss.channel.feed.cancel"></button>
-				</div>
-			</div>
-
+			<table class="table" ng-if="ctrl.channel.feeds.length > 0">
+				<thead>
+					<tr class="table-primary">
+						<th><i18n>rss.channel.feed.title</i18n></th>
+						<th><i18n>rss.channel.feed.show</i18n></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="feed in ctrl.channel.feeds track by $index" ng-class="{ selected : ctrl.display.feedEdition && $index === ctrl.selectedFeedIndex }">
+						<td ng-click="ctrl.openFeedEdition([$index])">[[ctrl.channel.feeds[$index].title]]</td>
+						<td ng-click="ctrl.openFeedEdition([$index])">[[ctrl.channel.feeds[$index].show]]</td>
+						<td ng-click="ctrl.removeFeed([$index])">
+							<button type="button" class="close" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
+
+
+		<form id="formFeedEdition" ng-if="ctrl.display.feedEdition">
+			<div class="form-group row">
+				<label for="inputFeedTitle" class="col-sm-3 col-form-label"><i18n>rss.channel.feed.title</i18n></label>
+				<div class="col-sm-9">
+					<input type="text" i18n-placeholder="rss.channel.feed.title.placeholder" id="inputFeedTitle" class="form-control" ng-model="ctrl.selectedFeed.title" />
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="inputFeedUrl" class="col-sm-3 col-form-label"><i18n>rss.channel.feed.url</i18n></label>
+				<div class="col-sm-9">
+					<input type="text" i18n-placeholder="rss.channel.feed.url.placeholder" id="inputFeedUrl" class="form-control" ng-model="ctrl.selectedFeed.link" />
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="inputFeedShow" class="col-sm-3 col-form-label"><i18n>rss.channel.feed.show</i18n></label>
+				<div class="col-sm-9">
+					<select id="inputFeedShow" class="form-control" ng-options="n for n in ctrl.showValues" ng-model="ctrl.selectedFeed.show"></select>
+				</div>
+			</div>
+		</form>
 	</ode-modal-body>
 
 	<ode-modal-footer>
+		<div ng-if="!ctrl.display.feedEdition && ctrl.canAddFeed">
+			<button class="btn btn-primary" ng-click="ctrl.openFeedEdition()" translate content="rss.channel.feed.add"></button>
+		</div>
+
+		<div ng-if="ctrl.display.feedEdition">
+			<button form="formFeedEdition" type="reset" class="btn btn-light text-primary" ng-click="ctrl.closeFeedEdition()">
+				<i18n>rss.channel.feed.cancel</i18n>
+			</button>
+			<button form="formFeedEdition" type="submit" class="btn btn-primary" ng-click="ctrl.saveFeed()">
+				<i18n>rss.channel.feed.save</i18n>
+			</button>
+		</div>
 	</ode-modal-footer>
 </ode-modal>

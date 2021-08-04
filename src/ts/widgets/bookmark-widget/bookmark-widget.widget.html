@@ -99,20 +99,20 @@
 		</div>
 
 		<div ng-if="ctrl.isCreatingBookmark()">
-			<button form="formCreated" type="submit" class="btn btn-primary" ng-click="ctrl.createBookmark()">
-				<i18n>bookmark.widget.createform.save</i18n>
-			</button>
 			<button form="formCreated" type="reset" class="btn btn-light text-primary" ng-click="ctrl.cancelCreate()">
 				<i18n>bookmark.widget.createform.cancel</i18n>
+			</button>
+			<button form="formCreated" type="submit" class="btn btn-primary" ng-click="ctrl.createBookmark()">
+				<i18n>bookmark.widget.createform.save</i18n>
 			</button>
 		</div>
 
 		<div ng-if="ctrl.isEditingBookmark()">
-			<button form="formEdited" type="submit" class="btn btn-primary" ng-click="ctrl.updateBookmark()">
-				<i18n>bookmark.widget.editform.save</i18n>
-			</button>
 			<button form="formEdited" type="reset" class="btn btn-light text-primary" ng-click="ctrl.cancelEdit()">
 				<i18n>bookmark.widget.editform.cancel</i18n>
+			</button>
+			<button form="formEdited" type="submit" class="btn btn-primary" ng-click="ctrl.updateBookmark()">
+				<i18n>bookmark.widget.editform.save</i18n>
 			</button>
 		</div>
 	</ode-modal-footer>
