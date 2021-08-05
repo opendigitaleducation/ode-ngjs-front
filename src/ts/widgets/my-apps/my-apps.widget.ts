@@ -7,10 +7,10 @@ class Controller implements IController {
 	redirect( path:string ) {
 		window.location.href = path;
 	};
-	getCssType( app:IWebApp ):string {
-		return app.displayName.toLowerCase();
+	getCssClass( app:IWebApp ):string {
+		const appCode = app.displayName.toLowerCase();
+		return `ic-app ${appCode} color-app-${appCode}`;
 	}
-
 }
 
 /* Directive */
