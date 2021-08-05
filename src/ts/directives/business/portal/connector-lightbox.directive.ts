@@ -1,23 +1,16 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { APP, ConfigurationFrameworkFactory } from "ode-ts-client";
+import { APP, ConfigurationFrameworkFactory, IWebApp } from "ode-ts-client";
 import { Subject } from "rxjs";
 
-type App = {
-    name: string,
-    target: string,
-    address: string,
-    casType: string,
-    scope: string[]
-}
 type AppEvent = {
-    app:App,
+    app:IWebApp,
     $mutex?:boolean,
     ctrlKey:boolean,   // Was CTRL key pressed ?
     metaKey: boolean   // Was Command key pressed? (Apple keyboard)
 }
 
 interface ITriggerScope extends IScope {
-    connectorLightboxTrigger: App;
+    connectorLightboxTrigger: IWebApp;
 }
 
 /** Global AppEvent stream, shared by every connector-lightbox[-trigger] */
@@ -39,7 +32,9 @@ class TriggerDirective implements IDirective<ITriggerScope,JQLite,IAttributes> {
                 ctrlKey: !!event.ctrlKey,
                 metaKey: !!event.metaKey
             } as AppEvent;
+            event.preventDefault();
             _onTriggerApp.next( appEvent );
+            return false;
         });
         scope.$on('$destroy', () => {
             elem.off('click');
@@ -99,11 +94,11 @@ export class Controller {
         }
     }
 
-    isAuthenticatedConnector(app: App): boolean {
+    isAuthenticatedConnector(app: IWebApp): boolean {
         return !!app.casType || (app.scope && app.scope.length > 0 && !!app.scope[0]);
     }
 
-    isAuthenticatedConnectorFirstAccess(app: App): boolean {
+    isAuthenticatedConnectorFirstAccess(app: IWebApp): boolean {
         return !this.authenticatedConnectorsAccessed
             || (this.authenticatedConnectorsAccessed && !this.authenticatedConnectorsAccessed.includes(app.name));
     }

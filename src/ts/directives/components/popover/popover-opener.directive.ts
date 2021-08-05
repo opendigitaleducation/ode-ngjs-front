@@ -53,11 +53,11 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	}
 }
 
-/** The pulsar directive.
+/** The popover-opener directive.
  *
  * Usage:
- *      &lt;a pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}"></a&gt;
+ *      &lt;popover>&lt;button popover-opener/>&lt;popover-content>&lt;/popover-content></popover&gt;
  */
-export function DirectiveFactory() {
+ export function DirectiveFactory() {
 	return new Directive();
 }

@@ -4,17 +4,17 @@
     </ode-modal-title>
 
     <ode-modal-body>
-        <div class="info vertical-spacing-twice">
+        <p class="text-center">
             <i18n>apps.authenticatedConnector.lightbox.content</i18n>
-        </div>
+        </p>
     </ode-modal-body>
 
     <ode-modal-footer>
-        <button class="horizontal-spacing" ng-click="ctrl.onConfirm()">
-            <i18n>confirm</i18n>
-        </button>
-        <button class="horizontal-spacing" ng-click="ctrl.onClose()">
+        <button class="btn btn-light text-primary" ng-click="ctrl.onClose()">
             <i18n>cancel</i18n>
+        </button>
+        <button class="btn btn-primary" ng-click="ctrl.onConfirm()">
+            <i18n>confirm</i18n>
         </button>
     </ode-modal-footer>
 </ode-modal>
