@@ -1,4 +1,5 @@
 import angular, { auto, IModule } from "angular";
+import CursusWidget = require("../widgets/cursus-widget/cursus-widget.widget");
 import SchoolWidget = require("../widgets/school-widget/school-widget.widget");
 import RecordMe = require("../widgets/record-me/record-me.widget");
 import AgendaWidget = require("../widgets/agenda-widget/agenda-widget.widget");
@@ -32,7 +33,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "school-widget" | "record-me"|"agenda-widget"|"qwant"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
+type KnownWidget = "cursus-widget"|"school-widget"|"record-me"|"agenda-widget"|"qwant"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -42,6 +43,7 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
+            case "cursus-widget": await loadCursusWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "school-widget": await loadSchoolWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "record-me": await loadRecordMeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "agenda-widget": await loadAgendaWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
@@ -57,6 +59,25 @@ const module = angular.module("odeWidgets", [])
         }
     };
 }]);
+
+/** Dynamically load the "cursus-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+function loadCursusWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/cursus-widget/cursus-widget.widget"],
+            function(require) {
+                var jsModule = <typeof CursusWidget> require("../widgets/cursus-widget/cursus-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/cursus-widget/cursus-widget.widget"
+        );
+    });
+}
 
 /** Dynamically load the "school-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
 function loadSchoolWidgetModule() {
