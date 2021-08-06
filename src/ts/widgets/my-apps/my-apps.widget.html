@@ -17,7 +17,7 @@
 		<ul class="application-list" ng-if="ctrl.apps.length>0">
 			<li class="application-item"
 					ng-repeat="app in ctrl.apps">
-				<a ng-href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]">
+				<a connector-lightbox-trigger="app" ng-href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]">
 					<i ng-class="ctrl.getCssClass(app)"></i>
 				</a>
 			</li>
