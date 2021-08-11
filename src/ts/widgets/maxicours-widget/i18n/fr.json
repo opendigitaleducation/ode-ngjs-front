@@ -1,0 +1,11 @@
+{
+    "maxicours-widget": "Aide aux devoirs",
+	"maxicours.title": "Aide aux devoirs",
+	"maxicours.inactive.user": "Vous n'êtes pas authentifié sur le service.",
+	"maxicours.connect": "Activer mon compte",
+	"maxicours.refresh": "Rafraîchir les informations",
+	"maxicours.my.points": "Mes points",
+	"maxicours.points": "pts",
+	"maxicours.daily.session": "Ma séance du jour",
+	"maxicours.my.courses": "Mes parcours à réaliser"
+}

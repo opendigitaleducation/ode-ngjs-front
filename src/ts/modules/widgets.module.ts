@@ -1,4 +1,5 @@
 import angular, { auto, IModule } from "angular";
+import MaxicoursWidget = require("../widgets/maxicours-widget/maxicours-widget.widget");
 import CursusWidget = require("../widgets/cursus-widget/cursus-widget.widget");
 import SchoolWidget = require("../widgets/school-widget/school-widget.widget");
 import RecordMe = require("../widgets/record-me/record-me.widget");
@@ -33,7 +34,7 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "cursus-widget"|"school-widget"|"record-me"|"agenda-widget"|"qwant"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
+type KnownWidget = "maxicours-widget"|"cursus-widget"|"school-widget"|"record-me"|"agenda-widget"|"qwant"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -43,6 +44,7 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
+            case "maxicours-widget": await loadMaxicoursWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "cursus-widget": await loadCursusWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "school-widget": await loadSchoolWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case "record-me": await loadRecordMeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
@@ -60,7 +62,26 @@ const module = angular.module("odeWidgets", [])
     };
 }]);
 
-/** Dynamically load the "cursus-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "maxicours-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
+function loadMaxicoursWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/maxicours-widget/maxicours-widget.widget"],
+            function(require) {
+                var jsModule = <typeof MaxicoursWidget> require("../widgets/maxicours-widget/maxicours-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/maxicours-widget/maxicours-widget.widget"
+        );
+    });
+}
+
+/** Dynamically load the "cursus-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadCursusWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -79,7 +100,7 @@ function loadCursusWidgetModule() {
     });
 }
 
-/** Dynamically load the "school-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "school-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadSchoolWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -98,7 +119,7 @@ function loadSchoolWidgetModule() {
     });
 }
 
-/** Dynamically load the "record-me" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "record-me" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadRecordMeWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -117,7 +138,7 @@ function loadRecordMeWidgetModule() {
     });
 }
 
-/** Dynamically load the "agenda-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "agenda-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadAgendaWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -136,7 +157,7 @@ function loadAgendaWidgetModule() {
     });
 }
 
-/** Dynamically load the "qwant-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "qwant-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadQwantWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -155,7 +176,7 @@ function loadQwantWidgetModule() {
     });
 }
 
-/** Dynamically load the "bookmark-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "bookmark-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadBookmarkWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -174,7 +195,7 @@ function loadBookmarkWidgetModule() {
     });
 }
 
-/** Dynamically load the "rss-widget" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "rss-widget" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadRssWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -193,7 +214,7 @@ function loadRssWidgetModule() {
     });
 }
 
-/** Dynamically load the "my-apps" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "my-apps" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadMyAppsWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -212,7 +233,7 @@ function loadMyAppsWidgetModule() {
     });
 }
 
-/** Dynamically load the "carnet-de-bord/carnet-de-bord" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "carnet-de-bord/carnet-de-bord" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadCarnetDeBordWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -231,7 +252,7 @@ function loadCarnetDeBordWidgetModule() {
     });
 }
 
-/** Dynamically load the "last-infos" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "last-infos" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadLastInfosWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -250,7 +271,7 @@ function loadLastInfosWidgetModule() {
     });
 }
 
-/** Dynamically load the "calendar" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "calendar" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadCalendarWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
@@ -269,7 +290,7 @@ function loadCalendarWidgetModule() {
     });
 }
 
-/** Dynamically load the "dicodelazone" widget, which is packaged as a separate entries thanks to require.ensure(). */
+/** Dynamically load the "dicodelazone" widget, which is packaged as a separate entry thanks to require.ensure(). */
 function loadDicoDeLaZoneWidgetModule() {
     return new Promise<string>( (resolve, reject) => {
         // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
