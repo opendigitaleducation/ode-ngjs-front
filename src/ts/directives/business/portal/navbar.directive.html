@@ -48,12 +48,8 @@
             </a>
         </div>
         
-        <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item">
-            <a 
-                href=""
-                i18n-title="navbar.help" 
-                pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}" 
-            >
+        <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item" pulsar="{index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}">
+            <a href="" i18n-title="navbar.help">
                 <i18n>help.icon</i18n>
             </a>
         </div>
@@ -113,14 +109,9 @@
             </a>
         </div>
         
-        <div class="navigation__item">
+        <div class="navigation__item" pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}">
             <popover>
-                <a 
-                    href="/welcome"
-                    i18n-title="navbar.applications" 
-                    pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}" 
-                    popover-opener
-                >
+                <a href="/welcome" i18n-title="navbar.applications" popover-opener>
                     <i class="ic-apps"></i>
                 </a>
                 
@@ -168,23 +159,14 @@
             </popover>
         </div>
 
-        <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item">
-            <a 
-                href=""
-                i18n-title="navbar.help" 
-                pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}" 
-            >
+        <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item" pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}">
+            <a href="" i18n-title="navbar.help">
                 <i18n>help.icon</i18n>
             </a>
         </div>
         
-        <div class="navigation__item">
-            <a 
-                href="/userbook/mon-compte" 
-                class="avatar" 
-                i18n-title="navbar.myaccount" 
-                pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}"
-            >
+        <div class="navigation__item" pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
+            <a href="/userbook/mon-compte" class="avatar" i18n-title="navbar.myaccount">
                 <img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
             </a>
         </div>
