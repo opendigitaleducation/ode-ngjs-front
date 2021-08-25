@@ -27,6 +27,7 @@ export * as PopoverOpener from './components/popover/popover-opener.directive';
 export * as Lightbox from './components/modal/lightbox.directive';
 export * as ConnectorLightbox from './business/portal/connector-lightbox.directive';
 export * as SmartBanner from './business/portal/smart-banner.directive';
+export * as Help from './business/portal/help.directive';
 export * as Autocomplete from './components/autocomplete/autocomplete.directive';
 
 /* New generation components */

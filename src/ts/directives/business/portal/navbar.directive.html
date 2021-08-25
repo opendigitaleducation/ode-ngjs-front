@@ -30,13 +30,9 @@
     </div>
     
     <nav class="navigation">
-        <div class="navigation__item">
+        <div class="navigation__item" ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')">
             <span>
-                <a 
-                    href="/conversation/conversation" 
-                    i18n-title="navbar.messages" 
-                    ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
-                >
+                <a href="/conversation/conversation" i18n-title="navbar.messages">
                     <i class="ic-conversation"><span class="new-mails" ng-if="nbNewMessages">[[nbNewMessages]]</span></i>
                 </a>    
             </span>
@@ -48,7 +44,7 @@
             </a>
         </div>
         
-        <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item" pulsar="{index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}">
+        <div class="navigation__item" ng-if="ctrl.currentLanguage == 'fr'" pulsar="{index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}">
             <a href="" i18n-title="navbar.help">
                 <i18n>help.icon</i18n>
             </a>
