@@ -1,4 +1,4 @@
-import { IAttributes, IController, IDirective, IScope } from "angular";
+import { IAttributes, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, ITheme, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
 
 /* The Help directive is tied to the old infra-front architecture, and relies on having data stored in the scope. */
@@ -6,6 +6,7 @@ import { ConfigurationFrameworkFactory, ITheme, SessionFrameworkFactory, Transpo
 interface Scope extends IScope {
     display:{read?:boolean};
     helpPath:string;
+    onHelp:()=>void;
 }
 
 export class Directive implements IDirective<Scope,JQLite,IAttributes> {
@@ -13,7 +14,7 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
     template = require('./help.directive.html').default;
     scope = {};
 
-    async link(scope:Scope, element:JQLite, attributes:IAttributes): Promise<void> {
+    async link(scope:Scope, element:JQLite, attributes:IAttributes) {
         const skin:ITheme = ConfigurationFrameworkFactory.instance().Platform.theme;
         const appPrefix:string|null = SessionFrameworkFactory.instance().session.currentApp;
         if( appPrefix===null ) {
@@ -21,6 +22,29 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
         } 
         let helpPath = await skin.getHelpPath();
         let helpText:string;
+
+        const http = TransportFrameworkFactory.instance().http;
+        const lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
+
+        scope.onHelp = function() {
+            if (helpText) {
+                setHtml(helpText);
+            }
+            else {
+                http.get<string>(
+                    scope.helpPath,
+                    {queryParams:{"_": ConfigurationFrameworkFactory.instance().Platform.deploymentTag}}
+                ).then( content => {
+                    if( http.latestResponse.status === 404 ) {
+                        helpText = '<h2>' + lang.translate('help.notfound.title') + '</h2><p>' + lang.translate('help.notfound.text') + '</p>';
+                    } else {
+                        helpText = content;
+                    }
+                    setHtml(helpText);
+                    scope.$apply();
+                })
+            }
+        };
 
         // FIXME old code with jquery starts here, i won't rewrite it now.
         scope.display = {};
@@ -44,7 +68,7 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
             helpContent.find('img').each(function(index, item){
                 $(item).attr('src', scope.helpPath + "../.." + $(item).attr('src'));
             });
-            element.find('div.content > div[ng-transclude]').html(helpContent.html());
+            element.find('ode-modal-body > div').html(helpContent.html());
             element.find('li a').on('click', function(e){
                 element.find('.section').slideUp();
                 $('div#' + $(e.target).attr('href')?.split('#')[1]).slideDown();
@@ -81,29 +105,6 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
             scope.display.read = true;
             scope.$apply('display');
         };
-
-        const http = TransportFrameworkFactory.instance().http;
-        const lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
-
-        element.children('i.navbar-help').on('click', function () {
-            if (helpText) {
-                setHtml(helpText);
-            }
-            else {
-                http.get<string>(
-                    scope.helpPath,
-                    {queryParams:{"_": ConfigurationFrameworkFactory.instance().Platform.deploymentTag}}
-                ).then( content => {
-                    if( http.latestResponse.status === 404 ) {
-                        helpText = '<h2>' + lang.translate('help.notfound.title') + '</h2><p>' + lang.translate('help.notfound.text') + '</p>';
-                    } else {
-                        helpText = content;
-                    }
-                    setHtml(helpText);
-                    scope.$apply();
-                })
-            }
-        });
     }
 }
 
