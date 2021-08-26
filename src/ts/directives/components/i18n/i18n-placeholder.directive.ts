@@ -7,7 +7,7 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
         attrs.$observe('i18nPlaceholder', val => {
             const compiled = this.$compile('<span>' + this.idiom.translate(attrs.i18nPlaceholder) + '</span>')(scope);
             setTimeout(function(){
-                elem.attr('placeholder', compiled.text());
+                elem.attr('placeholder', compiled.text()); // Use compiled text(), not html() because attributes should not contain html tags
             }, 10);
         });
     }

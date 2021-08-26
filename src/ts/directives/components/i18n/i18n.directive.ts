@@ -6,7 +6,11 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
     restrict='E';
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
-        elem.html( this.$compile('<span class="no-style">'+ this.idiom.translate(elem.text().trim()) +'</span>')(scope).text() );
+        const key = elem.text().trim();
+        const value = this.idiom.translate(key);
+        // Set the inner HTML of elem with compiled html() code, not compiled text().
+        // The html code may contain other angular directives, or HTML tags.
+        elem.html( this.$compile('<span class="no-style">'+ value +'</span>')(scope).html() );
     }
 }
 

@@ -3,11 +3,11 @@ import { I18nBase } from "./I18nBase";
 
 /* Directive */
 class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes,IController[]> {
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         attrs.$observe('i18nValue', val => {
             const compiled = this.$compile('<span>' + this.idiom.translate(attrs.i18nValue) + '</span>')(scope);
             setTimeout(function(){
-                elem.attr('value', compiled.text());
+                elem.attr('value', compiled.text()); // Use compiled text(), not html() because attributes should not contain html tags
             }, 10);
         });
     }

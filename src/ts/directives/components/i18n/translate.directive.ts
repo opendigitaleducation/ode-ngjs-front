@@ -20,7 +20,9 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
             if(!attrs.content){
                 return;
             }
-            elem.html( this.$compile('<span class="no-style">' + this.idiom.translate(attrs.content) + '</span>')(scope).text() );
+            // Set the inner HTML of elem with compiled html() code, not compiled text().
+            // The html code may contain other angular directives, or HTML tags.
+            elem.html( this.$compile('<span class="no-style">' + this.idiom.translate(attrs.content) + '</span>')(scope).html() );
         });
 
         attrs.$observe('attr', val => {
@@ -29,7 +31,7 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
             }
             var compiled = this.$compile('<span>' + this.idiom.translate(attrs[attrs.attr]) + '</span>')(scope);
             setTimeout(function(){
-                elem.attr(attrs.attr, compiled.text());
+                elem.attr(attrs.attr, compiled.text()); // Use compiled text(), not html() because attributes should not contain html tags
             }, 10);
         });
 
@@ -41,7 +43,7 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
             for(var prop in attrObj){
                 const compiled = this.$compile('<span>'+ this.idiom.translate(attrObj[prop]) +'</span>')(scope);
                 setTimeout(function(){
-                    elem.attr(prop, compiled.text());
+                    elem.attr(prop, compiled.text()); // Use compiled text(), not html() because attributes should not contain html tags
                 }, 0);
             }
         })
@@ -50,7 +52,9 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
             if(!attrs.key){
                 return;
             }
-            elem.html( this.$compile('<span class="no-style">'+ this.idiom.translate(attrs.key) +'</span>')(scope).text() );
+            // Set the inner HTML of elem with compiled html() code, not compiled text().
+            // The html code may contain other angular directives, or HTML tags.
+            elem.html( this.$compile('<span class="no-style">'+ this.idiom.translate(attrs.key) +'</span>')(scope).html() );
         });
     }
 }
