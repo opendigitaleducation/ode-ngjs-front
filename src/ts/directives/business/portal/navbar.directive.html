@@ -86,91 +86,87 @@
 
 <!-- Theme 2D -->
 <header class="no-1d navbar navbar-dark bg-secondary" ng-if="ctrl.is2D">
-    <a class="d-mobile-none" href="/timeline/timeline?token=[[ctrl.version]]">
+    <a class="btn btn-secondary d-mobile-none" href="/timeline/timeline?token=[[ctrl.version]]">
         <img class="logo" src="/assets/themes/[[ctrl.skin.skin]]/img/illustrations/logo.png" alt="Logo de l'ENT">
     </a>
-    
-    <a href="/welcome" class="application__title d-desktop-none text-truncate"
+
+    <a href="/welcome" class="d-desktop-none text-truncate"
         ng-bind-html="ctrl.title">
     </a>
-    
-    <nav class="navigation">
-        <div class="navigation__item">
-            <a href="/timeline/timeline" i18n-title="navbar.home"><i class="ic-home"></i></a>
-        </div>
-        
-        <div class="navigation__item" ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
-            <a href="/community" class="zero-mobile" i18n-title="navbar.community">
-                <i class="ic-community"></i>
-            </a>
-        </div>
-        
-        <div class="navigation__item" pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}">
-            <popover>
-                <a href="/welcome" i18n-title="navbar.applications" popover-opener>
-                    <i class="ic-apps"></i>
-                </a>
-                
-                <popover-content>
-                    <div class="content">
-                        <div class="my-apps row">
-                            <div ng-if="me.bookmarkedApps.length === 0">
-                                <i18n>navbar.myapps.more</i18n>
-                            </div>
-                            <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
-                                <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
-                                    <i class="ic-app [[app.displayName]] color-app-[[app.displayName]]" ng-switch-when="-1"></i>
-                                    <img skin-src="[[app.icon]]" ng-switch-default />
-                                </a>
-                            </div>
-                        </div>
-                        <div class="more">
-                            <a href="/welcome"><i18n>plus</i18n></a>
-                        </div>
-                    </div>
-                </popover-content>
-            </popover>
-        </div>
-        
-        <div class="navigation__item">
-            <span ng-include="ctrl.conversationUnreadUrl"></span>
-        </div>
-        
-        <div class="navigation__item" ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
-            <popover class="searchengine">
-                <a href="/searchengine" popover-opener ng-click="ctrl.openApps($event)" i18n-title="navbar.search">
-                    <i class="ic-search"></i>
-                </a>
-                <popover-content class="searchPortal">
-                    <div class="content searchContent">
-                        <div class="search-text row">
-                            <input type="text" class="searchInput" name="mysearch" ng-model="ctrl.mysearch"
-                                ng-keyup="ctrl.launchSearch($event);" />
-                            <button class="searchButton" ng-click="ctrl.launchSearch('link');">
-                                <i18n>ok</i18n>
-                            </button>
-                        </div>
-                    </div>
-                </popover-content>
-            </popover>
-        </div>
 
-        <div ng-if="ctrl.currentLanguage == 'fr'" class="navigation__item" pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}">
-            <a href="" i18n-title="navbar.help">
-                <help></help><!-- i18n>help.icon</i18n -->
+    <a href="/timeline/timeline" class="btn btn-secondary" i18n-title="navbar.home"><i class="ic-home"></i></a>
+
+    <a href="/community" class="btn btn-secondary zero-mobile" i18n-title="navbar.community"
+            ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
+        <i class="ic-community"></i>
+    </a>
+
+    <div class="btn btn-secondary" pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}">
+        <popover>
+            <a href="/welcome" i18n-title="navbar.applications" popover-opener>
+                <i class="ic-apps"></i>
             </a>
-        </div>
-        
-        <div class="navigation__item" pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
-            <a href="/userbook/mon-compte" class="avatar" i18n-title="navbar.myaccount">
-                <img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
+            
+            <popover-content>
+                <div class="content">
+                    <div class="my-apps row">
+                        <div ng-if="me.bookmarkedApps.length === 0">
+                            <i18n>navbar.myapps.more</i18n>
+                        </div>
+                        <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
+                            <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
+                                <i class="ic-app [[app.displayName]] color-app-[[app.displayName]]" ng-switch-when="-1"></i>
+                                <img skin-src="[[app.icon]]" ng-switch-default />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="more">
+                        <a href="/welcome"><i18n>plus</i18n></a>
+                    </div>
+                </div>
+            </popover-content>
+        </popover>
+    </div>
+    
+    <div class="btn btn-secondary" 
+            ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')">
+        <span ng-include="ctrl.conversationUnreadUrl"></span>
+    </div>
+
+    <div ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
+        <popover class="searchengine">
+            <a href="/searchengine" class="btn btn-secondary" i18n-title="navbar.search" popover-opener 
+                    ng-click="ctrl.openApps($event)">
+                <i class="ic-search"></i>
             </a>
-        </div>
-        
-        <div class="navigation__item">
-            <a href="" logout i18n-title="navbar.disconnect">
-                <i class="ic-disconnect"></i>
-            </a>
-        </div>
-    </nav>
+            <popover-content class="searchPortal">
+                <div class="content searchContent">
+                    <div class="search-text row">
+                        <input type="text" class="searchInput" name="mysearch" ng-model="ctrl.mysearch"
+                            ng-keyup="ctrl.launchSearch($event);" />
+                        <button class="searchButton" ng-click="ctrl.launchSearch('link');">
+                            <i18n>ok</i18n>
+                        </button>
+                    </div>
+                </div>
+            </popover-content>
+        </popover>
+    </div>
+
+    <div  class="btn btn-secondary" pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}"
+            ng-if="ctrl.currentLanguage == 'fr'">
+        <a href="" i18n-title="navbar.help">
+            <help></help><!-- i18n>help.icon</i18n -->
+        </a>
+    </div>
+    
+    <div class="btn btn-secondary" pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
+        <a href="/userbook/mon-compte" i18n-title="navbar.myaccount">
+            <img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
+        </a>
+    </div>
+    
+    <a href="" class="btn btn-secondary" logout i18n-title="navbar.disconnect">
+        <i class="ic-disconnect"></i>
+    </a>
 </header>

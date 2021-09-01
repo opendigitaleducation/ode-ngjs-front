@@ -25,11 +25,7 @@ export class Controller implements IController {
 
 	refreshAvatar() {
 		const session = SessionFrameworkFactory.instance().session;
-		this.avatar = session.description.photo;
-		if (!this.avatar || this.avatar === 'no-avatar.jpg' || this.avatar === 'no-avatar.svg') {
-			const basePath = ConfigurationFrameworkFactory.instance().Platform.theme.basePath;				
-			this.avatar = basePath + '/img/illustrations/no-avatar.svg';
-		}
+		this.avatar = session.avatarUrl;
 		this.username = session.description.displayName;
 	};
 
