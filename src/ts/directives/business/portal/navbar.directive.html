@@ -18,6 +18,12 @@
  ~
 -->
 
+<style>
+    ode-navbar header.no-1d img.avatar {
+        max-width:48px;
+    }
+</style>
+
 <!-- Theme 1D -->
 <header class="no-2d navbar navbar-light bg-white" ng-if="ctrl.is1D">
     <a class="application__title d-desktop-none text-truncate" href="/welcome?token=[[ctrl.version]]"
@@ -153,7 +159,7 @@
         </popover>
     </div>
 
-    <div  class="btn btn-secondary" pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}"
+    <div class="btn btn-secondary" pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}"
             ng-if="ctrl.currentLanguage == 'fr'">
         <a href="" i18n-title="navbar.help">
             <help></help><!-- i18n>help.icon</i18n -->
@@ -162,7 +168,7 @@
     
     <div class="btn btn-secondary" pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
         <a href="/userbook/mon-compte" i18n-title="navbar.myaccount">
-            <img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
+            <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
         </a>
     </div>
     
