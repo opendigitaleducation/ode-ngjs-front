@@ -20,7 +20,7 @@ async function getZlib() {
 // console.log("Use new recorder module");
 
 const resolvedNavigatorModules = {
-	getUserMediaLegacy: navigator.getUserMedia
+	getUserMediaLegacy: (navigator as any).getUserMedia
 		|| (navigator as any).webkitGetUserMedia
 		|| (navigator as any).mozGetUserMedia
 		|| (navigator as any).msGetUserMedia,
@@ -157,7 +157,7 @@ export var audio_recorder = (function () {
 				// Legacy. Prevent crash in that motherfu**ing IE 💩
 				resolvedNavigatorModules.getUserMediaLegacy({ audio: true },
 					handleMediaStream,
-					function (err) { console.log("err:", err) }
+					function (err:any) { console.log("err:", err) }
 				)
 			}
 
