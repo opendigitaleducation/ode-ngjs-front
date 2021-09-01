@@ -1,21 +1,29 @@
 <div class="widget-school">
 	<div class="widget-body">
-		<div class="header" ng-style="ctrl.getWidgetStyle()">
-			<div class="name">{{ctrl.me.firstName}}&nbsp;{{ctrl.me.lastName}}</div>
-
-			<div ng-class="{dropdown: ctrl.hasManySchools}">
-                <a class="btn btn-outline-light" href="#" role="button" id="ddSchoolWidgetSchool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-				    ng-class="{'dropdown-toggle': ctrl.hasManySchools}">
-				  {{ctrl.selectedSchool.name}}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="ddSchoolWidgetSchool"
-				     ng-if="ctrl.hasManySchools">
-                  <a class="dropdown-item" href="#" 
-					 ng-repeat="school in ctrl.description.schools"
-				  	 ng-click="ctrl.setSelectedSchool($index)">{{school.name}}</a>
-                </div>
-            </div>
-
+		<div class="widget-school-header" ng-style="ctrl.getWidgetStyle()">
+			<div class="d-flex align-items-center">
+				<div class="me-4">
+					<a href="" class="avatar-link">
+						<img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" />
+					</a>
+				</div>
+				<div class="flex-grow-1">
+					<div class="name">{{ctrl.description.displayName}}</div>
+					<div ng-class="{dropdown: ctrl.hasManySchools}">
+						<a class="school-multiple btn btn-outline-light border-0" href="" role="button" id="ddSchoolWidgetSchool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  {{ctrl.selectedSchool.name}}
+						</a>
+						<div class="school-choice dropdown-menu" aria-labelledby="ddSchoolWidgetSchool"
+								ng-class="{'d-none': !ctrl.hasManySchools}">
+							<div>
+								<a href="" 
+							 	   ng-repeat="school in ctrl.description.schools"
+							 	   ng-click="ctrl.setSelectedSchool($index)">{{school.name}}</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<!-- div class="avatar-list">
 				<a href="" class="avatar-link">
 					<img src="https://picsum.photos/100/100" alt="">

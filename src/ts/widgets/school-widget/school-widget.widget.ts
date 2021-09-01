@@ -13,6 +13,9 @@ class Controller implements IController {
 	private get description():IUserDescription {
 		return SessionFrameworkFactory.instance().session.description;
 	}
+	public get avatar():string {
+		return SessionFrameworkFactory.instance().session.avatarUrl;
+	}
 
 	public async initialize() {
 		this.themePath = await this.themeHelperSvc.getBootstrapThemePath();
