@@ -26,47 +26,41 @@
 <div ng-class="{ 'd-none': ctrl.isVideo || ctrl.isIdle || ctrl.isStopped || !ctrl.isAudioCompatible }">
     <div ng-if="ctrl.showActionButtons">
 
-        <div class="recorder--timer" 
-            ng-class="{'recording': ctrl.isRecording}">
-            <i class="record-audio"></i>
+        <div class="record-timer">
+            <i class="fas fa-microphone"></i>
             [[ctrl.time()]]
         </div>
-        <input type="text" i18n-placeholder="title" ng-model="ctrl.recorder.title" />
+        <input type="text" class="form-control" i18n-placeholder="title" ng-model="ctrl.recorder.title" />
         
-        <div class="recorder--controls">
-            <button type="button"
-                    ng-class="{'start': !ctrl.isRecording, 'suspend': ctrl.isRecording}" 
+        <div class="record-controls">
+            <button type="button" class="btn btn-circle"
                     ng-click="ctrl.switchAudioRecord()"
                     ng-disabled="ctrl.isEncoding || ctrl.isUploading">
-                <i class="record-audio" ng-class="{'start': !ctrl.isRecording, 'suspend': ctrl.isRecording}"></i>
-                <span ng-if="ctrl.isSuspended"><i18n>embed.resume</i18n></span>
-                <span ng-if="ctrl.isRecording"><i18n>embed.suspend</i18n></span>
+                <i class="fas" ng-class="{'fa-microphone': !ctrl.isRecording, 'fa-pause': ctrl.isRecording}"></i>
+                <span class="label" ng-if="ctrl.isSuspended"><i18n>embed.resume</i18n></span>
+                <span class="label" ng-if="ctrl.isRecording"><i18n>embed.suspend</i18n></span>
             </button>
 
-            <button type="button"
-                    class="recorder--control play" 
+            <button type="button" class="btn btn-circle"
                     ng-click="ctrl.switchPlay()" 
-                    ng-class="{'play': ctrl.showActionButtons, 'pause': ctrl.isPlaying}"
                     ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i ng-class="{'play': ctrl.showActionButtons, 'pause': ctrl.isPlaying}"></i>
-                <span ng-if="!ctrl.isPlaying"><i18n>embed.play</i18n></span>
-                <span ng-if="ctrl.isPlaying"><i18n>embed.pause</i18n></span>
+                <i class="fas" ng-class="{'fa-play': ctrl.showActionButtons, 'fa-pause': ctrl.isPlaying}"></i>
+                <span class="label" ng-if="!ctrl.isPlaying"><i18n>embed.play</i18n></span>
+                <span class="label" ng-if="ctrl.isPlaying"><i18n>embed.pause</i18n></span>
             </button>
 
-            <button type="button"
-                    class="recorder--control redo" 
+            <button type="button" class="btn btn-circle"
                     ng-click="ctrl.recorder.flush()" 
                     ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i class="redo"></i>
-                <span><i18n>embed.redo</i18n></span>
+                <i class="fas fa-redo-alt"></i>
+                <span class="label"><i18n>embed.redo</i18n></span>
             </button>
 
-            <button type="button"
-                    class="recorder--control save" 
+            <button type="button" class="btn btn-circle"
                     ng-click="ctrl.saveRecord()" 
                     ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i ng-class="{'save': !ctrl.isEncoding && !ctrl.isUploading, 'loading': ctrl.isEncoding || ctrl.isUploading}"></i>
-                <span><i18n>embed.save</i18n></span>
+                <i ng-class="{'fa-save': !ctrl.isEncoding && !ctrl.isUploading, 'fa-loading': ctrl.isEncoding || ctrl.isUploading}"></i>
+                <span class="label"><i18n>embed.save</i18n></span>
             </button>
         </div>
     </div>
