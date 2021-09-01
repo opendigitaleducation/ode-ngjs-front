@@ -95,7 +95,8 @@ class Controller implements IController {
     }
 
     getUserInfo(hook?:any) {
-        if ((typeof this.controllerData.id === "string" && this.controllerData.id.trim().length === 0)
+        if (typeof this.controllerData.id === "undefined"
+            || (typeof this.controllerData.id === "string" && this.controllerData.id.trim().length === 0)
             || this.controllerData.id < 0) {
             if (typeof hook === 'function')
                 hook();
@@ -107,40 +108,44 @@ class Controller implements IController {
             if( this.http().latestResponse.status !== 200 ) {
                 throw "Cannot get maxicours user info.";
             }
-            const xmlDocument = $.parseXML(xml);
-            const $xml = $(xmlDocument);
+            try {
+                const xmlDocument = $.parseXML(xml);
+                const $xml = $(xmlDocument);
 
-            let getText = function (xml:JQuery<XMLDocument>, tagName:string, parent?:string) {
-                const tags = parent ? xml.find(parent).find(tagName) : xml.find(tagName)
-                return tags.text()
-            }
-            let getContent = function (xml:JQuery<XMLDocument>, tagName:string, parent?:string) {
-                const tags = parent ? xml.find(parent).find(tagName) : xml.find(tagName)
-                return tags.contents()
-            }
-            let jsonifyArray = function(arrayTag:JQuery<HTMLElement>) {
-                return $(arrayTag).children().toArray().map( item => {
-                    let serialized:any = {};
-                    const children = $(item).children();
-                    for (let i = 0; i < children.length; i++) {
-                        serialized[children[i].nodeName] = children[i].textContent;
-                    }
-                    return serialized;
-                });
-            }
+                let getText = function (xml:JQuery<XMLDocument>, tagName:string, parent?:string) {
+                    const tags = parent ? xml.find(parent).find(tagName) : xml.find(tagName)
+                    return tags.text()
+                }
+                let getContent = function (xml:JQuery<XMLDocument>, tagName:string, parent?:string) {
+                    const tags = parent ? xml.find(parent).find(tagName) : xml.find(tagName)
+                    return tags.contents()
+                }
+                let jsonifyArray = function(arrayTag:JQuery<HTMLElement>) {
+                    return $(arrayTag).children().toArray().map( item => {
+                        let serialized:any = {};
+                        const children = $(item).children();
+                        for (let i = 0; i < children.length; i++) {
+                            serialized[children[i].nodeName] = children[i].textContent;
+                        }
+                        return serialized;
+                    });
+                }
 
-            this.controllerData.userInfo = {
-                hasAnActiveAccount: getText($xml, "hasAnActiveAccount"),
-                activityScore: getText($xml, "activityScore"),
-                hasSessionOfTheDay: getText($xml, "hasSessionOfTheDay"),
-                sessionOfTheDayUrl: getText($xml, "sessionOfTheDayUrl"),
-                sessionOfTheDayActivities: jsonifyArray($xml.find("sessionOfTheDayActivities")),
-                hasPersonnalCourses: getText($xml, "hasPersonnalCourses"),
-                newPersonnalCourses: jsonifyArray($xml.find("newPersonnalCourses")),
-                currentPersonnalCourses: jsonifyArray($xml.find("currentPersonnalCourses"))
-            }
+                this.controllerData.userInfo = {
+                    hasAnActiveAccount: getText($xml, "hasAnActiveAccount"),
+                    activityScore: getText($xml, "activityScore"),
+                    hasSessionOfTheDay: getText($xml, "hasSessionOfTheDay"),
+                    sessionOfTheDayUrl: getText($xml, "sessionOfTheDayUrl"),
+                    sessionOfTheDayActivities: jsonifyArray($xml.find("sessionOfTheDayActivities")),
+                    hasPersonnalCourses: getText($xml, "hasPersonnalCourses"),
+                    newPersonnalCourses: jsonifyArray($xml.find("newPersonnalCourses")),
+                    currentPersonnalCourses: jsonifyArray($xml.find("currentPersonnalCourses"))
+                }
 
-            this.apply && this.apply();
+                this.apply && this.apply();
+            } catch (e) {
+                console.log("Cannot parse maxicours user info.");
+            }
         })
         .finally( () => {
             if (typeof hook === 'function')
