@@ -55,7 +55,7 @@ class Directive implements IDirective {
 /** The ode-modal directive.
  *
  * Usage:
- *      &lt;ode-modal size?="sm|lg|xl">
+ *      &lt;ode-modal size?="sm|lg|xl" visible="a_boolean_variable" on-close?="a_function">
  *        &lt;ode-modal-title>Your HTML title here</ode-modal-title>
  *        &lt;ode-modal-body>Your HTML content here</ode-modal-body>
  *        &lt;ode-modal-footer>Your HTML footer here</ode-modal-footer>

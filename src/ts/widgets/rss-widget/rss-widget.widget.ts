@@ -103,7 +103,7 @@ class Controller implements IController {
 			this.selectedFeed = angular.copy(this.channel.feeds[index]);
 			this.selectedFeedIndex = index;
 		}else{
-			this.selectedFeed = {title:"", link:""};
+			this.selectedFeed = {title:"", link:"", show:3};
 			this.selectedFeedIndex = -1;
 		}
 		this.display.feedEdition = true;

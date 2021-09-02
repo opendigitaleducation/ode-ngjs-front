@@ -1,6 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import moment from 'moment'; // FIXME : should we use moment anymore ?
 import { notify } from "../../services";
 
 // UTILS
