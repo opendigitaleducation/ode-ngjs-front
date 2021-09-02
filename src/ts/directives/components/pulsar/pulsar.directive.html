@@ -1,6 +1,6 @@
 <style id="pulsar-css">
 	pulsar {
-		z-index: 200000;
+		z-index: 1036;
 		position: absolute;
 		pointer-events: all;
 	}
@@ -9,7 +9,7 @@
 		box-shadow: 0px 0px 0px 99999px rgb(0 0 0 / 60%);
 		position: absolute;
 		border-radius: 2px;
-		z-index: 150000;
+		z-index: 1035;
 	}
 
 	pulsar .content {
@@ -213,7 +213,7 @@
 
 	.pulsar-button {
 		position: absolute;
-		z-index: 100000;
+		z-index: 1031;
 		width: 40px;
 		height: 40px;
 	}
@@ -262,6 +262,10 @@
 		transition: all 250ms ease;
 	}
 
+	.pulse2::after {
+		animation-delay: .3s;
+	}
+
 	.pulse-spot::before {
 		content: 'i';
 		font-style: italic;
@@ -280,7 +284,7 @@
 		box-sizing: border-box;
 	}
 
-	pulsar .row>*{
-		width:auto;
+	pulsar .row>* {
+		width: auto;
 	}
 </style>
