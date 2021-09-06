@@ -1,8 +1,8 @@
 <div class="widget-bookmarks">
 	<div class="widget-header">
-		<div class="subtitle"><i18n>bookmark.widget.title</i18n></div>
+		<div class="subtitle"><i18n>bookmark-widget.widget.title</i18n></div>
 		<div class="tools">
-			<a href="" class="tool tool-option" i18n-title="bookmark.widget.manage.bookmarks"
+			<a href="" class="tool tool-option" i18n-title="bookmark-widget.widget.manage.bookmarks"
 					ng-click="ctrl.display.manage = true">
 				<i class="fas fa-cog"></i>
 			</a>
@@ -11,7 +11,7 @@
 
 	<div class="widget-body">
 		<div class="widget-empty-message link" ng-if="ctrl.bookmarks.length === 0">
-			<i18n>bookmark.widget.empty</i18n>
+			<i18n>bookmark-widget.widget.empty</i18n>
 		</div>
 
 		<ul class="bookmark-list" ng-if="!ctrl.bookmarks.isEmpty()">
@@ -25,19 +25,19 @@
 
 <ode-modal size="lg" visible="ctrl.display.manage" on-close="ctrl.display.manage = false">
 	<ode-modal-title>
-		<h2><i18n>bookmark.widget.manage.title</i18n></h2>
+		<h2><i18n>bookmark-widget.widget.manage.title</i18n></h2>
 	</ode-modal-title>
 
 	<ode-modal-body>
 		<div ng-if="ctrl.bookmarks.length === 0">
-			<p><i18n>bookmark.widget.manage.empty</i18n></p>
+			<p><i18n>bookmark-widget.widget.manage.empty</i18n></p>
 		</div>
 
 		<table class="table table-hover" ng-if="ctrl.bookmarks.length !== 0">
 			<thead>
 				<tr class="bg-secondary text-light">
-					<th><i18n>bookmark.widget.managetable.name</i18n></th>
-					<th><i18n>bookmark.widget.managetable.url</i18n></th>
+					<th><i18n>bookmark-widget.widget.managetable.name</i18n></th>
+					<th><i18n>bookmark-widget.widget.managetable.url</i18n></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -55,17 +55,17 @@
 		</table>
 
 		<form id="formCreated" autocomplete="off" class="mt-5" ng-if="ctrl.isCreatingBookmark()">
-			<h3><i18n>bookmark.widget.createform.title</i18n></h3>
+			<h3><i18n>bookmark-widget.widget.createform.title</i18n></h3>
 
 			<div class="form-group row mt-3">
-				<label for="inputCreatedName" class="col-sm-2 col-form-label"><i18n>bookmark.widget.createform.name</i18n></label>
+				<label for="inputCreatedName" class="col-sm-2 col-form-label"><i18n>bookmark-widget.widget.createform.name</i18n></label>
 				<div class="col-sm-10">
 					<input type="text" id="inputCreatedName" class="form-control auto-focused" ng-model="ctrl.createdBookmark.name" />
 				</div>
 			</div>
 
 			<div class="form-group row mt-3">
-				<label for="inputCreatedUrl" class="col-sm-2 col-form-label"><i18n>bookmark.widget.createform.url</i18n></label>
+				<label for="inputCreatedUrl" class="col-sm-2 col-form-label"><i18n>bookmark-widget.widget.createform.url</i18n></label>
 				<div class="col-sm-10">
 					<input type="text" id="inputCreatedUrl" class="form-control" ng-model="ctrl.createdBookmark.url" />
 				</div>
@@ -73,17 +73,17 @@
 		</form>
 
 		<form id="formEdited" autocomplete="off" class="mt-5" ng-if="ctrl.isEditingBookmark()">
-			<h3><i18n>bookmark.widget.edit.bookmark</i18n></h3>
+			<h3><i18n>bookmark-widget.widget.edit.bookmark</i18n></h3>
 
 			<div class="form-group row mt-3">
-				<label for="inputEditedName" class="col-sm-2 col-form-label"><i18n>bookmark.widget.editform.name</i18n></label>
+				<label for="inputEditedName" class="col-sm-2 col-form-label"><i18n>bookmark-widget.widget.editform.name</i18n></label>
 				<div class="col-sm-10">
 					<input type="text" id="inputEditedName" class="form-control auto-focused" ng-model="ctrl.editedBookmark.name" />
 				</div>
 			</div>
 
 			<div class="form-group row mt-3">
-				<label for="inputEditedUrl" class="col-sm-2 col-form-label"><i18n>bookmark.widget.editform.url</i18n></label>
+				<label for="inputEditedUrl" class="col-sm-2 col-form-label"><i18n>bookmark-widget.widget.editform.url</i18n></label>
 				<div class="col-sm-10">
 					<input type="text" id="inputEditedUrl" class="form-control" ng-model="ctrl.editedBookmark.url" />
 				</div>
@@ -93,24 +93,24 @@
 
 	<ode-modal-footer>
 		<div ng-if="!ctrl.isCreatingBookmark() && !ctrl.isEditingBookmark()">
-			<button class="btn btn-primary" ng-click="ctrl.newBookmark()"><i18n>bookmark.widget.new.bookmark</i18n></button>
+			<button class="btn btn-primary" ng-click="ctrl.newBookmark()"><i18n>bookmark-widget.widget.new.bookmark</i18n></button>
 		</div>
 
 		<div ng-if="ctrl.isCreatingBookmark()">
 			<button form="formCreated" type="reset" class="btn btn-light text-primary" ng-click="ctrl.cancelCreate()">
-				<i18n>bookmark.widget.createform.cancel</i18n>
+				<i18n>bookmark-widget.widget.createform.cancel</i18n>
 			</button>
 			<button form="formCreated" type="submit" class="btn btn-primary" ng-click="ctrl.createBookmark()">
-				<i18n>bookmark.widget.createform.save</i18n>
+				<i18n>bookmark-widget.widget.createform.save</i18n>
 			</button>
 		</div>
 
 		<div ng-if="ctrl.isEditingBookmark()">
 			<button form="formEdited" type="reset" class="btn btn-light text-primary" ng-click="ctrl.cancelEdit()">
-				<i18n>bookmark.widget.editform.cancel</i18n>
+				<i18n>bookmark-widget.widget.editform.cancel</i18n>
 			</button>
 			<button form="formEdited" type="submit" class="btn btn-primary" ng-click="ctrl.updateBookmark()">
-				<i18n>bookmark.widget.editform.save</i18n>
+				<i18n>bookmark-widget.widget.editform.save</i18n>
 			</button>
 		</div>
 	</ode-modal-footer>

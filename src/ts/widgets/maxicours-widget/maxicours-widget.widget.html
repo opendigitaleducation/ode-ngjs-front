@@ -1,6 +1,6 @@
 <div class="widget-maxicours">
     <div class="widget-header">
-        <div class="subtitle"><i18n>maxicours.title</i18n></div>
+        <div class="subtitle"><i18n>maxicours-widget.widget.title</i18n></div>
     </div>
 
     <div class="widget-body m-3"  ng-if="!ctrl.showWidget()" dnd-nodrag>
@@ -25,20 +25,20 @@
 
         <!-- Inactive user -->
         <div class="widget-empty-message" ng-if="!ctrl.loads && (!ctrl.controllerData.id || ctrl.controllerData.id < 0)">
-            <i18n>maxicours.inactive.user</i18n>
+            <i18n>maxicours-widget.widget.inactive.user</i18n>
             <form class="mt-3" data-maxicours-action method="get">
-                <button class="btn btn-primary" ng-click="ctrl.initAuthProcess()" formtarget="_blank" translate content="maxicours.connect"></button>
+                <button class="btn btn-primary" ng-click="ctrl.initAuthProcess()" formtarget="_blank" translate content="maxicours-widget.widget.connect"></button>
             </form>
         </div>
 
         <!-- Active user -->
         <div ng-if="!ctrl.loads && ctrl.controllerData.id >= 0">
             <div>
-                <i18n>maxicours.my.points</i18n>: <span>[[ ctrl.controllerData.userInfo.activityScore ]]</span>
+                <i18n>maxicours-widget.widget.my.points</i18n>: <span>[[ ctrl.controllerData.userInfo.activityScore ]]</span>
             </div>
             <div>
                 <div ng-if="ctrl.controllerData.userInfo.hasSessionOfTheDay">
-                    <h4><a ng-href="[[ctrl.controllerData.userInfo.sessionOfTheDayUrl]]" target="_blank"><i18n>maxicours.daily.session</i18n></a></h4>
+                    <h4><a ng-href="[[ctrl.controllerData.userInfo.sessionOfTheDayUrl]]" target="_blank"><i18n>maxicours-widget.widget.daily.session</i18n></a></h4>
                     <div ng-if="ctrl.controllerData.userInfo.hasSessionOfTheDay === 'true'">
                         <div class="activity row" ng-repeat="activity in ctrl.controllerData.userInfo.sessionOfTheDayActivities">
                             <img class="picto" ng-src="[[activity.picto]]"></img>
@@ -51,7 +51,7 @@
                 </div>
 
                 <div ng-if="ctrl.controllerData.userInfo.newPersonnalCourses.length > 0">
-                    <h4><i18n>maxicours.my.courses<i18n></h4>
+                    <h4><i18n>maxicours-widget.widget.my.courses<i18n></h4>
                     <ul>
                         <li ng-repeat="course in ctrl.controllerData.userInfo.newPersonnalCourses">
                             <b>

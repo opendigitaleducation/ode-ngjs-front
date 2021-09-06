@@ -1,6 +1,10 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, NotifyFrameworkFactory } from "ode-ts-client";
 
+/*
+ * NOTE As of 2021-09-06, this widget is only 1D now, the code below is never used. 
+ */
+
 /* Controller for the directive */
 class Controller implements IController {
 	constructor() {
@@ -32,8 +36,7 @@ function DirectiveFactory() {
 // Preload translations
 NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+//		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

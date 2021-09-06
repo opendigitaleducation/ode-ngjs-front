@@ -43,26 +43,26 @@
 			<!-- Students -->
 			<a href="/userbook/annuaire#/myClass" class="btn btn-alt"
 				ng-if="ctrl.isStudent"
-				translate content="school.widget.my.classroom"></a>
+				translate content="school-widget.widget.my.classroom"></a>
 			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-alt-outline" 
 				ng-if="ctrl.isStudent"
-				translate content="school.widget.my.team"></a>
+				translate content="school-widget.widget.my.team"></a>
 
 			<!-- Teachers -->
 			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-alt"
 				ng-if="ctrl.isTeacher"
-				translate content="school.widget.my.classrooms"></a>
+				translate content="school-widget.widget.my.classrooms"></a>
 			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-alt-outline"
 				ng-if="ctrl.isTeacher"
-				translate content="school.widget.school.team"></a>
+				translate content="school-widget.widget.school.team"></a>
 
 			<!-- Relatives -->
 			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-alt-outline"
 				ng-if="ctrl.isRelative"
-				translate content="school.widget.school.team"></a>
+				translate content="school-widget.widget.school.team"></a>
 			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-alt-outline"
 				ng-if="ctrl.isRelative"
-				translate content="school.widget.school.managers"></a>
+				translate content="school-widget.widget.school.managers"></a>
 		</div>
 	</div>
 </div>

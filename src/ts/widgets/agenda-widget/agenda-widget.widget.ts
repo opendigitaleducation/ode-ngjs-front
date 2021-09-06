@@ -134,7 +134,6 @@ function DirectiveFactory() {
 // Preload translations
 NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
 		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });

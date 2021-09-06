@@ -1,5 +1,5 @@
 {
-    "plus":  "plus",
-    "my-apps": "Mes applis",
-    "navbar.myapps.more":  "Cliquez sur \"plus\" pour sélectionner vos applications favorites."
+"my-apps.widget.title": "Mes applis",
+"my-apps.widget.options":  "plus",
+"my-apps.widget.more":  "Cliquez sur \"plus\" pour sélectionner vos applications favorites."
 }

@@ -17,11 +17,11 @@
 
         <form ng-if="!ctrl.loads">
             <div ng-if="!ctrl.cardNb || ctrl.error">
-                <p ng-if="!ctrl.error"><i18n>cursus.inactive.text</i18n></p>
-                <p ng-if="ctrl.error" class="text-warning"><i18n>cursus.error.text</i18n></p>
+                <p ng-if="!ctrl.error"><i18n>cursus-widget.widget.inactive.text</i18n></p>
+                <p ng-if="ctrl.error" class="text-warning"><i18n>cursus-widget.widget.error.text</i18n></p>
 
                 <div class="form-group row">
-                    <label class="col-sm-5 col-form-label text-primary" for="cursusInputCardNb" translate content="cursus.cardNb"></label>
+                    <label class="col-sm-5 col-form-label text-primary" for="cursusInputCardNb" translate content="cursus-widget.widget.cardNb"></label>
                     <div class="col-sm-7">
                         <input class="form-control form-control-sm" id="cursusInputCardNb" type="text" ng-model="inputCardNb">
                     </div>
@@ -30,17 +30,17 @@
                 <div class="d-flex justify-content-center mt-1">
                     <button class="btn btn-outline-secondary"
                             ng-click="ctrl.connect(inputCardNb)" ng-disabled="!inputCardNb" 
-                            translate content="cursus.validate"></button>
+                            translate content="cursus-widget.widget.validate"></button>
                 </div>
             </div>
 
             <div ng-if="ctrl.cardNb && !ctrl.error">
                 <div class="mb-3">
-                    <h2><i18n>cursus.my.wallets</i18n></h2>
+                    <h2><i18n>cursus-widget.widget.my.wallets</i18n></h2>
                     <table class="twelve centered-text">
                         <thead>
-                            <th translate content="cursus.wallet"></th>
-                            <th translate content="cursus.sale"></th>
+                            <th translate content="cursus-widget.widget.wallet"></th>
+                            <th translate content="cursus-widget.widget.sale"></th>
                         </thead>
                         <tbody ng-if="ctrl.sales">
                             <tr ng-repeat="sale in ctrl.sales">
@@ -52,12 +52,12 @@
                 </div>
 
                 <div>
-                    <h2><i18n>cursus.update.cardNb.title</i18n></h2>
-                    <i18n>cursus.update.cardNb.text</i18n>.
+                    <h2><i18n>cursus-widget.widget.update.cardNb.title</i18n></h2>
+                    <i18n>cursus-widget.widget.update.cardNb.text</i18n>.
                     <div class="d-flex justify-content-center mt-3">
                         <button class="btn btn-outline-secondary"
                             ng-click="ctrl.logout()" 
-                            translate content="cursus.update.cardNb.button"></button>
+                            translate content="cursus-widget.widget.update.cardNb.button"></button>
                     </div>
                 </div>
             </div>

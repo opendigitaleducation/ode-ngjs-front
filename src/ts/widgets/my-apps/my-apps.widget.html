@@ -1,9 +1,9 @@
 <div class="widget-applications">
 	<div class="widget-header">
-		<div class="subtitle"><i18n>my-apps</i18n></div>
+		<div class="subtitle"><i18n>my-apps.widget.title</i18n></div>
 
 		<div class="tools">
-			<a href="" class="tool tool-option" title="Options du widget">
+			<a href="" class="tool tool-option" i18n-title="my-apps.widget.options">
 				<i class="fas fa-cog"></i>
 			</a>
 		</div>
@@ -11,7 +11,7 @@
 
 	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message link" ng-if="ctrl.apps.length===0">
-			<i18n>navbar.myapps.more</i18n>
+			<i18n>my-apps.widget.more</i18n>
 		</div>
 
 		<ul class="application-list" ng-if="ctrl.apps.length>0">

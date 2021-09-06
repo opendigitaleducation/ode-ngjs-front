@@ -1,7 +1,7 @@
 <!--Widget Dashboard-->
 <div class="widget-dashboard">
 	<div class="widget-header">
-		<div class="subtitle"><i18n>logBook.title</i18n></div>
+		<div class="subtitle"><i18n>carnet-de-bord.widget.title</i18n></div>
 	</div>
     
 	<div class="widget-body" dnd-nodrag>
@@ -34,7 +34,7 @@
 						</div>
 					</div>
 					<div class="right">
-						<div class="label" translate content="logBook.[[contentType.title]]"></div>
+						<div class="label" translate content="carnet-de-bord.widget.[[contentType.title]]"></div>
 						<div class="info meta">[[contentType.compact]]</div>
 					</div>
 				</a>
@@ -48,7 +48,7 @@
                 <span translate content="[[ctrl.currentContentType.lightboxTitle]]"></span>
 
                 <span ng-if="ctrl.me.type !== 'ELEVE' ">
-                    <i18n>logBook.of</i18n>
+                    <i18n>carnet-de-bord.widget.of</i18n>
                     [[ctrl.getCurrentTag('Prenom')]]
                 </span>
             </h2>
@@ -65,7 +65,7 @@
                     <p ng-if="!item.subsections && item.pageUrl">
                         <a target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
                             <span>•</span>[[ item.value ]]
-                            <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
+                            <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                         </a>
                     </p>
 
@@ -77,7 +77,7 @@
                     <h4 ng-if="item.subsections && item.pageUrl">
                         <a target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
                             [[ item.value ]]
-                            <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
+                            <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                         </a>
                     </h4>
 
@@ -88,7 +88,7 @@
 
                             <a ng-if="subsection.pageUrl" target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ subsection.pageUrl ]]">
                                 <b>[[ subsection.header ]]
-                                    <i class="new-tab right-magnet" i18n-title="logBook.target.tooltip"></i>
+                                    <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                                 </b>
                             </a>
 

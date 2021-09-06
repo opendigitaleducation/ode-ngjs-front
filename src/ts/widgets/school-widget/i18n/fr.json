@@ -1,8 +1,7 @@
 {
-    "school-widget": "Établissement",
-    "school.widget.my.classroom": "Ma classe",
-    "school.widget.my.classrooms": "Mes classes",
-    "school.widget.my.team": "Mon équipe pédagogique",
-    "school.widget.school.team": "Équipe pédagogique",
-    "school.widget.school.managers": "Direction"
+"school-widget.widget.my.classroom": "Ma classe",
+"school-widget.widget.my.classrooms": "Mes classes",
+"school-widget.widget.my.team": "Mon équipe pédagogique",
+"school-widget.widget.school.team": "Équipe pédagogique",
+"school-widget.widget.school.managers": "Direction"
 }

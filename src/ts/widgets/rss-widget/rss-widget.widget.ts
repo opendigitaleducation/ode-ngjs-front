@@ -189,17 +189,13 @@ class Controller implements IController {
 		}
 		return momentDate.lang('fr').format('dddd DD MMMM YYYY HH:mm');
 	};
-
-	constructor( 
-		private $window:IWindowService 
-		) {}
 }
 
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./rss-widget.widget.html').default;
-	controller = ["$window",Controller];
+	controller = [Controller];
 	controllerAs = 'ctrl';
     require = ['odeRssWidget'];
 
@@ -222,7 +218,6 @@ function DirectiveFactory() {
 // Preload translations
 NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
 		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });

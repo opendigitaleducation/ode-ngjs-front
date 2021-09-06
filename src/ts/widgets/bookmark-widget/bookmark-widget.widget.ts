@@ -48,11 +48,11 @@ class Bookmark implements IBookmark {
 
 	create():Promise<Bookmark> {
 		if (isEmpty(this.name)) {
-			notify.error('bookmark.widget.form.name.is.empty');
+			notify.error('bookmark-widget.widget.form.name.is.empty');
 			return Promise.reject();
 		}
 		if (isEmpty(this.url)) {
-			notify.error('bookmark.widget.form.url.is.empty');
+			notify.error('bookmark-widget.widget.form.url.is.empty');
 			return Promise.reject();
 		}
 	
@@ -217,7 +217,6 @@ function DirectiveFactory() {
 // Preload translations
 NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
 		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });

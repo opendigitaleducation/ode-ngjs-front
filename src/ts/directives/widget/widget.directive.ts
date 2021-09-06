@@ -1,5 +1,5 @@
-import angular, { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { IWidget, TransportFrameworkFactory, WidgetPosition } from "ode-ts-client";
+import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
+import { IWidget } from "ode-ts-client";
 import { WidgetLoader } from "../../modules/widgets.module";
 import { WidgetService } from "../../services";
 
@@ -17,8 +17,6 @@ export class Controller implements IController {
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
-//	template?:string=undefined;
-//	templateUrl?:string=undefined;
 	scope = {
 		widget: "=odeWidget"
 	};
@@ -33,7 +31,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 
 		this.widgetLoader( ctrl.widget.platformConf.name )
 		.then( () => {
-			const htmlFragment=`<ode-${ctrl.widget.platformConf.name}>LOADING</ode-${ctrl.widget.platformConf.name}>`;
+			const htmlFragment=`<ode-${ctrl.widget.platformConf.name}></ode-${ctrl.widget.platformConf.name}>`;
 			const compiled = this.$compile(htmlFragment)(scope);
 			elem.append( compiled );
 		});

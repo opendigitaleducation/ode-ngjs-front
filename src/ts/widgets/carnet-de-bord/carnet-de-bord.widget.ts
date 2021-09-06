@@ -13,7 +13,7 @@ type ContentType = {
 	icon: string;	//"timer-off";
 	compact: string|boolean;	//"",
 	full: any[]|boolean;
-	lightboxTitle: string;	//"logBook.lateness.all"
+	lightboxTitle: string;	//"carnet-de-bord.widget.lateness.all"
 }
 
 /* Controller for the directive */
@@ -36,31 +36,31 @@ class Controller implements IController {
 		icon: "ic-timer-off",
 		compact: "",
 		full: [],
-		lightboxTitle: "logBook.lateness.all"
+		lightboxTitle: "carnet-de-bord.widget.lateness.all"
 	},{
 		title: "absences",
 		icon: "ic-nobody",
 		compact: "",
 		full: [],
-		lightboxTitle: "logBook.absences.all"
+		lightboxTitle: "carnet-de-bord.widget.absences.all"
 	},{
 		title: "grades",
 		icon: "ic-grades",
 		compact: "",
 		full: [],
-		lightboxTitle: "logBook.grades.all"
+		lightboxTitle: "carnet-de-bord.widget.grades.all"
 	},{
 		title: "diary",
 		icon: "ic-homeworks",
 		compact: "",
 		full: [],
-		lightboxTitle: "logBook.diary.all"
+		lightboxTitle: "carnet-de-bord.widget.diary.all"
 	},{
 		title: "skills",
 		icon: "ic-trending-up",
 		compact: "",
 		full: [],
-		lightboxTitle: "logBook.skills.all"
+		lightboxTitle: "carnet-de-bord.widget.skills.all"
 	}];
     public structureAddress:string = "";
     public structureId:string = "";
@@ -131,7 +131,7 @@ class Controller implements IController {
 						var pageUrl = $(delay).parent().attr('page');
 						latedate = $(delay).parent().find('Date').text();
 						latedate = moment(latedate);
-						latedate = lang.translate('logBook.the')+" "+latedate.format('DD/MM/YYYY - HH:mm');
+						latedate = lang.translate('carnet-de-bord.widget.the')+" "+latedate.format('DD/MM/YYYY - HH:mm');
 						allDelays.push({
 							value : latedate,
 							pageUrl : pageUrl
@@ -166,12 +166,12 @@ class Controller implements IController {
                             startdate = startdate.format('DD/MM/YYYY HH:mm');
                             enddate = enddate.format('DD/MM/YYYY HH:mm');
 
-                            absDate = lang.translate('logBook.from')+" "+startdate +" "+lang.translate('logBook.to')+" "+enddate;
+                            absDate = lang.translate('carnet-de-bord.widget.from')+" "+startdate +" "+lang.translate('carnet-de-bord.widget.to')+" "+enddate;
                         }else {
                             absDate = $(absence).parent().find('DateDebut').text();
                             absDate = moment(absDate);
                             absDate = absDate.format('DD/MM/YYYY HH:mm');
-                            absDate = lang.translate('logBook.the')+" "+  absDate;
+                            absDate = lang.translate('carnet-de-bord.widget.the')+" "+  absDate;
                         }
                         allAbsences.push({
                             value : absDate,
@@ -198,7 +198,7 @@ class Controller implements IController {
                     var matiere = $(result).find('Matiere').text();
                     var notedate:any = moment($(result).find('Date').text());
                     notedate = notedate.format('DD/MM/YYYY');
-                    var grade = note+"/"+bareme+" "+lang.translate('logBook.in')+" "+matiere+" "+lang.translate('logBook.the')+" "+notedate;
+                    var grade = note+"/"+bareme+" "+lang.translate('carnet-de-bord.widget.in')+" "+matiere+" "+lang.translate('carnet-de-bord.widget.the')+" "+notedate;
 
                     allGrades.push({
                         value : grade,
@@ -221,7 +221,7 @@ class Controller implements IController {
                 $(diaries).each(function(i, diary){
                     if ($(diary).find('TravailAFaire Descriptif').text()) {
 
-                        let matiere = lang.translate('logBook.new.homework')+" "+$(diary).find('Matiere').text()
+                        let matiere = lang.translate('carnet-de-bord.widget.new.homework')+" "+$(diary).find('Matiere').text()
                         let works = $(diary).find('TravailAFaire');
                         let subsections:any[] = [];
 
@@ -230,7 +230,7 @@ class Controller implements IController {
                             let matiereFirst = $(work).parent().find('Matiere').text()
                             let delivdate:any = moment($(work).find('PourLe').text())
                             delivdate = delivdate.format('DD/MM/YYYY');
-                            delivdate = lang.translate('logBook.for')+" "+delivdate
+                            delivdate = lang.translate('carnet-de-bord.widget.for')+" "+delivdate
                             let descr:any = $(work).find('Descriptif');
                             descr = descr.html(descr.text()).text();
 
@@ -272,13 +272,13 @@ class Controller implements IController {
                         var skillDate:any = moment($(skill).find('Date').text());
                         skillDate = skillDate.format('DD/MM/YYYY');
 
-                        var headskill = lang.translate('logBook.skills')+" ";
-                        var headitem = lang.translate('logBook.skills.item')+" ";
+                        var headskill = lang.translate('carnet-de-bord.widget.skills')+" ";
+                        var headitem = lang.translate('carnet-de-bord.widget.skills.item')+" ";
 
-                        var fullTitle = title +" "+lang.translate('logBook.the')+" "+skillDate;
+                        var fullTitle = title +" "+lang.translate('carnet-de-bord.widget.the')+" "+skillDate;
 
                         if(matiere){
-                            fullTitle = fullTitle+" "+lang.translate('logBook.in')+" "+matiere;
+                            fullTitle = fullTitle+" "+lang.translate('carnet-de-bord.widget.in')+" "+matiere;
                         }
 
                         var subsections = [{
@@ -329,10 +329,10 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
                     "address" : "https://WSEducation.index-education.net/pronote"                    
                 }];
                 */
-                throw "pronote.access.error";
+                throw "carnet-de-bord.widget.pronote.access.error";
             }
             if( !angular.isArray(structures) ) {
-                throw "logBook.widget.nodata";
+                throw "carnet-de-bord.widget.nodata";
             }
 			ctrl.structures = structures;
 			ctrl.eleves = [];
@@ -375,7 +375,6 @@ function DirectiveFactory() {
 // Preload translations
 NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
 		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
