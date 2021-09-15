@@ -8,7 +8,13 @@ class Controller implements IController {
 		window.location.href = path;
 	};
 	getCssClass( app:IWebApp ):string {
-		const appCode = app.displayName.toLowerCase();
+		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
+		let appCode = app.displayName.toLowerCase();
+		switch( appCode ) {
+			case "admin.title": 	appCode = "admin"; break;
+			case "directory.user":	appCode = "userbook"; break;
+			default: break;
+		}
 		return `ic-app ${appCode} color-app-${appCode}`;
 	}
 }
