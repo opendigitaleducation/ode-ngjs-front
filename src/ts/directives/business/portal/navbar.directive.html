@@ -20,7 +20,12 @@
 
 <style id="navbar-css">
     ode-navbar header.no-1d img.avatar {
+        width: 1em;
         max-width: 1em;
+    }
+    ode-navbar header.no-1d i.ic-conversation,
+    ode-navbar header.no-1d i.ic-help {
+        color: #fff;
     }
 </style>
 
@@ -31,7 +36,7 @@
     </a>
     
     <div class="d-mobile-none">
-        <img ng-src="[[ctrl.avatar]]" id="my-photo" />
+        <img ng-src="[[ctrl.avatar]]" />
         <span href="" translate key="welcome"></span>
     </div>
     
@@ -107,72 +112,88 @@
         <i class="ic-community"></i>
     </a>
 
-    <div class="btn btn-secondary" pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}">
-        <popover>
-            <a href="/welcome" i18n-title="navbar.applications" popover-opener>
-                <i class="ic-apps"></i>
-            </a>
-            
-            <popover-content>
-                <div class="content">
-                    <div class="my-apps row">
-                        <div ng-if="me.bookmarkedApps.length === 0">
-                            <i18n>navbar.myapps.more</i18n>
-                        </div>
-                        <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
-                            <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
-                                <i class="ic-app [[app.displayName]] color-app-[[app.displayName]]" ng-switch-when="-1"></i>
-                                <img skin-src="[[app.icon]]" ng-switch-default />
-                            </a>
-                        </div>
+    <popover class="btn btn-secondary" pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}">
+        <a href="/welcome" class="text-light" i18n-title="navbar.applications" popover-opener>
+            <i class="ic-apps"></i>
+        </a>
+        
+        <popover-content>
+            <div class="content">
+                <div class="my-apps row">
+                    <div ng-if="me.bookmarkedApps.length === 0">
+                        <i18n>navbar.myapps.more</i18n>
                     </div>
-                    <div class="more">
-                        <a href="/welcome"><i18n>plus</i18n></a>
+                    <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
+                        <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
+                            <i class="ic-app [[app.displayName]] color-app-[[app.displayName]]" ng-switch-when="-1"></i>
+                            <img skin-src="[[app.icon]]" ng-switch-default />
+                        </a>
                     </div>
                 </div>
-            </popover-content>
-        </popover>
-    </div>
+                <div class="more">
+                    <a href="/welcome"><i18n>plus</i18n></a>
+                </div>
+            </div>
+        </popover-content>
+    </popover>
     
     <div class="btn btn-secondary" 
             ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')">
         <span ng-include="ctrl.conversationUnreadUrl"></span>
     </div>
 
-    <div ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
-        <popover class="searchengine">
-            <a href="/searchengine" class="btn btn-secondary" i18n-title="navbar.search" popover-opener 
-                    ng-click="ctrl.openApps($event)">
-                <i class="ic-search"></i>
-            </a>
-            <popover-content class="searchPortal">
-                <div class="content searchContent">
-                    <div class="search-text row">
-                        <input type="text" class="searchInput" name="mysearch" ng-model="ctrl.mysearch"
-                            ng-keyup="ctrl.launchSearch($event);" />
-                        <button class="searchButton" ng-click="ctrl.launchSearch('link');">
-                            <i18n>ok</i18n>
-                        </button>
-                    </div>
+    <popover class="btn btn-secondary d-none d-sm-block"
+            ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
+        <a href="/searchengine" class="text-light" i18n-title="navbar.search" popover-opener 
+                ng-click="ctrl.openApps($event)">
+            <i class="ic-search"></i>
+        </a>
+        <popover-content class="searchPortal">
+            <div class="content searchContent">
+                <div class="search-text row">
+                    <input type="text" class="searchInput" name="mysearch" ng-model="ctrl.mysearch"
+                        ng-keyup="ctrl.launchSearch($event);" />
+                    <button class="searchButton" ng-click="ctrl.launchSearch('link');">
+                        <i18n>ok</i18n>
+                    </button>
                 </div>
-            </popover-content>
-        </popover>
-    </div>
+            </div>
+        </popover-content>
+    </popover>
 
-    <div class="btn btn-secondary" pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}"
+    <a href="" i18n-title="navbar.help" class="btn btn-secondary" 
+            pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}"
             ng-if="ctrl.currentLanguage == 'fr'">
-        <a href="" i18n-title="navbar.help">
-            <help></help><!-- i18n>help.icon</i18n -->
-        </a>
-    </div>
+        <help></help><!-- i18n>help.icon</i18n -->
+    </a>
     
-    <div class="btn btn-secondary" pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
-        <a href="/userbook/mon-compte" i18n-title="navbar.myaccount">
-            <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" id="my-photo" />
-        </a>
-    </div>
+    <a href="/userbook/mon-compte" i18n-title="navbar.myaccount" class="btn btn-secondary d-none d-sm-block"
+            pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
+        <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" />
+    </a>
     
-    <a href="" class="btn btn-secondary" logout i18n-title="navbar.disconnect">
+    <a href="" class="btn btn-secondary d-none d-sm-block" logout i18n-title="navbar.disconnect">
         <i class="ic-disconnect"></i>
     </a>
+
+    <div class="nav-item dropdown d-block d-sm-none">
+        <a class="dropdown-toggle btn btn-secondary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="/searchengine" i18n-title="navbar.search"
+                    ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')"
+                    ng-click="ctrl.openApps($event)">
+                <i class="ic-search"></i>
+                &nbsp;<i18n>navbar.search</i18n>
+            </a>
+            <a class="dropdown-item" href="/userbook/mon-compte" i18n-title="navbar.myaccount">
+                <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" />
+                &nbsp;<i18n>navbar.myaccount</i18n>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="" logout i18n-title="navbar.disconnect">
+                <i class="ic-disconnect"></i>
+                &nbsp;<i18n>navbar.disconnect</i18n>
+            </a>
+        </div>
+    </div>
 </header>
