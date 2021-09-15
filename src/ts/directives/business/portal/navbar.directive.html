@@ -97,12 +97,8 @@
 
 <!-- Theme 2D -->
 <header class="no-1d navbar navbar-dark bg-secondary" ng-if="ctrl.is2D">
-    <a class="btn btn-secondary d-mobile-none" href="/timeline/timeline?token=[[ctrl.version]]">
+    <a class="btn btn-secondary" href="/timeline/timeline?token=[[ctrl.version]]">
         <img class="logo" src="/assets/themes/[[ctrl.skin.skin]]/img/illustrations/logo.png" alt="Logo de l'ENT">
-    </a>
-
-    <a href="/welcome" class="d-desktop-none text-truncate"
-        ng-bind-html="ctrl.title">
     </a>
 
     <a href="/timeline/timeline" class="btn btn-secondary" i18n-title="navbar.home"><i class="ic-home"></i></a>
