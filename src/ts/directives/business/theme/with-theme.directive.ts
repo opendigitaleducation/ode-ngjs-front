@@ -19,7 +19,8 @@ export class Directive implements IDirective<IScope,JQLite,IAttributes,IControll
                 url = `${this.helperSvc.CDN}/assets/themes/${theme.bootstrapVersion}/skins/${skinName}/`;
                 elem.addClass(theme.bootstrapVersion);//add class at root=>wrapped theme
                 //this.helperSvc.loadOldWrappedTheme(theme.child, skinName); // NOTE 2021-08-31 old wrapped theme support removed, finally
-                this.helperSvc.loadThemeJs(theme.bootstrapVersion)
+                this.helperSvc.loadThemeJs(theme.bootstrapVersion);
+                break;
             }
         }
         this.helperSvc.applyStyle(url);

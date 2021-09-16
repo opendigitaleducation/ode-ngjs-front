@@ -33,15 +33,19 @@ export class ThemeHelperService {
     ) {
     }
 
+    private get platform() {
+        return ConfigurationFrameworkFactory.instance().Platform;
+    }
+
     /** Get the configured CDN URL root. */
     get CDN() {
-        return ConfigurationFrameworkFactory.instance().Platform.cdnDomain;
+        return this.platform.cdnDomain;
     }
 
     /** Return the path URL to the active theme, for example : /assets/themes/ode-bootstrap-neo */
     async getBootstrapThemePath():Promise<string> {
-        const theme = ConfigurationFrameworkFactory.instance().Platform.theme.themeName;
-        const conf = await ConfigurationFrameworkFactory.instance().Platform.theme.getConf();
+        const theme = this.platform.theme.themeName;
+        const conf = await this.platform.theme.getConf();
         for( let override of conf.overriding ) {
             if( override.child === theme ) {
                 return `${this.CDN}/assets/themes/${override.bootstrapVersion}`;
@@ -50,13 +54,19 @@ export class ThemeHelperService {
         return `${this.CDN}/assets/themes/${theme}`;
     }
 
+    /** Return the path URL to the active skin, for example : /assets/themes/ode-bootstrap-neo/skins/dyslexic */
+    async getBootstrapSkinPath():Promise<string> {
+        let stylePath = await this.getBootstrapThemePath();
+        return `${stylePath}/skins/${this.platform.theme.skinName}`;
+    }
+
     /* Extracted from an old code base. */
     toSkinUrl( url:string ):string {
         const theme = angular.element(document.querySelectorAll("#theme"));
         if(!theme.attr('href')) {
             return "";
         }
-        const path = ConfigurationFrameworkFactory.instance().Platform.theme.basePath;
+        const path = this.platform.theme.basePath;
         if(url.indexOf('http://') === -1 && url.indexOf('https://') === -1 && url.indexOf('/workspace/') === -1){
             return path + url;
         } else {
@@ -69,12 +79,11 @@ export class ThemeHelperService {
      * THIS IS A LEGACY FEATURE and should not be used anymore.
      */
     loadOldWrappedTheme( oldTheme:string, skinName:string ) {
-        const platform = ConfigurationFrameworkFactory.instance().Platform;
         $("#themeOld").remove();
         const style = angular.element(
             `<link rel="stylesheet" 
                 type="text/css" 
-                href="${platform.cdnDomain}/assets/themes/${oldTheme}/skins/${skinName}/wrapped.theme.css?version=${platform.deploymentTag}"
+                href="${this.platform.cdnDomain}/assets/themes/${oldTheme}/skins/${skinName}/wrapped.theme.css?version=${this.platform.deploymentTag}"
                 id="themeOld"
                 crossorigin="anonymous" />`
         );
@@ -83,34 +92,31 @@ export class ThemeHelperService {
 
     /** Load the JS of a derived theme (skin) */
     loadThemeJs( theme:string ) {
-        const platform = ConfigurationFrameworkFactory.instance().Platform;
         $("#themeJS").remove();
         const style = angular.element(
             `<script
                 type="text/javascript"
-                src="${platform.cdnDomain}/assets/themes/${theme}/js/theme.js?version=${platform.deploymentTag}"
+                src="${this.platform.cdnDomain}/assets/themes/${theme}/js/theme.js?version=${this.platform.deploymentTag}"
                 id="themeJS" />`
         );
         $('body').append(style);
     }
 
     /** Apply a theme from its URL */
-    applyStyle( stylePath:string ) {
-        const platform = ConfigurationFrameworkFactory.instance().Platform;
-        if(stylePath && stylePath.startsWith("/")){
-            stylePath = platform.cdnDomain + stylePath;
-        }
+    async applyStyle( stylePath:string ) {
+        if( stylePath && stylePath.length > 0 && stylePath.lastIndexOf('/', stylePath.length-1) !== stylePath.length-1 ) 
+            stylePath += "/";
+        stylePath = `${stylePath}theme.css?version=${this.platform.deploymentTag}`;
         if($('#theme').length === 0) {
             const style = angular.element(
                 `<link rel="stylesheet" 
                     type="text/css" 
-                    href="${stylePath}theme.css?version=${platform.deploymentTag}"
+                    href="${stylePath}"
                     id="theme"
                     crossorigin="anonymous" />`
             );
             var favicon = angular.element(
-                `<link rel="icon"
-                    href="${platform.theme.basePath}img/illustrations/favicon.ico" />`
+                `<link rel="icon" href="${this.platform.theme.basePath}img/illustrations/favicon.ico" />`
             );
             style.on('load', e => {
                 $('body').show();
@@ -123,19 +129,20 @@ export class ThemeHelperService {
             }, 300);
         }
         else {
-            $('#theme').attr('href', stylePath + 'theme.css');
+            $('#theme').attr('href', stylePath);
         }
     }
 
     /** @return list of available derived themes (skins) for the user. */
     listThemes():Promise<IThemeDesc[]> {
-        return ConfigurationFrameworkFactory.instance().Platform.theme.listThemes();
+        return this.platform.theme.listThemes();
     }
 
-    /** Apply a derived theme (skin) and save it as prefered. */
-    setTheme( theme:IThemeDesc ) {
-        this.applyStyle( theme.path );
-        ConfigurationFrameworkFactory.instance().Platform.theme.setDefaultTheme( theme );
+    /** Apply a derived theme (skin) and save it as prefered, then update the data in cache. */
+    async setTheme( theme:IThemeDesc ) {
+        let stylePath = await this.getBootstrapThemePath();
+        this.applyStyle( `${stylePath}/skins/${theme._id}` );
+        this.platform.theme.setDefaultTheme( theme );
     }
 
     /** @return the CSS class of a widget */
