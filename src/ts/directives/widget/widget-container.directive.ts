@@ -14,7 +14,7 @@ export class Controller implements IController {
 
 	loadWidgets() {
 		this.widgets = this.widgetSvc.list()
-			.filter( w => w.userPref.position === this.position )
+			.filter( w => w.userPref.position===this.position && (w.platformConf.mandatory||w.userPref.show) )
 			.sort( (a,b) => {
 				return a.userPref.index < b.userPref.index
 					? -1 
