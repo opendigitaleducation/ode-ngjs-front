@@ -29,6 +29,7 @@ export * as ConnectorLightbox from './business/portal/connector-lightbox.directi
 export * as SmartBanner from './business/portal/smart-banner.directive';
 export * as Help from './business/portal/help.directive';
 export * as Autocomplete from './components/autocomplete/autocomplete.directive';
+export * as BindHtml from './business/media/bind-html.directive'
 
 /* New generation components */
 export * as Portal from './business/portal/portal.directive';
