@@ -44,7 +44,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 		delegateClose: '&?'
 	};
 
-	link(scope:Scope, element:JQLite, attributes:IAttributes, controllers:IController[]|undefined): void {
+	link(scope:Scope, element:JQLite, attributes:IAttributes, controllers?:IController[]): void {
 		let delegate:LightboxDelegate = scope.delegate;
 		// FIXME
 		// if(attributes.navigationGuard){

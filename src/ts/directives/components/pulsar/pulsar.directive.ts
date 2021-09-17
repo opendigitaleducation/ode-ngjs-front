@@ -40,7 +40,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 	restrict= 'A';
 	scope= true;
 
-    link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		const idiom = ConfigurationFrameworkFactory.instance().Platform.idiom;
 		const http = TransportFrameworkFactory.instance().http;
 

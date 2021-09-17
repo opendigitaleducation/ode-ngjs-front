@@ -7,7 +7,7 @@ const theme = ConfigurationFrameworkFactory.instance().Platform.theme;
 export class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'EA';
 
-    async link(scope:IScope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): Promise<void> {
+    async link(scope:IScope, elem:JQLite, attr:IAttributes, controllers?:IController[]): Promise<void> {
         const conf = await theme.getConf();
         await theme.onSkinReady();
         const themeName = theme.themeName;

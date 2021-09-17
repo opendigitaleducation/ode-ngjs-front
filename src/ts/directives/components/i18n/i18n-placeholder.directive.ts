@@ -3,7 +3,7 @@ import { I18nBase } from "./I18nBase";
 
 /* Directive */
 class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes,IController[]> {
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         attrs.$observe('i18nPlaceholder', val => {
             const compiled = this.$compile('<span>' + this.idiom.translate(attrs.i18nPlaceholder) + '</span>')(scope);
             setTimeout(function(){

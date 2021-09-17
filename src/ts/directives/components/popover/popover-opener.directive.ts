@@ -3,7 +3,7 @@ import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	require= '^popover';
-	link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+	link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		const parentNode = (tag => {
 			tag = tag.toUpperCase();
 			let parent:HTMLElement = elem[0];

@@ -138,7 +138,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
     require = ['connectorLightbox'];
 
-    async link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined) {
+    async link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]) {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
         if( !ctrl ) {
             return;

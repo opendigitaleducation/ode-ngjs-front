@@ -122,7 +122,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
      * @param $attr hash object with key-value pairs of normalized attribute names and their corresponding attribute values.
      * @param controllers Array of "require"d controllers : [ngModelCtrl]
      */
-    link(scope:Scope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:Scope, elem:JQLite, attr:IAttributes, controllers?:IController[]): void {
         let ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
         if( !ctrl || ! ctrl.recorder ) {
             return;

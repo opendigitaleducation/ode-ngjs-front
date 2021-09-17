@@ -91,7 +91,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ['odeNavbar'];
 
-    link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 		const platform = ConfigurationFrameworkFactory.instance().Platform;

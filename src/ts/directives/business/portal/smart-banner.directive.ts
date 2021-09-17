@@ -19,7 +19,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
     templateUrl = require('./smart-banner.directive.lazy.html').default;
 
-    link(scope:Scope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:Scope, elem:JQLite, attr:IAttributes, controllers?:IController[]): void {
 		const http = TransportFrameworkFactory.instance().http;
         const skin = ConfigurationFrameworkFactory.instance().Platform.theme;
         const me = SessionFrameworkFactory.instance().session.user;

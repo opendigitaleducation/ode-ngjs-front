@@ -6,7 +6,7 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
     restrict = 'A';
     replace = true;
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         /* FIXME What is this, and why pollute the scope ??
         if(attrs.params){
             var params = scope.$eval(attrs.params);

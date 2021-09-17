@@ -9,7 +9,7 @@ export class PulsarController implements IController {
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controller= [PulsarController];
 	restrict= 'E';
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		elem.on('close', () => {
 			if(attrs.onClose){
 				scope.$eval(attrs.onClose);

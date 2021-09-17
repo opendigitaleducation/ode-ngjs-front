@@ -153,7 +153,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ["odeToaster", "^^odeExplorer"];
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		if( controllers ) {
 			const ctrl:Controller = controllers[0] as Controller;
 			const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;

@@ -5,7 +5,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	require= '^popover';
 	restrict= 'E';
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		elem.addClass("hidden");
 	}
 }

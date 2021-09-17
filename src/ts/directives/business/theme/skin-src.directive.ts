@@ -4,7 +4,7 @@ import { ThemeHelperService } from "../../../services/themeHelper.service";
 export class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	restrict = 'A';
 
-	link($scope:IScope, $element:JQLite, $attributes:IAttributes, controllers:IController[]|undefined) {
+	link($scope:IScope, $element:JQLite, $attributes:IAttributes, controllers?:IController[]) {
 		$attributes.$observe('skinSrc', () => {
 			$element.attr('src', this.helperSvc.toSkinUrl($attributes.skinSrc) );
 		});

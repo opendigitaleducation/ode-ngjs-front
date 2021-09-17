@@ -25,7 +25,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ["odeWidget"];
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined) {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]) {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 

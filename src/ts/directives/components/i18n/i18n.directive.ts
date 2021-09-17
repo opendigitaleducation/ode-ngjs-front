@@ -5,7 +5,7 @@ import { I18nBase } from "./I18nBase";
 class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict='E';
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         const key = elem.text().trim();
         const value = this.idiom.translate(key);
         // Set the inner HTML of elem with compiled html() code, not compiled text().

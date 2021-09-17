@@ -72,7 +72,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ['assistant'];
 
-    link(scope:IScope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attr:IAttributes, controllers?:IController[]): void {
         let ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
         
 		if( !ctrl || this.helperSvc.viewport <= this.helperSvc.FAT_MOBILE ) {  /* TODO contrôle à appliquer à l'aide d'une directive ?*/

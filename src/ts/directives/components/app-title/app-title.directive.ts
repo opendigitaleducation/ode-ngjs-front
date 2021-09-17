@@ -4,7 +4,7 @@ import { IAttributes, IController, IDirective, IScope } from "angular";
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
 
-    link(scope:IScope, elem:JQLite, attr:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, elem:JQLite, attr:IAttributes, controllers?:IController[]): void {
         // NOTE : previous code to adapt if required:
         // elem.addClass('zero-mobile');
         // elem.find('h1').addClass('application-title');

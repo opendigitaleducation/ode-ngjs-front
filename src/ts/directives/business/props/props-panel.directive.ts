@@ -29,7 +29,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ["odePropsPanel"];
 
-    link(scope:IScope, element:JQLite, attrs:IAttributes, controllers:IController[]|undefined): void {
+    link(scope:IScope, element:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		if( !controllers ) return;
         const ctrl:PropsPanelController = controllers[0] as PropsPanelController;
 
