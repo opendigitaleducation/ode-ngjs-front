@@ -19,6 +19,8 @@ export class Controller implements IController {
 	public avatar:string = "no-avatar.svg";
 	public messagerieLink:string = '/zimbra/zimbra';
 	public mysearch:string = "";
+	public apps:IWebApp[] = [];
+
 
 	public is1D:boolean = false;
 	public is2D:boolean = false;
@@ -28,6 +30,18 @@ export class Controller implements IController {
 		this.avatar = session.avatarUrl;
 		this.username = session.description.displayName;
 	};
+
+	geAppCssClass( app:IWebApp ):string {
+		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
+		// @see also my-apps.widget.ts
+		let appCode = app.displayName.toLowerCase();
+		switch( appCode ) {
+			case "admin.title": 	appCode = "admin"; break;
+			case "directory.user":	appCode = "userbook"; break;
+			default: break;
+		}
+		return `ic-app ${appCode} color-app-${appCode}`;
+	}
 
 	openApps(event:any){
 		const width = $(window).width()
@@ -69,7 +83,6 @@ interface Scope extends IScope {
 	version?:string;
 	me?:{
 		hasWorkflow(right:string):boolean;
-		bookmarkedApps:IWebApp[];
 	};
 
 	messagerieLink?: string;
@@ -104,8 +117,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		scope.me = {
 			hasWorkflow(right:string):boolean {
 				return SessionFrameworkFactory.instance().session.hasWorkflow(right);
-			},
-			bookmarkedApps: []
+			}
 		};
 		scope.goToMessagerie = () => {
 			console.log(scope.messagerieLink);
@@ -161,9 +173,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			}
 			ctrl.refreshAvatar();
 
-			if( scope.me ) {
-				scope.me.bookmarkedApps = values[2];
-			}
+			ctrl.apps = values[2];
 
 			scope.$apply();
 		});

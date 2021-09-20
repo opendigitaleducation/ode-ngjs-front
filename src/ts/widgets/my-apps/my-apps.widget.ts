@@ -9,6 +9,7 @@ class Controller implements IController {
 	};
 	getCssClass( app:IWebApp ):string {
 		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
+		// @see also navbar.directive.ts
 		let appCode = app.displayName.toLowerCase();
 		switch( appCode ) {
 			case "admin.title": 	appCode = "admin"; break;

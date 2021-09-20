@@ -116,12 +116,12 @@
         <popover-content>
             <div class="content">
                 <div class="my-apps row">
-                    <div ng-if="me.bookmarkedApps.length === 0">
+                    <div ng-if="ctrl.apps.length === 0">
                         <i18n>navbar.myapps.more</i18n>
                     </div>
-                    <div class="bookmarked-app" ng-repeat="app in me.bookmarkedApps">
+                    <div class="bookmarked-app" ng-repeat="app in ctrl.apps track by $index">
                         <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
-                            <i class="ic-app [[app.displayName]] color-app-[[app.displayName]]" ng-switch-when="-1"></i>
+                            <i ng-class="ctrl.geAppCssClass(app)" ng-switch-when="-1"></i>
                             <img skin-src="[[app.icon]]" ng-switch-default />
                         </a>
                     </div>
