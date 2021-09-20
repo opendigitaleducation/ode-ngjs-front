@@ -1,6 +1,6 @@
 import angular, { IModule } from "angular";
 import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget, AppTitle, Pulsar, Assistant, Lightbox, SmartBanner, Modal, Autocomplete, Recorder, SkinSrc, ConnectorLightbox, Help, BindHtml } from "../directives";
-import { QuickstartService, ThemeHelperService, WidgetService } from "../services";
+import { QuickstartService, ThemeHelperService, WidgetService, RichContentService } from "../services";
 
 const dndLists = require('angular-drag-and-drop-lists');
 
@@ -41,5 +41,6 @@ const module = angular.module("odeUi", ['dndLists']);
     .service("odeThemeHelperService", ThemeHelperService )
     .service("odeQuickstartService", QuickstartService )
     .service("odeWidgetService", WidgetService )
+    .service("odeRichContentService", RichContentService )
     ;
  }

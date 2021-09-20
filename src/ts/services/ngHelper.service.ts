@@ -1,8 +1,10 @@
 import angular from "angular";
+import $ from "jquery"; // FIXME : remove jQuery dependency 
+
 
 /** 
  * This service was intended to be a jQuery minimal replacement, tailored to our needs. 
- * This would be a pain to maintain => thinking about integrating another lib instead.
+ * //FIXME This would be a pain to maintain natively => thinking about integrating another lib.
  */
 export class NgHelperService {
     // /** Replacement for $(selector) a.k.a. jQuery(selector)  */
@@ -35,12 +37,14 @@ export class NgHelperService {
 
     /** Replacement for $.width() */
     public width(set:JQLite): number {
-        return parseFloat(getComputedStyle(set[0], null).width.replace("px", "")) || 0;
+        //return parseFloat(getComputedStyle(set[0], null).width.replace("px", "")) || 0;
+        return $(set).width() ?? 0;
     }
 
     /** Replacement for $.height() */
     public height(set:JQLite): number {
-        return parseFloat(getComputedStyle(set[0], null).height.replace("px", "")) || 0;
+        //return parseFloat(getComputedStyle(set[0], null).height.replace("px", "")) || 0;
+        return $(set).height() ?? 0;
     }
 
     /** Replacement for $.parents(selector) */
