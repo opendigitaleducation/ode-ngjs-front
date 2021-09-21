@@ -1,6 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope, IWindowService } from "angular";
 import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import moment from 'moment'; // FIXME : should we use moment anymore ?
+import { L10n } from "../../utils";
 
 type Feed = {title:string, link:string, show?:number};
 type Channel = {
@@ -183,9 +183,9 @@ class Controller implements IController {
 	formatDate( date:any ){
 		var momentDate;
 		if (typeof date === "number"){
-			momentDate = moment.unix(date);
+			momentDate = L10n.unix(date);
 		} else {
-			momentDate = moment(date, undefined, 'en');
+			momentDate = L10n.moment(date, undefined, 'en');
 		}
 		return momentDate.lang('fr').format('dddd DD MMMM YYYY HH:mm');
 	};

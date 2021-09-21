@@ -1,6 +1,6 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
 import { App, NotifyFrameworkFactory } from "ode-ts-client";
-import moment from 'moment'; // FIXME : should we use moment anymore ?
+import { L10n } from "../../../utils"; 
 import { TrackingService } from "../../../services";
 
 interface PortalScope extends IScope {
@@ -23,21 +23,7 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 
 	link(scope:PortalScope, elem:JQLite, attrs:IAttributes) {
 		NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
-			if( lang === 'fr' ) {
-				moment.updateLocale(lang, {
-					calendar: {
-						lastDay: '[Hier à] HH[h]mm',
-						sameDay: '[Aujourd\'hui à] HH[h]mm',
-						nextDay: '[Demain à] HH[h]mm',
-						lastWeek: 'dddd [dernier à] HH[h]mm',
-						nextWeek: 'dddd [prochain à] HH[h]mm',
-						sameElse: 'dddd LL'
-					}
-				});
-			}
-			else {
-				moment.lang( lang );
-			}
+			L10n.initialize( lang );
 		});
 
 		// Tracking

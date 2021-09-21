@@ -3,7 +3,7 @@
 		<div class="subtitle"><i18n>my-apps.widget.title</i18n></div>
 
 		<div class="tools">
-			<a href="" class="tool tool-option" i18n-title="my-apps.widget.options">
+			<a href="/welcome" target="_blank" class="tool tool-option" i18n-title="my-apps.widget.options">
 				<i class="fas fa-cog"></i>
 			</a>
 		</div>
@@ -11,7 +11,7 @@
 
 	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message link" ng-if="ctrl.apps.length===0">
-			<i18n>my-apps.widget.more</i18n>
+			<a href="/welcome"><i18n>my-apps.widget.more</i18n></a>
 		</div>
 
 		<ul class="application-list" ng-if="ctrl.apps.length>0">

@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import moment from "moment";
+import { L10n } from "../../utils";
 import { ConfigurationFrameworkFactory, ILastInfosModel, IUserDescription, IUserInfo, LastInfosWidget, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
 import { ThemeHelperService } from "../../services";
 
@@ -130,7 +130,7 @@ class Controller implements IController {
 					if($(delay).text() === 'false'){
 						var pageUrl = $(delay).parent().attr('page');
 						latedate = $(delay).parent().find('Date').text();
-						latedate = moment(latedate);
+						latedate = L10n.moment(latedate);
 						latedate = lang.translate('carnet-de-bord.widget.the')+" "+latedate.format('DD/MM/YYYY - HH:mm');
 						allDelays.push({
 							value : latedate,
@@ -161,15 +161,15 @@ class Controller implements IController {
                             // du... au...
                             let startdate:any = $(absence).parent().find('DateDebut').text();
                             let enddate:any = $(absence).parent().find('DateFin').text();
-                            startdate = moment(startdate);
-                            enddate = moment(enddate);
+                            startdate = L10n.moment(startdate);
+                            enddate = L10n.moment(enddate);
                             startdate = startdate.format('DD/MM/YYYY HH:mm');
                             enddate = enddate.format('DD/MM/YYYY HH:mm');
 
                             absDate = lang.translate('carnet-de-bord.widget.from')+" "+startdate +" "+lang.translate('carnet-de-bord.widget.to')+" "+enddate;
                         }else {
                             absDate = $(absence).parent().find('DateDebut').text();
-                            absDate = moment(absDate);
+                            absDate = L10n.moment(absDate);
                             absDate = absDate.format('DD/MM/YYYY HH:mm');
                             absDate = lang.translate('carnet-de-bord.widget.the')+" "+  absDate;
                         }
@@ -196,7 +196,7 @@ class Controller implements IController {
                     var note = $(result).find('Note').text();
                     var bareme = $(result).find('Bareme').text();
                     var matiere = $(result).find('Matiere').text();
-                    var notedate:any = moment($(result).find('Date').text());
+                    var notedate:any = L10n.moment($(result).find('Date').text());
                     notedate = notedate.format('DD/MM/YYYY');
                     var grade = note+"/"+bareme+" "+lang.translate('carnet-de-bord.widget.in')+" "+matiere+" "+lang.translate('carnet-de-bord.widget.the')+" "+notedate;
 
@@ -228,7 +228,7 @@ class Controller implements IController {
                         $(works).each(function(i, work){
                             let pageUrl = $(work).attr('page');
                             let matiereFirst = $(work).parent().find('Matiere').text()
-                            let delivdate:any = moment($(work).find('PourLe').text())
+                            let delivdate:any = L10n.moment($(work).find('PourLe').text())
                             delivdate = delivdate.format('DD/MM/YYYY');
                             delivdate = lang.translate('carnet-de-bord.widget.for')+" "+delivdate
                             let descr:any = $(work).find('Descriptif');
@@ -269,7 +269,7 @@ class Controller implements IController {
                         var item = $(skill).find('Item').text()+" ";
 
                         var matiere = $(skill).find('Matiere').text();
-                        var skillDate:any = moment($(skill).find('Date').text());
+                        var skillDate:any = L10n.moment($(skill).find('Date').text());
                         skillDate = skillDate.format('DD/MM/YYYY');
 
                         var headskill = lang.translate('carnet-de-bord.widget.skills')+" ";

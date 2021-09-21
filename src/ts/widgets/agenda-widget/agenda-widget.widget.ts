@@ -1,6 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import moment from 'moment'; // FIXME : should we use moment anymore ?
+import { L10n } from "../../utils"; 
 
 type ResourceMetadata = {
 	_id: string;
@@ -50,11 +50,10 @@ class Controller implements IController {
 	readonly MAX_EVENTS_DISPLAYED = 5;
 
 	private dateToMoment(date:string) {
-		var numberHoursLag = moment(moment(date)
-			.format("YYYY MM DD HH:MM"), "YYYY MM DD HH:MM")
+		var numberHoursLag = L10n.moment( L10n.moment(date).format("YYYY MM DD HH:MM") )
 			.format('Z')
 			.split(':')[0];
-		return moment.utc(date).add(numberHoursLag, 'hours');
+		return L10n.utc(date).add(numberHoursLag, 'hours');
 	}
 
 	toDisplayedGroup(date:string) {
@@ -66,7 +65,7 @@ class Controller implements IController {
 	}
 	
 	today(format:string){
-		return moment().format(format);
+		return L10n.moment().format(format);
 	}
 
 	loadEvents() {

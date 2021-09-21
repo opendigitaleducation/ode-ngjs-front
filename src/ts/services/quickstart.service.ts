@@ -1,5 +1,5 @@
 import { ConfigurationFrameworkFactory, IUserInfo, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import moment from 'moment'; // FIXME : should we use moment anymore ?
+import { L10n } from "../utils";
 
 const skin = ConfigurationFrameworkFactory.instance().Platform.theme;
 
@@ -41,7 +41,7 @@ export class QuickstartService {
 		this.save();
 	};
 	seeAssistantLater(){
- 		this.state.assistantTimer = moment().format('MM/DD/YYYY HH:mm');
+ 		this.state.assistantTimer = L10n.moment().format('MM/DD/YYYY HH:mm');
  		this.save();
  	};
 	getAppStep():number {
@@ -142,9 +142,9 @@ export class QuickstartService {
 			if(
  				preferences.assistant !== -1 && !(
  					preferences.assistantTimer 
- 					&& moment(preferences.assistantTimer).year() === moment().year() 
- 					&& moment(preferences.assistantTimer).dayOfYear() === moment().dayOfYear() 
- 					&& moment(preferences.assistantTimer).hour() === moment().hour()
+ 					&& L10n.moment(preferences.assistantTimer).year() === L10n.moment().year() 
+ 					&& L10n.moment(preferences.assistantTimer).dayOfYear() === L10n.moment().dayOfYear() 
+ 					&& L10n.moment(preferences.assistantTimer).hour() === L10n.moment().hour()
  				)
  			){
 				http.get(skin.basePath + 'template/assistant/steps.json').then( steps => {

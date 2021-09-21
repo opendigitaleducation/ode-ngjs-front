@@ -1,4 +1,4 @@
-import moment from 'moment'; // FIXME : should we use moment anymore ?
+import { L10n } from ".";
 import { notify } from "../services/notify.service";
 import { ConfigurationFrameworkFactory, TransportFrameworkFactory } from 'ode-ts-client';
 import $ from "jquery"; // FIXME : remove jQuery dependency 
@@ -116,7 +116,7 @@ export var audio_recorder = (function () {
 	return {
 		elapsedTime: 0,
 		loadComponents: function () {
-			this.title = lang.translate('recorder.filename') + moment().format('DD/MM/YYYY');
+			this.title = lang.translate('recorder.filename') + L10n.moment().format('DD/MM/YYYY');
 			loaded = true;
 
 			const handleMediaStream = (mediaStream:MediaStream) => {

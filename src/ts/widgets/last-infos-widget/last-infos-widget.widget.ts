@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import moment from "moment";
+import { L10n } from "../../utils";
 import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, ILastInfosModel, LastInfosWidget } from "ode-ts-client";
 
 interface IExtendedLastInfosModel extends ILastInfosModel {
@@ -22,7 +22,7 @@ class Controller implements IController {
 	load():Promise<void> {
 		return this.widget.loadInfos( this.resultSize ).then( infos => {
 			this.infos = infos.map( info => {
-				(info as IExtendedLastInfosModel).relativeDate = moment(info.date).fromNow();
+				(info as IExtendedLastInfosModel).relativeDate = L10n.moment(info.date).fromNow();
 				(info as IExtendedLastInfosModel).tooltip = this.lang.translate('last-infos-widget.widget.thread') + ' : ' + info.thread_title +
 					' | ' + this.lang.translate('last-infos-widget.widget.author') + ' : ' + info.username;
 				return info as IExtendedLastInfosModel;
