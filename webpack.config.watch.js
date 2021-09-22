@@ -1,4 +1,5 @@
 const path = require('path');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 module.exports = env => ({
   mode: "development",
@@ -21,6 +22,11 @@ module.exports = env => ({
     // Resolvable extensions.
     extensions: [".ts", ".tsx", ".js", ".html"]
   },
+  plugins: [
+    new MomentLocalesPlugin({
+        localesToKeep: ['de', 'es', 'fr', 'it', 'pt'],  // ('en' is built into Moment and can’t be removed)
+    }),
+  ],
   module: {
     rules: [
       // ts-loader will handle files with `.ts` or `.tsx` extensions

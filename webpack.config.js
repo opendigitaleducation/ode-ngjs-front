@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require("terser-webpack-plugin");
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 module.exports = env => ({
   mode: "production",
@@ -22,6 +23,11 @@ module.exports = env => ({
     // Resolvable extensions.
     extensions: [".ts", ".tsx", ".js", ".html"]
   },
+  plugins: [
+    new MomentLocalesPlugin({
+        localesToKeep: ['de', 'es', 'fr', 'it', 'pt'],  // ('en' is built into Moment and can’t be removed)
+    }),
+  ],
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin({

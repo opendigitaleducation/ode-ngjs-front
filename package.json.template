@@ -49,6 +49,7 @@
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^4.0.1",
+    "moment-locales-webpack-plugin": "~1.2.0",
     "ode-ts-client": "^0.6.0-explorer",
     "rxjs": "^6.6.6",
     "terser-webpack-plugin": "^5.1.1",
