@@ -12,7 +12,10 @@ type PulsarInfos = {
 	workflow?:string,
 	el?:HTMLElement,
 	steps:PulsarInfos[],
-	delta?:string
+	delta?:string,
+	style?:{ 
+		zIndex?:number
+	}
 };
 
 /*
@@ -175,6 +178,10 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
 				if(pulsarButton?.css('display') !== 'none'){
 					pulsarButton?.offset({ left: xPositions[xPosition]+deltaX, top: yPositions[yPosition]+deltaY });
+					// Adjust style as required (z-index)
+					if( pulsarInfos.style && typeof pulsarInfos.style.zIndex==="number" ) {
+						pulsarButton?.css('z-index', pulsarInfos.style.zIndex);
+					}
 				}
 
 				if(pulsarElement && pulsarElement.find('.arrow').length){

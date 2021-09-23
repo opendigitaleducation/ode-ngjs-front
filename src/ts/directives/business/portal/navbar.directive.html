@@ -55,7 +55,7 @@
             </a>
         </div>
         
-        <div class="navigation__item" ng-if="ctrl.currentLanguage == 'fr'" pulsar="{index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}">
+        <div class="navigation__item" ng-if="ctrl.currentLanguage == 'fr'" pulsar="{index:5, style:{zIndex:1021}, i18n:'portal.pulsar.help', position:'bottom center'}">
             <a href="" i18n-title="navbar.help">
                 <help></help><!-- i18n>help.icon</i18n -->
             </a>
@@ -108,7 +108,7 @@
         <i class="ic-community"></i>
     </a>
 
-    <popover class="btn btn-secondary" pulsar="{ index: 3, i18n: 'portal.pulsar.apps', position: 'bottom center'}">
+    <popover class="btn btn-secondary" pulsar="{index:3, style:{zIndex:1021}, i18n:'portal.pulsar.apps', position:'bottom center'}">
         <a href="/welcome" class="text-light" i18n-title="navbar.applications" popover-opener>
             <i class="ic-apps"></i>
         </a>
@@ -158,13 +158,13 @@
     </popover>
 
     <a href="" i18n-title="navbar.help" class="btn btn-secondary" 
-            pulsar="{ index: 5, i18n: 'portal.pulsar.help', position: 'bottom center'}"
+            pulsar="{ index:5, style:{zIndex:1021}, i18n:'portal.pulsar.help', position:'bottom center'}"
             ng-if="ctrl.currentLanguage == 'fr'">
         <help></help><!-- i18n>help.icon</i18n -->
     </a>
     
     <a href="/userbook/mon-compte" i18n-title="navbar.myaccount" class="btn btn-secondary d-none d-sm-block"
-            pulsar="{ index: 4, i18n: 'portal.pulsar.account', position: 'bottom center'}">
+            pulsar="{ index:4, style:{zIndex:1021}, i18n:'portal.pulsar.account', position:'bottom center'}">
         <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" />
     </a>
     
