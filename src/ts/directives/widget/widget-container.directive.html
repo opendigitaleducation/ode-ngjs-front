@@ -62,7 +62,7 @@
     dnd-drop="ctrl.onDnDDrop(event, item, index, dropEffect)"
 >
     <li 
-        ng-repeat="widget in ctrl.widgets" 
+        ng-repeat="widget in ctrl.widgets track by widget.platformConf.id" 
         class="widget"
         ode-widget="widget"
         dnd-draggable="widget.platformConf.id" 

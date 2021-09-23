@@ -101,6 +101,16 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			scope.$apply();
 		});
 
+		const subscription = ctrl.widgetSvc.onChange().subscribe({
+			next: e => { 
+				ctrl.loadWidgets();
+				scope.$apply();
+			}
+		});
+
+		scope.$on( "$destroy", () => {
+			subscription && subscription.unsubscribe();
+		});
 	}
 }
 
