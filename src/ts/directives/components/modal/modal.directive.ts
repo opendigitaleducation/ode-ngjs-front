@@ -1,20 +1,17 @@
 import { IController, IDirective } from "angular";
 
-type ModalSize = "sm"|"lg"|"xl";
+type ModalSize = "sm"|"md"|"lg"|"xl";
 
 /* Controller for the directive */
 export class Controller implements IController {
 	constructor() {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
 		this.id = null as unknown as string;
-		this.onValidate = null as unknown as Function;
-		this.size = null;
 	}
 	id:string;
-	size:ModalSize|null;
+	size:ModalSize = "md";
 	visible?:boolean;
 	onClose?:Function;
-	onValidate:Function;
 
 	getStyle() {
 		return {
