@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="{{ctrl.id+'Label'}}" ng-transclude="title"></h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"ng-click="ctrl.onClose()">
+                <button type="button" class="btn-close" aria-label="Close" ng-if="ctrl.onClose" ng-click="ctrl.onClose()">
                 </button>
             </div>
             <div class="modal-body" ng-transclude="body"></div>

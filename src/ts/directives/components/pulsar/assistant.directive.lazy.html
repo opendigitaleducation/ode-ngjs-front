@@ -1,7 +1,14 @@
 <style>
+@keyframes bounce-pop-out{
+  0%{transform:scale(0)}
+  50%{transform:scale(1.1)}
+  90%{transform:scale(0.9)}
+  100%{transform:scale(1)}
+}
+
 assistant {
   z-index: 100001 !important;
-  position: relative
+  position: relative;
 }
 
 assistant i[class$="-large"] {
@@ -67,16 +74,16 @@ assistant i.visioconf-large::before         {  content: "\e957";  color: #763294
 assistant i.wiki-large::before              {  content: '\e813';  color: #763294}
 assistant i.workspace-large::before         {  content: "\e81b";}
 
-assistant button.close {
-  display: none
-}
-
 assistant .ignore {
   position: absolute;
   top: 20px;
   right: 20px;
   font-size: 13px;
   cursor: pointer;
+}
+
+assistant .top-spacing-four {
+  margin-top: 20px !important;
 }
 
 assistant ode-modal .modal-content {
@@ -369,7 +376,7 @@ assistant ode-modal .modal-content .multi-apps i.dotsx3-h {
 }
 </style>
 
-<ode-modal visible="ctrl.show.assistant" on-close="ctrl.closeAssistant()" size="xl">
+<ode-modal visible="ctrl.show.assistant" size="xl">
     <ode-modal-title>
         <div class="logo-quickstart"></div>
         <a class="ignore" ng-click="ctrl.closeAssistant()"><i18n>ignore</i18n></a>
@@ -390,12 +397,14 @@ assistant ode-modal .modal-content .multi-apps i.dotsx3-h {
     </ode-modal-body>
 
     <ode-modal-footer>
-        <button ng-click="ctrl.seeLater()" class="btn btn-outline-primary bg-light text-primary"><i18n>quickstart.see.later</i18n></button>
+        <button ng-click="ctrl.seeLater()" class="btn btn-light text-primary"><i18n>quickstart.see.later</i18n></button>
         <div class="">
             <button class="btn btn-outline-primary" ng-click="ctrl.previous()" ng-if="ctrl.currentStep.index !== 0"><i18n>previous</i18n></button>
-            <button class="btn btn-primary" ng-click="ctrl.next()" ng-if="ctrl.currentStep.index !== 0 && ctrl.currentStep.index !== ctrl.steps.length -1"><i18n>next</i18n></button>
-            <button class="btn btn-primary" ng-click="ctrl.next()" ng-if="ctrl.currentStep.index === 0"><i18n>quickstart.discover</i18n></button>
-            <button class="btn btn-primary" ng-click="ctrl.next()" ng-if="ctrl.currentStep.index === ctrl.steps.length - 1"><i18n>quickstart.done</i18n></button>
+            <button class="btn btn-primary" ng-click="ctrl.next()">
+              <i18n ng-if="ctrl.currentStep.index===0">quickstart.discover</i18n>
+              <i18n ng-if="ctrl.currentStep.index>0 && ctrl.currentStep.index<ctrl.steps.length-1">next</i18n>
+              <i18n ng-if="ctrl.currentStep.index===ctrl.steps.length-1">quickstart.done</i18n>
+            </button>
         </div>
     </ode-modal-footer>
 
