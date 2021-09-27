@@ -1,4 +1,5 @@
 import angular from "angular";
+import { IWebApp } from "ode-ts-client";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 
@@ -7,6 +8,23 @@ import $ from "jquery"; // FIXME : remove jQuery dependency
  * //FIXME This would be a pain to maintain natively => thinking about integrating another lib.
  */
 export class NgHelperService {
+
+    /** 
+     * Map between apps and their CSS class.
+     */
+	getIconClass( app:IWebApp ):string {
+		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
+		let appCode = app.displayName.toLowerCase();
+		switch( appCode ) {
+			case "messagerie": 		appCode = "conversation"; break;
+			case "admin.title": 	appCode = "admin"; break;
+			case "directory.user":	appCode = "userbook"; break;
+			default: break;
+		}
+		return `ic-app ${appCode} color-app-${appCode}`;
+	}
+
+    
     // /** Replacement for $(selector) a.k.a. jQuery(selector)  */
     // public querySelect(selector:string):JQLite {
     //     return angular.element(document.querySelectorAll(selector));

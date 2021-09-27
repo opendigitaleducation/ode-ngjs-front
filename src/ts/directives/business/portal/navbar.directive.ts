@@ -1,16 +1,14 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme, IWebApp } from "ode-ts-client";
 import { SessionService } from "../../../services/session.service";
-import { UserService } from "../../../services/user.service";
+import { NgHelperService } from "../../../services/ngHelper.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 // Controller for the directive
 export class Controller implements IController {
     constructor(
-			private $scope:Scope,
-            private me:UserService,
-            private session:SessionService
-        ) {
+		public session:SessionService,
+		public helperSvc: NgHelperService) {
 	}
 	public skin?:ITheme;
 	public conversationUnreadUrl?:String;
@@ -21,7 +19,6 @@ export class Controller implements IController {
 	public mysearch:string = "";
 	public apps:IWebApp[] = [];
 
-
 	public is1D:boolean = false;
 	public is2D:boolean = false;
 
@@ -30,18 +27,6 @@ export class Controller implements IController {
 		this.avatar = session.avatarUrl;
 		this.username = session.description.displayName;
 	};
-
-	geAppCssClass( app:IWebApp ):string {
-		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
-		// @see also my-apps.widget.ts
-		let appCode = app.displayName.toLowerCase();
-		switch( appCode ) {
-			case "admin.title": 	appCode = "admin"; break;
-			case "directory.user":	appCode = "userbook"; break;
-			default: break;
-		}
-		return `ic-app ${appCode} color-app-${appCode}`;
-	}
 
 	openApps(event:any){
 		const width = $(window).width()
@@ -59,18 +44,6 @@ export class Controller implements IController {
 			window.location.href = '/searchengine#/' + words;
 		}
 	};
-
-
-// 	skin.listThemes(function(themes){
-// 		$scope.themes = themes;
-// 		$scope.$apply('themes');
-// 	});
-
-// 	$scope.$root.$on('refreshMails', $scope.refreshMails);
-
-// 	$scope.refreshMails();
-// 	$scope.currentURL = window.location.href;
-// }]
 }
 
 /*
@@ -94,13 +67,13 @@ interface Scope extends IScope {
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
-//	replace = true; // requires a template with a single root HTTML element to work.
+//	replace = true; // requires a template with a single root HTML element to work.
 	template = require('./navbar.directive.html').default;
 	scope = {
 		title: "@?"
 	};
 	bindToController = true;
-	controller = ['$scope','odeUser', 'odeSession', Controller];
+	controller = ['odeSession', "odeNgHelperService", Controller];
 	controllerAs = 'ctrl';
 	require = ['odeNavbar'];
 
@@ -155,9 +128,9 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		}
 
 		Promise.all([
-			this.getCurrentLanguage(),
+			ctrl.session.getLanguage(),
 			platform.theme.onOverrideReady(),
-			this.getBookmarks(),
+			ctrl.session.getBookmarks(),
 			platform.theme.onFullyReady() // required for getting school degree
 		]).then( (values) => {
 			ctrl.skin = platform.theme;
@@ -177,16 +150,6 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 
 			scope.$apply();
 		});
-	}
-
-	getCurrentLanguage():Promise<string> {
-		return NotifyFrameworkFactory.instance().onSessionReady().promise
-		.then( userInfo => SessionFrameworkFactory.instance().session.currentLanguage );
-	}
-
-	getBookmarks():Promise<IWebApp[]> {
-		return NotifyFrameworkFactory.instance().onSessionReady().promise
-		.then( userInfo => ConfigurationFrameworkFactory.instance().User.bookmarkedApps );
 	}
 }
 

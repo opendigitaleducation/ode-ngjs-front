@@ -1,30 +1,24 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, IWebApp, NotifyFrameworkFactory } from "ode-ts-client";
+import { NgHelperService } from "../../services";
 
 /* Controller for the directive */
 class Controller implements IController {
+    constructor(
+		public helperSvc: NgHelperService
+		) {
+    }
 	apps:IWebApp[] = [];
 	redirect( path:string ) {
 		window.location.href = path;
 	};
-	getCssClass( app:IWebApp ):string {
-		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
-		// @see also navbar.directive.ts
-		let appCode = app.displayName.toLowerCase();
-		switch( appCode ) {
-			case "admin.title": 	appCode = "admin"; break;
-			case "directory.user":	appCode = "userbook"; break;
-			default: break;
-		}
-		return `ic-app ${appCode} color-app-${appCode}`;
-	}
 }
 
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./my-apps.widget.html').default;
-	controller = [Controller];
+	controller = ["odeNgHelperService", Controller];
 	controllerAs = 'ctrl';
     require = ['odeMyApps'];
 

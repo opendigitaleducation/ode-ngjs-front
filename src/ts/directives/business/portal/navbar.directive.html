@@ -121,7 +121,7 @@
                     </div>
                     <div class="bookmarked-app" ng-repeat="app in ctrl.apps track by $index">
                         <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
-                            <i ng-class="ctrl.geAppCssClass(app)" ng-switch-when="-1"></i>
+                            <i class="fs-1" ng-class="ctrl.helperSvc.getIconClass(app)" ng-switch-when="-1"></i>
                             <img skin-src="[[app.icon]]" ng-switch-default />
                         </a>
                     </div>
