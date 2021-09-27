@@ -60,7 +60,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="feed in ctrl.channel.feeds track by $index" ng-class="{ 'table-active' : ctrl.display.feedEdition && $index === ctrl.selectedFeedIndex }">
+					<tr class="c-pointer" 
+							ng-repeat="feed in ctrl.channel.feeds track by $index" 
+							ng-class="{ 'table-active' : ctrl.display.feedEdition && $index === ctrl.selectedFeedIndex }">
 						<td ng-click="ctrl.openFeedEdition($index)">[[ctrl.channel.feeds[$index].title]]</td>
 						<td ng-click="ctrl.openFeedEdition($index)">[[ctrl.channel.feeds[$index].show]]</td>
 						<td ng-click="ctrl.removeFeed($index)">

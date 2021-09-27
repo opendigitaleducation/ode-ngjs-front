@@ -42,7 +42,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="bookmark in ctrl.bookmarks" ng-class="{ 'table-active' : ctrl.editedBookmark && bookmark._id === ctrl.editedBookmark._id }">
+				<tr class="c-pointer" 
+						ng-repeat="bookmark in ctrl.bookmarks"
+						ng-class="{ 'table-active' : ctrl.editedBookmark && bookmark._id === ctrl.editedBookmark._id }">
 					<td ng-click="ctrl.editBookmark(bookmark)">[[bookmark.name]]</td>
 					<td ng-click="ctrl.editBookmark(bookmark)">[[bookmark.url]]</td>
 					<td ng-click="ctrl.deleteBookmark(bookmark)">
