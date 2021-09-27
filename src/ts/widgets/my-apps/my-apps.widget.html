@@ -1,12 +1,6 @@
 <div class="widget-applications">
 	<div class="widget-header">
 		<div class="subtitle"><i18n>my-apps.widget.title</i18n></div>
-
-		<div class="tools">
-			<a href="/welcome" target="_blank" class="tool tool-option" i18n-title="my-apps.widget.options">
-				<i class="fas fa-cog"></i>
-			</a>
-		</div>
 	</div>
 
 	<div class="widget-body" dnd-nodrag>
@@ -24,4 +18,10 @@
 			</li>
 		</ul>
 	</div>
+
+	<div class="widget-footer border-top border-ghost" ng-if="ctrl.apps.length!==0">
+		<div class="widget-footer-action">
+			<a class="link" target="_blank" href="/welcome"><i18n>my-apps.widget.options</i18n></a>
+		</div>
+	</div>	
 </div>
