@@ -28,7 +28,7 @@ class Controller implements IController {
 
 	public getWidgetStyle() {
 		return {
-			'background-image': "url("+ this.themePath +"/images/wallpaper3.png)"
+			'background-image': "url("+ this.themePath +"/images/widget-3.png)"
 		};
 	}
 
