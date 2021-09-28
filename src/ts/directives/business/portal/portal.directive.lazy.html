@@ -23,6 +23,30 @@
     <div ng-transclude></div>
 </main>
 
+<div id="infotips-container" class="toast-container">
+    <ode-infotip 
+            header=""
+            userprefs-key="rgpdCookies" 
+            userprefs-field="showInfoTip"
+            save-on-change="false"
+            show="showRgpd">
+        
+        <i18n>rgpd.cookies.banner.text1</i18n>
+
+        <div class="mt-4 pt-4 border-top d-flex justify-content-end">
+            <button type="button" class="btn btn-primary btn-sm me-4"
+                    ng-click="goToMyAccount()">
+                <i18n>rgpd.cookies.banner.button.consult</i18n>
+            </button>
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="toast"
+                    ng-click="closeBanner()">
+                <i18n>rgpd.cookies.banner.button.close</i18n>
+            </button>
+        </div>
+    </ode-infotip>
+    <div ng-transclude="infotips"></div>
+</div>
+
 <xiti></xiti>
 
 <connector-lightbox></connector-lightbox>

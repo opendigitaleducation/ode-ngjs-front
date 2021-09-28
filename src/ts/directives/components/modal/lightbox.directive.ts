@@ -207,6 +207,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 }
 
 /** The lightbox directive.
+ * @deprecated
+ * Replaced by modal.directive.ts
  *
  * Usage: //TODO
  *      &lt;lightbox ></lightbox&gt;

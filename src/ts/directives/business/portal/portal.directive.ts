@@ -1,17 +1,23 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { App, NotifyFrameworkFactory } from "ode-ts-client";
+import { App, ConfigurationFrameworkFactory, NotifyFrameworkFactory, USER_PREFS } from "ode-ts-client";
 import { L10n } from "../../../utils"; 
 import { TrackingService } from "../../../services";
 
 interface PortalScope extends IScope {
 	app?:App;
 	name:string;
+
+	goToMyAccount: () => void;
+	closeBanner: () => void;
+	showRgpd?: Boolean;
 }
 
 /* Directive */
 class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
-	transclude = true;
+	transclude = {
+        infotips:   "odeInfotips"
+    };
 	templateUrl(element:JQLite, attrs:IAttributes) {
 		// Load the specified template-url, or the default implementation.
 		return attrs.templateUrl ? attrs.templateUrl : require('./portal.directive.lazy.html').default;
@@ -22,9 +28,23 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 	};
 
 	link(scope:PortalScope, elem:JQLite, attrs:IAttributes) {
+		const preferences = ConfigurationFrameworkFactory.instance().User.preferences;
+
 		NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
 			L10n.initialize( lang );
 		});
+
+		scope.goToMyAccount = () => {
+			document.location.href = '/userbook/mon-compte';
+			preferences.get(USER_PREFS.RGPD_COOKIES)['showInfoTip'] = false;
+			preferences.save(USER_PREFS.RGPD_COOKIES);
+		}
+
+		scope.closeBanner = () => {
+			scope.showRgpd = false;
+			preferences.get(USER_PREFS.RGPD_COOKIES)['showInfoTip'] = false;
+			preferences.save(USER_PREFS.RGPD_COOKIES);
+		}
 
 		// Tracking
 		if( scope.app ) {
