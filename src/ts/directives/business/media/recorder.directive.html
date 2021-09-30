@@ -59,7 +59,7 @@
             <button type="button" class="btn btn-circle"
                     ng-click="ctrl.saveRecord()" 
                     ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i ng-class="{'fa-save': !ctrl.isEncoding && !ctrl.isUploading, 'fa-loading': ctrl.isEncoding || ctrl.isUploading}"></i>
+                <i ng-class="ctrl.getSaveBtnClass()"></i>
                 <span class="label"><i18n>embed.save</i18n></span>
             </button>
         </div>

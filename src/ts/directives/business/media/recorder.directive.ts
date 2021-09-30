@@ -95,6 +95,14 @@ export class Controller implements IController {
         this.recorder?.flush();
         this.recorder?.record();
     }
+
+    getSaveBtnClass() {
+        if( this.isEncoding || this.isUploading ) {
+            return 'fas fa-sync fa-spin';
+        } else {
+            return 'fas fa-save';
+        }
+    }
 }
 
 interface Scope extends IScope {
