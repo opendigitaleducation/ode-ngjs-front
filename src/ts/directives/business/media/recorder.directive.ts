@@ -98,7 +98,7 @@ export class Controller implements IController {
 
     getSaveBtnClass() {
         if( this.isEncoding || this.isUploading ) {
-            return 'fas fa-sync fa-spin';
+            return 'fas fa-spinner fa-spin';
         } else {
             return 'fas fa-save';
         }
