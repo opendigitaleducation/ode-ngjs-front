@@ -37,7 +37,7 @@
                     ng-click="ctrl.switchAudioRecord()"
                     ng-disabled="ctrl.isEncoding || ctrl.isUploading">
                 <i class="fas" ng-class="{'fa-microphone': !ctrl.isRecording, 'fa-pause': ctrl.isRecording}"></i>
-                <span class="label" ng-if="ctrl.isSuspended"><i18n>embed.resume</i18n></span>
+                <span class="label" ng-if="!ctrl.isRecording"><i18n>embed.resume</i18n></span>
                 <span class="label" ng-if="ctrl.isRecording"><i18n>embed.suspend</i18n></span>
             </button>
 

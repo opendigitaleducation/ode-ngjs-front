@@ -106,8 +106,8 @@ export class Controller implements IController {
 }
 
 interface Scope extends IScope {
-    format:string;
-    onUpload:Function;
+    format?:string;
+    onUpload?:Function;
 }
 
 /* Directive */
@@ -115,8 +115,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
     restrict = 'EA';
 	template = require("./recorder.directive.html").default;
     scope = {
-        format: '@',
-        onUpload: '&'
+        format: '@?',
+        onUpload: '&?'
     };
 	controller = [Controller];
 	controllerAs = 'ctrl';
@@ -138,7 +138,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
         ctrl.recorder.state( function (eventName:string) {
             if(eventName === 'saved'){
-                scope.onUpload();
+                scope.onUpload && scope.onUpload();
             }
             if( ctrl?.isRecording ) {
                 scope.$apply(); // Force reevaluation of the recorder's field
