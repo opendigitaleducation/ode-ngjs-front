@@ -116,7 +116,7 @@ class Controller implements IController {
 	}
 	
 	removeFeed(index:number){
-		if(index && index >= 0 && index < this.totalFeeds){
+		if(typeof index==="number" && index >= 0 && index < this.totalFeeds){
 			this.channel.feeds.splice(index, 1);
 			this.saveChannel();
 		}
