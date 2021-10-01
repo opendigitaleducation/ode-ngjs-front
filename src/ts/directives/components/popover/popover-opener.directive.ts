@@ -17,13 +17,13 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		const popover = parentNode.find('popover-content');
 		parentNode.on(mouseEvent, function (e) {
 			if (mouseEvent === 'click') {
-				if (popover.hasClass('hidden')) {
+				if (popover.hasClass('d-none')) {
 					e.stopPropagation();
 				}
 
 				angular.element(document.querySelector('body') as HTMLBodyElement).one('click', function (e) {
 					parentNode.triggerHandler('close');
-					popover.addClass("hidden");
+					popover.addClass("d-none");
 				});
 			}
 			/*FIXME without jQuery */
@@ -41,13 +41,13 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 					popover.addClass('bottom');
 				}
 			}
-			popover.removeClass("hidden");
+			popover.removeClass("d-none");
 		});
 
 		if(mouseEvent === 'mouseover') {
 			parentNode.on('mouseout', function (e) {
 				parentNode.triggerHandler('close');
-				popover.addClass("hidden");
+				popover.addClass("d-none");
 			});
 		}
 	}

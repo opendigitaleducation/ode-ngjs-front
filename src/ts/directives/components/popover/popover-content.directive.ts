@@ -6,7 +6,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	restrict= 'E';
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
-		elem.addClass("hidden");
+		elem.addClass("d-none");
 	}
 }
 
