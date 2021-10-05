@@ -1,6 +1,5 @@
-import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
+import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import { NotifyService } from "../../../services";
 
 interface Scope extends IScope {
     banner:any;
@@ -94,10 +93,6 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
         scope.init();    
     }
-
-    /* Constructor with Dependency Injection */
-    constructor(private $compile:ICompileService) {
-    }
 }
 
 /**
@@ -106,7 +101,6 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
  * Usage:
  *   &lt;smart-banner ></smart-banner&gt;
  */
-export function DirectiveFactory($compile:ICompileService) {
-	return new Directive($compile);
+export function DirectiveFactory() {
+	return new Directive();
 }
-DirectiveFactory.$inject = ["$compile"];

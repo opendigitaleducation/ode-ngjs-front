@@ -3,7 +3,6 @@ export * as Samples from './samples/index';
 
 /* Other directives are exported directly, for simplicity. */
 export * from './directives/index';
-// TODO add other directives here...
 
 export * from './services/index';
 
