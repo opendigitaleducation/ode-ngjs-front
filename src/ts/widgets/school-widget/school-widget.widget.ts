@@ -32,10 +32,15 @@ class Controller implements IController {
 		};
 	}
 
-	public setSelectedSchool( idx:number ) {
+	public setSelectedSchool( idx:number, ev?:JQuery.Event ) {
 		if( 0 <= idx && idx < this.description.schools.length ) {
-			this.selectedSchool = this.description.schools[idx];
+			// If an event is given, and related to pressing the enter or spacebar key.
+			if( !ev || (ev.type==='keydown' && (ev.which===13 || ev.which===32)) ) {	
+				this.selectedSchool = this.description.schools[idx];
+				return true;
+			}
 		}
+		return false;
 	}
 
 	private getDefaultUrl() {
