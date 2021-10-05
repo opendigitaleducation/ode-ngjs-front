@@ -40,8 +40,11 @@ export class QuickstartService {
 
 		this.save();
 	};
+	get assistantTimerFormat() {
+		return 'MM/DD/YYYY HH:mm';
+	}
 	seeAssistantLater(){
- 		this.state.assistantTimer = L10n.moment().format('MM/DD/YYYY HH:mm');
+ 		this.state.assistantTimer = L10n.moment().format(this.assistantTimerFormat);
  		this.save();
  	};
 	getAppStep():number {
@@ -142,9 +145,9 @@ export class QuickstartService {
 			if(
  				preferences.assistant !== -1 && !(
  					preferences.assistantTimer 
- 					&& L10n.moment(preferences.assistantTimer).year() === L10n.moment().year() 
- 					&& L10n.moment(preferences.assistantTimer).dayOfYear() === L10n.moment().dayOfYear() 
- 					&& L10n.moment(preferences.assistantTimer).hour() === L10n.moment().hour()
+ 					&& L10n.moment(preferences.assistantTimer, this.assistantTimerFormat).year() === L10n.moment().year() 
+ 					&& L10n.moment(preferences.assistantTimer, this.assistantTimerFormat).dayOfYear() === L10n.moment().dayOfYear() 
+ 					&& L10n.moment(preferences.assistantTimer, this.assistantTimerFormat).hour() === L10n.moment().hour()
  				)
  			){
 				http.get(skin.basePath + 'template/assistant/steps.json').then( steps => {

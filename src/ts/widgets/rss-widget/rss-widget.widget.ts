@@ -75,7 +75,7 @@ class Controller implements IController {
 			if(feed.link !== null && feed.link !== ""){
 				return TransportFrameworkFactory.instance().http.get<FeedContent>('/rss/feed/items?url=' + encodeURIComponent(feed.link) + '&force=' + force)
 				.then( result => {
-					if(!result.title) result.title = mytitle;
+					if(typeof result==="object" && !result.title) result.title = mytitle;
 					if(result.status===200 && this.feeds.length < this.totalFeeds){
 						if(result.Items !== undefined && feed.show != undefined && result.Items.length > feed.show){
 							result.Items = result.Items.slice(0, feed.show);
@@ -187,7 +187,7 @@ class Controller implements IController {
 		} else {
 			momentDate = L10n.moment(date, undefined, 'en');
 		}
-		return momentDate.lang('fr').format('dddd DD MMMM YYYY HH:mm');
+		return momentDate.locale('fr').format('dddd DD MMMM YYYY HH:mm');
 	};
 }
 
