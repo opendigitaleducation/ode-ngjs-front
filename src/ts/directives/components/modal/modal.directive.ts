@@ -1,4 +1,5 @@
-import { IController, IDirective } from "angular";
+import { IAttributes, IController, IDirective, IScope } from "angular";
+import { L10n } from "../../..";
 
 type ModalSize = "sm"|"md"|"lg"|"xl";
 
@@ -30,7 +31,7 @@ export class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective {
+class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./modal.directive.html').default;
 	scope = {
@@ -41,12 +42,22 @@ class Directive implements IDirective {
 	};
 	bindToController = true;
     transclude = {
-		title:	"odeModalTitle",
+		title:	"?odeModalTitle",
         body:   "odeModalBody",
-        footer: "odeModalFooter"
+        footer: "?odeModalFooter"
     };
 	controller = [Controller];
 	controllerAs = 'ctrl';
+	require=['odeModal'];
+
+	link(scope:IScope, element:JQLite, attributes:IAttributes, controllers?:IController[]): void {
+		if( !controllers ) return;
+		const ctrl:Controller = controllers[0] as Controller;
+
+		if( typeof attributes['id'] === "undefined" || (attributes['id'] as string).length === 0 ) {
+			ctrl.id = L10n.moment(new Date()).format("YYMMDDHHMMssSSS") + (1000*Math.random()).toFixed(0);
+		}
+	}
 }
 
 /** The ode-modal directive.

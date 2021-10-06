@@ -3,8 +3,8 @@
 		<div class="widget-school-header" ng-style="ctrl.getWidgetStyle()">
 			<div class="d-flex align-items-center">
 				<div class="me-4">
-					<a href="/userbook/mon-compte" class="avatar-link">
-						<img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" />
+					<a href="/userbook/mon-compte" class="avatar-link" i18n-title="navbar.myaccount">
+						<img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" alt="{{ctrl.description.displayName}}" />
 					</a>
 				</div>
 				<div class="flex-grow-1">
