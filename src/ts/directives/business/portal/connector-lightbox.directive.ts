@@ -1,6 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { APP, ConfigurationFrameworkFactory, IWebApp } from "ode-ts-client";
-import { Subject } from "rxjs";
+import { APP, ConfigurationFrameworkFactory, IWebApp, RxJS } from "ode-ts-client";
 
 type AppEvent = {
     app:IWebApp,
@@ -14,7 +13,7 @@ interface ITriggerScope extends IScope {
 }
 
 /** Global AppEvent stream, shared by every connector-lightbox[-trigger] */
-const _onTriggerApp = new Subject<AppEvent>();
+const _onTriggerApp = new RxJS.Subject<AppEvent>();
 
 //--------------------------------------------------------------------------------
 class TriggerDirective implements IDirective<ITriggerScope,JQLite,IAttributes> {
