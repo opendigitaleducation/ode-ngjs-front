@@ -1,4 +1,4 @@
-import { ConfigurationFrameworkFactory } from "ode-ts-client";
+import { conf } from "../utils";
 const humane = require('humane-js');
 
 /**
@@ -8,7 +8,7 @@ const humane = require('humane-js');
  */
 export class NotifyService {
     private message(type:"error"|"info"|"success", message:string, timeout?:number) {
-		message = ConfigurationFrameworkFactory.instance().Platform.idiom.translate(message);
+		message = conf().Platform.idiom.translate(message);
 		let options:any = { addnCls: 'humane-original-'+ type };
 		if(timeout != null)
 			options["timeout"] = timeout;

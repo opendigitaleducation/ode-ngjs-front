@@ -1,6 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { L10n } from "../../utils";
-import { ConfigurationFrameworkFactory, ILastInfosModel, IUserDescription, IUserInfo, LastInfosWidget, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { L10n, conf, notif, session, http } from "../../utils";
+import { ILastInfosModel, IUserDescription, IUserInfo } from "ode-ts-client";
 import { ThemeHelperService } from "../../services";
 
 interface IExtendedLastInfosModel extends ILastInfosModel {
@@ -21,8 +21,8 @@ class Controller implements IController {
 	constructor( 
 		private themeHelperSvc:ThemeHelperService
 	) {}
-	private me:IUserInfo = SessionFrameworkFactory.instance().session.user;
-	private description:IUserDescription = SessionFrameworkFactory.instance().session.description;
+	private me:IUserInfo = session().user;
+	private description:IUserDescription = session().description;
 
 	public structures:any[] = [];
 	public eleves:any[] = [];
@@ -117,7 +117,7 @@ class Controller implements IController {
 	}
 
 	private getContent( contentType:ContentType, eleve:any ) {
-		const lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
+		const lang = conf().Platform.idiom;
 		if( contentType.title === 'lateness' ) {
 			let delays = $(eleve).find('Retard Justifie');
 			let latedate:any = false;
@@ -318,10 +318,9 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
 		if( ! ctrl ) return;
 
-        const http = TransportFrameworkFactory.instance().http;
-		http.get('/sso/pronote')
+		http().get('/sso/pronote')
 		.then( (structures:any[]) => {
-            if( http.latestResponse.status !== 200 ) {
+            if( http().latestResponse.status !== 200 ) {
                 /* Mocked data for testing during development.
                 structures = [{
                     "structureId" : null,
@@ -357,7 +356,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             if( typeof e === "string" ) {
                 ctrl.errorMsg = {error:e};
             } else {
-                ctrl.errorMsg = JSON.parse(http.latestResponse.statusText);
+                ctrl.errorMsg = JSON.parse(http().latestResponse.statusText);
             }
 		});		
 	}
@@ -373,9 +372,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

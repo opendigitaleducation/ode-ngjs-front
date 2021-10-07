@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { conf, session, http } from "../../../utils";
 
 interface Scope extends IScope {
     banner:any;
@@ -19,9 +19,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
     templateUrl = require('./smart-banner.directive.lazy.html').default;
 
     link(scope:Scope, elem:JQLite, attr:IAttributes, controllers?:IController[]): void {
-		const http = TransportFrameworkFactory.instance().http;
-        const skin = ConfigurationFrameworkFactory.instance().Platform.theme;
-        const me = SessionFrameworkFactory.instance().session.user;
+        const skin = conf().Platform.theme;
+        const me = session().user;
 
         scope.closeBanner = () => {
             scope.setCookie("test",30);
@@ -57,9 +56,9 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
         scope.init = async () => {
             try {
-                const data = await http.get('/conf/smartBanner').then( data => { 
+                const data = await http().get('/conf/smartBanner').then( data => { 
                     //if 200 ok=> display banner
-                    if( http.latestResponse.status==200 && data!==null) {
+                    if( http().latestResponse.status==200 && data!==null) {
                         return data;
                     }
                     return null;
@@ -72,7 +71,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
                     }
                     scope.showBanner = scope.getCookie() == null;
 
-                    const lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
+                    const lang = conf().Platform.idiom;
                     scope.icon = lang.translate("smartbanner.icon.uri");
                     if (scope.showBanner) {
                         if (/Android/i.test(navigator.userAgent)) {

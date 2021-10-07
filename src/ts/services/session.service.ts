@@ -1,19 +1,20 @@
-import { ConfigurationFrameworkFactory, IWebApp, NotifyFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
+import { IWebApp } from "ode-ts-client";
+import { conf, notif, session } from "../utils";
 
 export class SessionService {
 
     public hasWorkflow(right:string):boolean {
-        return SessionFrameworkFactory.instance().session.hasWorkflow(right);
+        return session().hasWorkflow(right);
     }
 
 	public getLanguage():Promise<string> {
-		return NotifyFrameworkFactory.instance().onSessionReady().promise
-		.then( userInfo => SessionFrameworkFactory.instance().session.currentLanguage );
+		return notif().onSessionReady().promise
+		.then( userInfo => session().currentLanguage );
 	}
 
 	public getBookmarks():Promise<IWebApp[]> {
-		return NotifyFrameworkFactory.instance().onSessionReady().promise
-		.then( userInfo => ConfigurationFrameworkFactory.instance().User.bookmarkedApps );
+		return notif().onSessionReady().promise
+		.then( userInfo => conf().User.bookmarkedApps );
 	}
 
 }

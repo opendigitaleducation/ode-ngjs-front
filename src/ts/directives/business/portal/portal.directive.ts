@@ -1,6 +1,6 @@
 import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { App, ConfigurationFrameworkFactory, NotifyFrameworkFactory, USER_PREFS } from "ode-ts-client";
-import { L10n } from "../../../utils"; 
+import { App, USER_PREFS } from "ode-ts-client";
+import { L10n, conf, notif } from "../../../utils"; 
 import { TrackingService } from "../../../services";
 
 interface PortalScope extends IScope {
@@ -28,9 +28,9 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 	};
 
 	link(scope:PortalScope, elem:JQLite, attrs:IAttributes) {
-		const preferences = ConfigurationFrameworkFactory.instance().User.preferences;
+		const preferences = conf().User.preferences;
 
-		NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+		notif().onLangReady().promise.then( lang => {
 			L10n.initialize( lang );
 		});
 

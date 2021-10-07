@@ -1,5 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IWebApp, NotifyFrameworkFactory } from "ode-ts-client";
+import { IWebApp } from "ode-ts-client";
+import { conf, notif } from "../../utils";
 import { NgHelperService } from "../../services";
 
 /* Controller for the directive */
@@ -26,8 +27,8 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
 		if( ! ctrl ) return;
 
-		NotifyFrameworkFactory.instance().onSessionReady().promise.then( () => {
-			ctrl.apps = ConfigurationFrameworkFactory.instance().User.bookmarkedApps;
+		notif().onSessionReady().promise.then( () => {
+			ctrl.apps = conf().User.bookmarkedApps;
 			scope.$apply();
 		})
 	}
@@ -39,9 +40,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

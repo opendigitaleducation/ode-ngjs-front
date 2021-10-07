@@ -1,5 +1,6 @@
 import angular, { IDocumentService, ILocationService, IScope } from "angular";
-import { App, ConfigurationFrameworkFactory, IMatomoTrackingParams, SessionFrameworkFactory } from "ode-ts-client";
+import { App, IMatomoTrackingParams } from "ode-ts-client";
+import { conf, session } from "../utils";
 
 export class TrackingService {
     constructor( 
@@ -12,7 +13,7 @@ export class TrackingService {
     private hasOptedIn: boolean = false;
 
     trackApp( app:App ) {
-        const analytics = ConfigurationFrameworkFactory.instance().Platform.analytics;
+        const analytics = conf().Platform.analytics;
         analytics.parameters<IMatomoTrackingParams>("matomo").then( (params?) => {
             if( !params ) return;
             try {
@@ -40,7 +41,7 @@ export class TrackingService {
                 }]);
 
                 if( params.detailApps ) {
-                    const me = SessionFrameworkFactory.instance().session.user;
+                    const me = session().user;
 
                     // Check the doNotTrack apps filter.
                     if( angular.isArray(params.doNotTrack) && angular.isArray(me.apps) ) {
@@ -66,7 +67,7 @@ export class TrackingService {
     }
 
     trackPage( title:string, url:string ) {
-        ConfigurationFrameworkFactory.instance().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
+        conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
         .then( (params?) => {
             if( params ) {
             // Then let's track single-page applications routes, too.
@@ -79,7 +80,7 @@ export class TrackingService {
     }
 
     saveOptIn() {
-        ConfigurationFrameworkFactory.instance().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
+        conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
         .then( (params?) => {
             if( params ) {
                 let _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];

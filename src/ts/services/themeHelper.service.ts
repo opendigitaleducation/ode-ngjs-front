@@ -1,6 +1,7 @@
 import angular from "angular";
-import { ConfigurationFrameworkFactory, IThemeDesc, WidgetName } from "ode-ts-client";
+import { IThemeDesc, WidgetName } from "ode-ts-client";
 import { NgHelperService } from "./ngHelper.service";
+import { conf } from "../utils";
 import $ from 'jquery';
 
 /**
@@ -34,7 +35,7 @@ export class ThemeHelperService {
     }
 
     private get platform() {
-        return ConfigurationFrameworkFactory.instance().Platform;
+        return conf().Platform;
     }
 
     /** Get the configured CDN URL root. */

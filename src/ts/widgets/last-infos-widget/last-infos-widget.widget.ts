@@ -1,6 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { L10n } from "../../utils";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, ILastInfosModel, LastInfosWidget } from "ode-ts-client";
+import { L10n, conf, notif } from "../../utils";
+import { ILastInfosModel, LastInfosWidget } from "ode-ts-client";
 
 interface IExtendedLastInfosModel extends ILastInfosModel {
 	relativeDate: string;
@@ -10,7 +10,7 @@ interface IExtendedLastInfosModel extends ILastInfosModel {
 /* Controller for the directive */
 class Controller implements IController {
 	public widget = new LastInfosWidget();
-	private lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
+	private lang = conf().Platform.idiom;
 
 	public infos:IExtendedLastInfosModel[] = [];
 	public resultSizeValues = [1,2,3,4,5,6,7,8,9,10];
@@ -74,9 +74,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

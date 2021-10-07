@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory } from "ode-ts-client";
+import { notif } from "../../utils";
 
 /*
  * NOTE As of 2021-09-06, this widget is only 1D now, the code below is never used. 
@@ -34,7 +34,7 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
 //		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}

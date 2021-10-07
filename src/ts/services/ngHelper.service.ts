@@ -1,6 +1,7 @@
 import angular from "angular";
-import { ConfigurationFrameworkFactory, IWebApp } from "ode-ts-client";
+import { IWebApp } from "ode-ts-client";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
+import { conf } from "../utils";
 
 
 /** 
@@ -19,7 +20,7 @@ export class NgHelperService {
         } else {
             appCode = app.displayName.trim().toLowerCase();
         }
-        appCode = ConfigurationFrameworkFactory.instance().Platform.idiom.removeAccents(appCode);
+        appCode = conf().Platform.idiom.removeAccents(appCode);
 		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
 		switch( appCode ) {
 			case "admin.title": 	    appCode = "admin"; break;

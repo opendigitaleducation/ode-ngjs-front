@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { conf, notif, http } from "../../utils";
 
 /* Controller for the directive */
 class Controller implements IController {
@@ -27,7 +27,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         if( !ctrl ) {
             return;
 		}
-		TransportFrameworkFactory.instance().http.get('/assets/widgets/dicodelazone-widget/lexicon.json')
+		http().get('/assets/widgets/dicodelazone-widget/lexicon.json')
 		.then( data => {
 			ctrl.lexicon = data;
 			ctrl.suggestions = Object.keys(data);
@@ -42,10 +42,10 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		case "en":	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		case "en":	conf().Platform.idiom.addKeys( require('./i18n/en.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

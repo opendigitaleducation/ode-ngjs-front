@@ -1,11 +1,12 @@
-import { ConfigurationFrameworkFactory, IXitiTrackingParams } from "ode-ts-client";
+import { IXitiTrackingParams } from "ode-ts-client";
+import { conf } from "../utils";
 
 /** The xiti loader service. */
 export class XitiService {
 
     /** Apply XiTi tracking. */
     public runScript() {
-        ConfigurationFrameworkFactory.instance().Platform.analytics.xiti()
+        conf().Platform.analytics.xiti()
         .then( conf => {if(conf) this.loadScript(conf); });
     }
 
@@ -15,7 +16,7 @@ export class XitiService {
 
         if( typeof xitiConf.ID_ETAB === 'object' ) {
             //Xiti script path
-            const skin = ConfigurationFrameworkFactory.instance().Platform.theme;
+            const skin = conf().Platform.theme;
             const scriptPath = skin.basePath + 'js/xtfirst_ENT.js';
 
             (window as any).xt_multc = "&x1=" + xitiConf.ID_SERVICE +

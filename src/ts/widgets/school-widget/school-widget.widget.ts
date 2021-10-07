@@ -1,5 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IUserDescription, IUserInfo, NotifyFrameworkFactory, School, SessionFrameworkFactory } from "ode-ts-client";
+import { IUserDescription, IUserInfo, School } from "ode-ts-client";
+import { conf, notif, session } from "../../utils";
 import { ThemeHelperService } from "../../services";
 
 /* Controller for the directive */
@@ -8,18 +9,18 @@ class Controller implements IController {
 		private themeHelperSvc:ThemeHelperService
 	) {}
 	private get me():IUserInfo {
-		return SessionFrameworkFactory.instance().session.user;
+		return session().user;
 	}
 	private get description():IUserDescription {
-		return SessionFrameworkFactory.instance().session.description;
+		return session().description;
 	}
 	public get avatar():string {
-		return SessionFrameworkFactory.instance().session.avatarUrl;
+		return session().avatarUrl;
 	}
 
 	public async initialize() {
 		this.themePath = await this.themeHelperSvc.getBootstrapThemePath();
-		await NotifyFrameworkFactory.instance().onSessionReady().promise;
+		await notif().onSessionReady().promise;
 		this.setSelectedSchool( 0 );
 	}
 
@@ -115,9 +116,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

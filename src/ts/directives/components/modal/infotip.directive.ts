@@ -1,5 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IUserPreferences, UserPreferenceKey } from "ode-ts-client";
+import { UserPreferenceKey } from "ode-ts-client";
+import { conf } from "../../../utils";
 
 interface Scope extends IScope {
 	header?: string;
@@ -47,7 +48,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 			}
 		}
 
-		const preferences = ConfigurationFrameworkFactory.instance().User.preferences;
+		const preferences = conf().User.preferences;
 		await preferences.load( key );
 
 		// Helper get/set function

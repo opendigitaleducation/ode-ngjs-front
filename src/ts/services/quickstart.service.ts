@@ -1,13 +1,11 @@
-import { ConfigurationFrameworkFactory, IUserInfo, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import { L10n } from "../utils";
+import { IUserInfo } from "ode-ts-client";
+import { L10n, conf, session, http } from "../utils";
 
-const skin = ConfigurationFrameworkFactory.instance().Platform.theme;
+const skin = conf().Platform.theme;
 
 const model = {
-	get me():IUserInfo { return SessionFrameworkFactory.instance().session.user; }
+	get me():IUserInfo { return session().user; }
 }
-
-const http = TransportFrameworkFactory.instance().http;
 
 /**
  * Service dedicated to the &lt;assistant> directive
@@ -83,7 +81,7 @@ export class QuickstartService {
 		this.save();
 	};
 	save(cb?: () => void){
-		http.putJson('/userbook/preference/quickstart', this.state).then( () => {
+		http().putJson('/userbook/preference/quickstart', this.state).then( () => {
 			if(typeof cb === 'function'){
 				cb();
 			}
@@ -119,7 +117,7 @@ export class QuickstartService {
 			return;
 		}
 		this.loading = true;
-		http.get('/userbook/preference/quickstart').then( pref => {
+		http().get('/userbook/preference/quickstart').then( pref => {
 			let preferences;
 			if(pref.preference){
 				try{
@@ -150,7 +148,7 @@ export class QuickstartService {
  					&& L10n.moment(preferences.assistantTimer, this.assistantTimerFormat).hour() === L10n.moment().hour()
  				)
  			){
-				http.get(skin.basePath + 'template/assistant/steps.json').then( steps => {
+				http().get(skin.basePath + 'template/assistant/steps.json').then( steps => {
 					this.steps = steps;
 					let nbSteps = this.steps[this.types[model.me.type]];
 					for(let i = 0; i < nbSteps; i++){

@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory } from "ode-ts-client";
+import { conf, notif } from "../../utils";
 
 /* Directive */
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
@@ -13,9 +13,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

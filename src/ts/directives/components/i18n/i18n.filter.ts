@@ -1,8 +1,8 @@
 import { IFilterFunction } from "angular";
-import { ConfigurationFrameworkFactory } from "ode-ts-client";
+import { conf } from "../../../utils";
 
 const Filter:IFilterFunction = (input:string) => {
-    return ConfigurationFrameworkFactory.instance().Platform.idiom.translate(input);
+    return conf().Platform.idiom.translate(input);
 }
 
 export function FilterFactory() {

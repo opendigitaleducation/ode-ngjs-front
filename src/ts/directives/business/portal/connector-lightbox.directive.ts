@@ -1,5 +1,6 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { APP, ConfigurationFrameworkFactory, IWebApp, RxJS } from "ode-ts-client";
+import { APP, IWebApp, RxJS } from "ode-ts-client";
+import { conf } from "../../../utils";
 
 type AppEvent = {
     app:IWebApp,
@@ -79,13 +80,13 @@ export class Controller {
         const target = this._currentAppEvent.ctrlKey || this._currentAppEvent.metaKey ? '_blank' : !!_app.target ? _app.target : '_self';
 
         if (target !== '_self') {
-            ConfigurationFrameworkFactory.instance().User.preferences
+            conf().User.preferences
               .update('authenticatedConnectorsAccessed', this.authenticatedConnectorsAccessed)
               .save('authenticatedConnectorsAccessed');
             window.open(_app.address, target);
         } else {
             (async () => {
-                await ConfigurationFrameworkFactory.instance().User.preferences
+                await conf().User.preferences
                 .update('authenticatedConnectorsAccessed', this.authenticatedConnectorsAccessed)
                 .save('authenticatedConnectorsAccessed');
                 window.open(_app.address, target);
@@ -154,10 +155,10 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
             sub.unsubscribe();
         });
 
-        ctrl.authenticatedConnectorsAccessed = await ConfigurationFrameworkFactory.instance().User.preferences.load('authenticatedConnectorsAccessed');
+        ctrl.authenticatedConnectorsAccessed = await conf().User.preferences.load('authenticatedConnectorsAccessed');
         try {
-            const conf = await ConfigurationFrameworkFactory.instance().Platform.apps.getPublicConf( APP.CAS );
-            ctrl.skipCheck = !!conf.skip;
+            const cf = await conf().Platform.apps.getPublicConf( APP.CAS );
+            ctrl.skipCheck = !!cf.skip;
         } catch(e){
             console.warn("Failed to get public conf: ", e)
         }

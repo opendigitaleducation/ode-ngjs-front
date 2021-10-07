@@ -1,5 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory, USER_PREFS } from "ode-ts-client";
+import { USER_PREFS } from "ode-ts-client";
+import { conf, notif, http } from "../../utils";
 
 /* Controller for the directive */
 class Controller implements IController {
@@ -16,13 +17,13 @@ class Controller implements IController {
   public apply?: () => void;
 
   private get version(): string {
-    return ConfigurationFrameworkFactory.instance().Platform.deploymentTag;
+    return conf().Platform.deploymentTag;
   }
 
   logout() {
     delete this.cardNb;
     delete this.sales;
-    return ConfigurationFrameworkFactory.instance().User.preferences
+    return conf().User.preferences
       .update(USER_PREFS.CURSUS, {})
       .save(USER_PREFS.CURSUS);
   }
@@ -37,7 +38,7 @@ class Controller implements IController {
   }
 
   getCardNb() {
-    return ConfigurationFrameworkFactory.instance().User.preferences
+    return conf().User.preferences
       .load(USER_PREFS.CURSUS)
       .then(data => {
         this.cardNb = data;
@@ -45,7 +46,7 @@ class Controller implements IController {
   }
 
   setCardNb(cardNb: string) {
-    return ConfigurationFrameworkFactory.instance().User.preferences
+    return conf().User.preferences
       .update(USER_PREFS.CURSUS, { cardNb: cardNb })
       .save(USER_PREFS.CURSUS);
   }
@@ -54,9 +55,7 @@ class Controller implements IController {
     if (!this.cardNb) {
       return Promise.reject();
     }
-    const http = TransportFrameworkFactory.instance().http;
-
-    return http
+    return http()
       .get("/cursus/sales", {
         queryParams: {
           "cardNb": this.cardNb,
@@ -64,7 +63,7 @@ class Controller implements IController {
         }
       })
       .then((data: { sales: any[], wallets: any[] }) => {
-        if( http.latestResponse.status !== 200 ) {
+        if( http().latestResponse.status !== 200 ) {
           throw "Cannot get sales";
         }
         this.error = false;
@@ -132,9 +131,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then(lang => {
+notif().onLangReady().promise.then(lang => {
   switch (lang) {
-    default: ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys(require('./i18n/fr.json')); break;
+    default: conf().Platform.idiom.addKeys(require('./i18n/fr.json')); break;
   }
 });
 

@@ -1,6 +1,6 @@
 import angular, { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
 import { NgHelperService, QuickstartService } from "../../../services";
+import { conf, session, http } from "../../../utils";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 /* Local types */
@@ -44,8 +44,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 	scope= true;
 
     link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
-		const idiom = ConfigurationFrameworkFactory.instance().Platform.idiom;
-		const http = TransportFrameworkFactory.instance().http;
+		const idiom = conf().Platform.idiom;
 
 		if( !elem ) {
 			return;
@@ -53,7 +52,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
 		// Legacy code (angular templates in old format)
 		scope.me = {
-			hasWorkflow: SessionFrameworkFactory.instance().session.hasWorkflow
+			hasWorkflow: session().hasWorkflow
 		};
 
 		if( this.helperSvc.viewport <= this.helperSvc.TABLET ||  /* TODO contrôle à appliquer à l'aide d'une directive ?*/
@@ -362,7 +361,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 				//scroll voir hauteur document ou bloquer scroll
 				// ok pour xp on layers
 
-				http.get<string>('/infra/public/template/pulsar.html').then( html => {
+				http().get<string>('/infra/public/template/pulsar.html').then( html => {
 					let tmp = $(html);
 					tmp.find('button').addClass('btn btn-primary');
 					let scoped = this.$compile(tmp)(scope);

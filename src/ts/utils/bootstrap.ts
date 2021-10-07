@@ -1,6 +1,6 @@
 import angular from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, SessionFrameworkFactory } from "ode-ts-client";
-import { L10n } from ".";
+import { SessionFrameworkFactory } from "ode-ts-client";
+import { conf } from ".";
 
 /* 
  * This code bootstraps angular on the current web page.
@@ -9,7 +9,7 @@ import { L10n } from ".";
  */
 (()=>{
     document.addEventListener("DOMContentLoaded", () => {
-            ConfigurationFrameworkFactory.instance().initialize( null, null )
+            conf().initialize( null, null )
             .then( () => SessionFrameworkFactory.instance().initialize()) // TODO: get version and CDN from mustache directive.
             .then( () => {
                 // Bootstrap angularJS on the <html> tag, requiring the "app" module.

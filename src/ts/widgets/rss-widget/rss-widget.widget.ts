@@ -1,6 +1,5 @@
-import angular, { IAttributes, IController, IDirective, IScope, IWindowService } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import { L10n } from "../../utils";
+import angular, { IAttributes, IController, IDirective, IScope } from "angular";
+import { L10n, conf, notif, http } from "../../utils";
 
 type Feed = {title:string, link:string, show?:number};
 type Channel = {
@@ -50,7 +49,7 @@ class Controller implements IController {
 
 	initFeeds():Promise<void> {
 		if(this.channel === undefined){
-			return TransportFrameworkFactory.instance().http.get<Channel[]>('/rss/channels')
+			return http().get<Channel[]>('/rss/channels')
 			.then( channels => {
 				if(channels && channels.length > 0) {
 					this.channel = channels[0];
@@ -73,7 +72,7 @@ class Controller implements IController {
 		return Promise.all( this.channel.feeds.map( feed => {
 			const mytitle = feed.title;
 			if(feed.link !== null && feed.link !== ""){
-				return TransportFrameworkFactory.instance().http.get<FeedContent>('/rss/feed/items?url=' + encodeURIComponent(feed.link) + '&force=' + force)
+				return http().get<FeedContent>('/rss/feed/items?url=' + encodeURIComponent(feed.link) + '&force=' + force)
 				.then( result => {
 					if(typeof result==="object" && !result.title) result.title = mytitle;
 					if(result.status===200 && this.feeds.length < this.totalFeeds){
@@ -151,7 +150,7 @@ class Controller implements IController {
 
 	createChannel() {
 		if(this.channel){
-			TransportFrameworkFactory.instance().http.postJson('/rss/channel', this.channel)
+			http().postJson('/rss/channel', this.channel)
 			.then( response => {
 				this.channel._id = response._id;
 				this.loadFeeds(0); // 0 : default, from the cache
@@ -163,7 +162,7 @@ class Controller implements IController {
 	
 	editChannel() {
 		if(this.channel && this.channel._id){
-			TransportFrameworkFactory.instance().http.putJson('/rss/channel/' + this.channel._id, {feeds: this.channel.feeds})
+			http().putJson('/rss/channel/' + this.channel._id, {feeds: this.channel.feeds})
 			.then( response => {
 				this.loadFeeds(0); // 0 : default, from the cache
 			});
@@ -216,9 +215,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

@@ -1,5 +1,6 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IIdiom, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory, ITheme, IWebApp } from "ode-ts-client";
+import { IIdiom, ITheme, IWebApp } from "ode-ts-client";
+import { conf, session, http } from "../../../utils";
 import { SessionService } from "../../../services/session.service";
 import { NgHelperService } from "../../../services/ngHelper.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
@@ -23,9 +24,8 @@ export class Controller implements IController {
 	public is2D:boolean = false;
 
 	refreshAvatar() {
-		const session = SessionFrameworkFactory.instance().session;
-		this.avatar = session.avatarUrl;
-		this.username = session.description.displayName;
+		this.avatar = session().avatarUrl;
+		this.username = session().description.displayName;
 	};
 
 	openApps(event:any){
@@ -80,8 +80,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
-		const platform = ConfigurationFrameworkFactory.instance().Platform;
-		const http = TransportFrameworkFactory.instance().http;
+		const platform = conf().Platform;
 
 		// Legacy code (angular templates in old format)
 		scope.lang = platform.idiom;
@@ -89,12 +88,12 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		scope.version = platform.deploymentTag;
 		scope.me = {
 			hasWorkflow(right:string):boolean {
-				return SessionFrameworkFactory.instance().session.hasWorkflow(right);
+				return session().hasWorkflow(right);
 			}
 		};
 		scope.goToMessagerie = () => {
 			console.log(scope.messagerieLink);
-			http.get('/userbook/preference/zimbra').then( data => {
+			http().get('/userbook/preference/zimbra').then( data => {
 				try{
 					if( data.preference? JSON.parse(data.preference)['modeExpert'] && scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|preauth') : false){
 							scope.messagerieLink = '/zimbra/preauth';
@@ -111,13 +110,13 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		}
 		scope.refreshMails = () => {
 			if(scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|view')){
-				http.get('/zimbra/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
+				http().get('/zimbra/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
 					scope.nbNewMessages = nbMessages.count;
 					scope.$apply('nbNewMessages');
 				});
 	
 			} else {
-				http.get('/conversation/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
+				http().get('/conversation/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
 					scope.nbNewMessages = nbMessages.count;
 					scope.$apply('nbNewMessages');
 				});

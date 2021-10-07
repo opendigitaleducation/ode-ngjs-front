@@ -1,13 +1,10 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { conf, notif, http } from "../../utils";
 import { notify } from "../../services";
 
 // UTILS
 function isEmpty(str:string) {
 	return (!str || str.trim().length === 0);
-}
-function http() {
-	return TransportFrameworkFactory.instance().http;
 }
 
 // TYPES
@@ -215,9 +212,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

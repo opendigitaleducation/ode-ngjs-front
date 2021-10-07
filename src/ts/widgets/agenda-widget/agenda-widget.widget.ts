@@ -1,6 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, NotifyFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
-import { L10n } from "../../utils"; 
+import { conf, L10n, notif, http } from "../../utils"; 
 
 type ResourceMetadata = {
 	_id: string;
@@ -69,7 +68,7 @@ class Controller implements IController {
 	}
 
 	loadEvents() {
-		return TransportFrameworkFactory.instance().http.get<IAgenda[]>('/calendar/calendars')
+		return http().get<IAgenda[]>('/calendar/calendars')
 		.then( calendars => {
 			if( angular.isArray(calendars) && calendars.length > 0 ) {
 				let filter = calendars.map( calendar => 'calendarId='+calendar._id ).join('&');
@@ -79,7 +78,7 @@ class Controller implements IController {
 			return null;
 		})
 		.then( filterOn => {
-			return filterOn===null? [] : TransportFrameworkFactory.instance().http.get<IAgendaEvent[]>('/calendar/events/widget?' + filterOn + '&nb=' + this.MAX_EVENTS_DISPLAYED);
+			return filterOn===null? [] : http().get<IAgendaEvent[]>('/calendar/events/widget?' + filterOn + '&nb=' + this.MAX_EVENTS_DISPLAYED);
 		});
 	}
 
@@ -131,9 +130,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then( lang => {
+notif().onLangReady().promise.then( lang => {
 	switch( lang ) {
-		default:	ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
+		default:	conf().Platform.idiom.addKeys( require('./i18n/fr.json') ); break;
 	}
 });
 

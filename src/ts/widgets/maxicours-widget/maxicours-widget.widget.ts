@@ -1,5 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, IHttp, IUserInfo, NotifyFrameworkFactory, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { IUserInfo } from "ode-ts-client";
+import { conf, notif, session, http } from "../../utils";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 /* Controller for the directive */
@@ -23,13 +24,10 @@ class Controller implements IController {
     loads:boolean = false;
 
     private get version(): string {
-        return ConfigurationFrameworkFactory.instance().Platform.deploymentTag;
+        return conf().Platform.deploymentTag;
     }
     private get me(): IUserInfo {
-        return SessionFrameworkFactory.instance().session.user;
-    }
-    private http(): IHttp {
-        return TransportFrameworkFactory.instance().http;
+        return session().user;
     }
 
     showWidget() {
@@ -61,9 +59,9 @@ class Controller implements IController {
     }
 
     getConf() {
-        return this.http().get('/maxicours/conf', { queryParams: { "_": this.version } })
+        return http().get('/maxicours/conf', { queryParams: { "_": this.version } })
         .then( data => {
-            if( this.http().latestResponse.status !== 200 ) {
+            if( http().latestResponse.status !== 200 ) {
                 throw "Cannot get maxicours widget configuration.";
             }
             Object.assign( this.controllerData, data );
@@ -78,9 +76,9 @@ class Controller implements IController {
     }
 
     getUserStatus() {
-        return this.http().get<string>('/maxicours/getUserStatus', { queryParams: { "_": this.version } })
+        return http().get<string>('/maxicours/getUserStatus', { queryParams: { "_": this.version } })
         .then( xml => {
-            if( this.http().latestResponse.status !== 200 ) {
+            if( http().latestResponse.status !== 200 ) {
                 throw "Cannot get maxicours user status.";
             }
             const xmlDocument = $.parseXML(xml);
@@ -103,9 +101,9 @@ class Controller implements IController {
             return Promise.resolve();
         }
 
-        this.http().get<string>('/maxicours/getUserInfo/' + this.controllerData.id)
+        http().get<string>('/maxicours/getUserInfo/' + this.controllerData.id)
         .then( xml => {
-            if( this.http().latestResponse.status !== 200 ) {
+            if( http().latestResponse.status !== 200 ) {
                 throw "Cannot get maxicours user info.";
             }
             try {
@@ -185,9 +183,9 @@ function DirectiveFactory() {
 }
 
 // Preload translations
-NotifyFrameworkFactory.instance().onLangReady().promise.then(lang => {
+notif().onLangReady().promise.then(lang => {
     switch (lang) {
-        default: ConfigurationFrameworkFactory.instance().Platform.idiom.addKeys(require('./i18n/fr.json')); break;
+        default: conf().Platform.idiom.addKeys(require('./i18n/fr.json')); break;
     }
 });
 

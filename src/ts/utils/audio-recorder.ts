@@ -1,6 +1,5 @@
-import { L10n } from ".";
+import { L10n, conf } from ".";
 import { notify } from "../services/notify.service";
-import { ConfigurationFrameworkFactory, TransportFrameworkFactory } from 'ode-ts-client';
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 declare const Zlib: any;
@@ -11,7 +10,7 @@ async function getZlib() {
 		_zlib = await $.ajax('/infra/public/js/zlib.min.js',{
 			dataType:"script"
 		});
-        //_zlib = await TransportFrameworkFactory.instance().http.getScript('/infra/public/js/zlib.min.js');
+        //_zlib = await http().getScript('/infra/public/js/zlib.min.js');
 		//console.log(Zlib);
     }
     return _zlib;
@@ -33,7 +32,7 @@ const resolvedNavigatorModules = {
  * Utility class to record audio files, with no dependencies on angularJS.
  */
 export var audio_recorder = (function () {
-    var lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
+    var lang = conf().Platform.idiom;
 	var context:AudioContext,
 		ws:WebSocket|null = null,
 		gainNode:any,

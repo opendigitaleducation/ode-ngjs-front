@@ -1,5 +1,6 @@
 import { IAttributes, IDirective, IScope } from "angular";
-import { ConfigurationFrameworkFactory, ITheme, SessionFrameworkFactory, TransportFrameworkFactory } from "ode-ts-client";
+import { ITheme } from "ode-ts-client";
+import { conf, session, http } from "../../../utils";
 
 /* The Help directive is tied to the old infra-front architecture, and relies on having data stored in the scope. */
 
@@ -15,27 +16,26 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
     scope = {};
 
     async link(scope:Scope, element:JQLite, attributes:IAttributes) {
-        const skin:ITheme = ConfigurationFrameworkFactory.instance().Platform.theme;
-        const appPrefix:string|null = SessionFrameworkFactory.instance().session.currentApp;
+        const skin:ITheme = conf().Platform.theme;
+        const appPrefix:string|null = session().currentApp;
         if( appPrefix===null ) {
             return;
         } 
         let helpPath = await skin.getHelpPath();
         let helpText:string;
 
-        const http = TransportFrameworkFactory.instance().http;
-        const lang = ConfigurationFrameworkFactory.instance().Platform.idiom;
+        const lang = conf().Platform.idiom;
 
         scope.onHelp = function() {
             if (helpText) {
                 setHtml(helpText);
             }
             else {
-                http.get<string>(
+                http().get<string>(
                     scope.helpPath,
-                    {queryParams:{"_": ConfigurationFrameworkFactory.instance().Platform.deploymentTag}}
+                    {queryParams:{"_": conf().Platform.deploymentTag}}
                 ).then( content => {
-                    if( http.latestResponse.status === 404 ) {
+                    if( http().latestResponse.status === 404 ) {
                         helpText = '<h2>' + lang.translate('help.notfound.title') + '</h2><p>' + lang.translate('help.notfound.text') + '</p>';
                     } else {
                         helpText = content;
