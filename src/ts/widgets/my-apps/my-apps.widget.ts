@@ -1,12 +1,12 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { IWebApp } from "ode-ts-client";
 import { conf, notif } from "../../utils";
-import { NgHelperService } from "../../services";
+import { ThemeHelperService } from "../../services";
 
 /* Controller for the directive */
 class Controller implements IController {
     constructor(
-		public helperSvc: NgHelperService
+		public themeSvc: ThemeHelperService
 		) {
     }
 	apps:IWebApp[] = [];
@@ -19,7 +19,7 @@ class Controller implements IController {
 class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./my-apps.widget.html').default;
-	controller = ["odeNgHelperService", Controller];
+	controller = ["odeThemeHelperService", Controller];
 	controllerAs = 'ctrl';
     require = ['odeMyApps'];
 

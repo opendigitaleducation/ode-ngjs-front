@@ -1,7 +1,5 @@
 import angular from "angular";
-import { IWebApp } from "ode-ts-client";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
-import { conf } from "../utils";
 
 
 /** 
@@ -10,37 +8,6 @@ import { conf } from "../utils";
  */
 export class NgHelperService {
 
-    /** 
-     * Map between apps and their CSS class.
-     */
-	getIconClass( app:IWebApp ):string {
-        let appCode = app.icon.trim().toLowerCase() || "";
-        if( appCode && appCode.length > 0 ) {
-            if(appCode.endsWith("-large"))  appCode = appCode.replace("-large", "");
-        } else {
-            appCode = app.displayName.trim().toLowerCase();
-        }
-        appCode = conf().Platform.idiom.removeAccents(appCode);
-		// @see distinct values for app's displayName is in query /auth/oauth2/userinfo
-		switch( appCode ) {
-			case "admin.title": 	    appCode = "admin"; break;
-            case "banques des savoirs": appCode = "banquesavoir"; break;
-            case "collaborativewall":   appCode = "collaborative-wall"; break;
-            case "communautés":         appCode = "community"; break;
-			case "directory.user":	    appCode = "userbook"; break;
-            case "emploi du temps":     appCode = "edt"; break;
-			case "messagerie": 		    appCode = "conversation"; break;
-            case "news":                appCode = "actualites"; break;
-            case "homeworks":
-            case "cahier de texte":     appCode = "cahier-de-texte"; break;
-            case "diary":
-            case "cahier de texte 2d":  appCode = "cahier-textes"; break;
-			default: break;
-		}
-		return `ic-app-${appCode} color-app-${appCode}`;
-	}
-
-    
     // /** Replacement for $(selector) a.k.a. jQuery(selector)  */
     // public querySelect(selector:string):JQLite {
     //     return angular.element(document.querySelectorAll(selector));

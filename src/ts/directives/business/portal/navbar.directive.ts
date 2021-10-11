@@ -1,15 +1,15 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { IIdiom, ITheme, IWebApp } from "ode-ts-client";
 import { conf, session, http } from "../../../utils";
-import { SessionService } from "../../../services/session.service";
-import { NgHelperService } from "../../../services/ngHelper.service";
+import { SessionService, NgHelperService, ThemeHelperService } from "../../../services";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 // Controller for the directive
 export class Controller implements IController {
     constructor(
 		public session:SessionService,
-		public helperSvc: NgHelperService) {
+		public helperSvc: NgHelperService,
+		public themeSvc:ThemeHelperService ) {
 	}
 	public skin?:ITheme;
 	public conversationUnreadUrl?:String;
@@ -73,7 +73,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		title: "@?"
 	};
 	bindToController = true;
-	controller = ['odeSession', "odeNgHelperService", Controller];
+	controller = ['odeSession', "odeNgHelperService", "odeThemeHelperService", Controller];
 	controllerAs = 'ctrl';
 	require = ['odeNavbar'];
 
