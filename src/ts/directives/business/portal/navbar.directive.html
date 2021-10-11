@@ -172,9 +172,9 @@
         <i class="ic-disconnect"></i>
     </a>
 
-    <div class="nav-item dropdown d-block d-sm-none">
+    <div class="dropdown d-block d-sm-none">
         <a class="dropdown-toggle btn btn-secondary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+        <div class="dropdown-menu dropdown-menu-end" data-bs-popper aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" href="/searchengine" i18n-title="navbar.search"
                     ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')"
                     ng-click="ctrl.openApps($event)">
