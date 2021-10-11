@@ -11,14 +11,14 @@ export class ThemeHelperService {
     static $inject =["odeNgHelperService"];
 
     private iconOfWidget:{[name in WidgetName]:string} = {
-        "last-infos-widget":    "ic-app actualites",
+        "last-infos-widget":    "ic-app-actualites",
         "birthday":             "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "calendar-widget":      "ic-app calendar",
+        "calendar-widget":      "ic-app-calendar",
         "carnet-de-bord":       "ic-carnet-de-bord",
         "record-me":            "ic-microphone",
         "mood":                 "ic-star",        // FIXME obviously wrong => create missing icon in CSS
         "my-apps":              "ic-apps",
-        "notes":                "ic-app notes",
+        "notes":                "ic-app-notes",
         "rss-widget":           "ic-rss",
         "bookmark-widget":      "ic-signets",
         "qwant":                "ic-star",        // FIXME obviously wrong => create missing icon in CSS

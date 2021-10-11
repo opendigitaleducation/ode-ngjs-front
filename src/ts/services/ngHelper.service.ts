@@ -37,7 +37,7 @@ export class NgHelperService {
             case "cahier de texte 2d":  appCode = "cahier-textes"; break;
 			default: break;
 		}
-		return `ic-app ${appCode} color-app-${appCode}`;
+		return `ic-app-${appCode} color-app-${appCode}`;
 	}
 
     
