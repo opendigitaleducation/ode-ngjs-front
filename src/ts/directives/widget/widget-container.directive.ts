@@ -10,31 +10,41 @@ export class Controller implements IController {
 		) {
     }
     position?: WidgetPosition;
-	widgets?: IWidget[];
+	dndWidgets?: IWidget[];
+	lockedWidgets?: IWidget[];
 
+	/** Prepare the list of widgets targeting this container. */
 	loadWidgets() {
-		this.widgets = this.widgetSvc.list()
-			.filter( w => w.userPref.position===this.position && (w.platformConf.mandatory||w.userPref.show) )
-			.sort( (a,b) => {
-				return a.userPref.index < b.userPref.index
-					? -1 
-					: a.userPref.index === b.userPref.index ? 0 : 1;
-			});
+		const onIndex = (a:IWidget,b:IWidget) => {
+			return a.userPref.index < b.userPref.index
+				? -1 
+				: a.userPref.index === b.userPref.index ? 0 : 1;
+		};
+		this.dndWidgets = this.widgetSvc.list()
+			.filter( w => w.userPref.position===this.position && w.userPref.show && !w.platformConf.mandatory )
+			.sort( onIndex );
+		this.lockedWidgets = this.widgetSvc.list()
+			.filter( w => w.userPref.position===this.position && w.platformConf.mandatory )
+			.sort( onIndex );
 	}
 
+	/** Save current widgets configuration as user's preferences. */
 	updateAndSave() {
-		this.widgets?.forEach( (w,i) => {
+		this.dndWidgets?.forEach( (w,i) => {
 			w.userPref.index = i;
 		});
+		// No need to save locked widgets, they will never move.
 		return WidgetFrameworkFactory.instance().saveUserPrefs();
 	}
 
-	checkPosition( widget:IWidget ) {
+	/** Truthy if the widget is targeting this container. */
+	checkPosition( widget:IWidget ):boolean {
 		return widget.userPref?.position === this.position || (widget.userPref?.position==="left" && !this.position );
 	}
 
+	/** Get the type of DnD this container accepts. */
 	get allowedDndTypes():string[] {
-		return [''+this.position];
+		return [""+this.position];
 	}
 
 	get isMobileView():boolean {
@@ -42,8 +52,8 @@ export class Controller implements IController {
 	}
 
 	onDnDDrop(event:DragEvent, itemId:string, index:number, dropEffect:string) {
-		if( this.widgets && 0<=index && index<=this.widgets.length ) {
-			const oldIdx = this.widgets.findIndex( (w) => {
+		if( this.dndWidgets && 0<=index && index<=this.dndWidgets.length ) {
+			const oldIdx = this.dndWidgets.findIndex( (w) => {
 				return w.platformConf.id===itemId
 			});
 			if( oldIdx===-1 || oldIdx === index ) {
@@ -51,13 +61,13 @@ export class Controller implements IController {
 				return false;
 			}
 
-			const item = this.widgets[oldIdx];
-			this.widgets.splice( oldIdx, 1 );
+			const item = this.dndWidgets[oldIdx];
+			this.dndWidgets.splice( oldIdx, 1 );
 			if( index > 0 && index >= oldIdx) {
 				// Adjust new index since it has just changed.
 				index--;
 			}
-			this.widgets.splice( index, 0, item );
+			this.dndWidgets.splice( index, 0, item );
 
 			this.updateAndSave();
 

@@ -8,13 +8,17 @@
         position: relative;
     }
 
+    /** No left-padding for dnd-lists */
+    ul[dnd-list] {
+        padding-left: 0px;
+    }
+
     /**
-    * The dnd-list should always have a min-height,
+    * The dnd-list accepting drops should always have a min-height,
     * otherwise you can't drop to it once it's empty
     */
-    ul[dnd-list] {
+    ul[dnd-list][dnd-drop] {
         min-height: 42px;
-        padding-left: 0px;
     }
 
     /**
@@ -56,17 +60,28 @@
     }
 </style>
 
+<ul
+    dnd-list
+    dnd-allowed-types="[]"
+>
+    <li 
+        ng-repeat="widget in ctrl.lockedWidgets track by widget.platformConf.id" 
+        class="widget"
+        ode-widget="widget"
+    >
+    </li>
+</ul>
 <ul 
     dnd-list 
     dnd-allowed-types="ctrl.allowedDndTypes"
     dnd-drop="ctrl.onDnDDrop(event, item, index, dropEffect)"
 >
     <li 
-        ng-repeat="widget in ctrl.widgets track by widget.platformConf.id" 
+        ng-repeat="widget in ctrl.dndWidgets track by widget.platformConf.id" 
         class="widget"
         ode-widget="widget"
         dnd-draggable="widget.platformConf.id" 
-        dnd-type="ctrl.position" 
+        dnd-type="widget.userPref.position" 
         dnd-disable-if="ctrl.isMobileView"
     >
     </li>
