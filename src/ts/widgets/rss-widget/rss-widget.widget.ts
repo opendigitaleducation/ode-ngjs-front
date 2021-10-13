@@ -44,7 +44,7 @@ class Controller implements IController {
 	} = {
 		edition: false,
 		feedEdition: false,
-		selectedFeed: -1
+		selectedFeed: 0
 	};
 
 	initFeeds():Promise<void> {
@@ -126,7 +126,7 @@ class Controller implements IController {
 	}
 	
 	saveFeed(){
-		if(this.selectedFeedIndex && this.validFeed(this.selectedFeed)){
+		if(typeof this.selectedFeedIndex==="number" && this.validFeed(this.selectedFeed)){
 			if( this.selectedFeed ) {
 				if(this.selectedFeedIndex >= 0 && this.selectedFeedIndex < this.totalFeeds){
 					this.channel.feeds[this.selectedFeedIndex] = this.selectedFeed;
