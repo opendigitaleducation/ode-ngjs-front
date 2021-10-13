@@ -2,6 +2,9 @@ import { L10n, conf } from ".";
 import { notify } from "../services/notify.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
+/** These statuses are sent to the callbacks registered with the state(cb) method. */
+type RecorderStatus = 'idle'|'preparing'|'recording'|'suspended'|'paused'|'playing'|'stop'|'uploading'|'encoding'|'saved';
+
 declare const Zlib: any;
 
 let _zlib:any = null;
@@ -105,11 +108,15 @@ export var audio_recorder = (function () {
 	}
 
 	function notifyFollowers(status:any, data?:any) {
-		followers.forEach(function (follower) {
-			if (typeof follower === 'function') {
-				follower(status, data);
-			}
-		})
+		try {
+			followers.forEach(function (follower) {
+				if (typeof follower === 'function') {
+					follower(status, data);
+				}
+			});
+		} catch {
+			// void: just don't stop the recorder process when a follower throws an error.
+		}
 	}
 
 	return {
@@ -227,7 +234,7 @@ export var audio_recorder = (function () {
 						console.log(event.data);
 						closeWs();
 						notify.error(event.data);
-					} else if (event.data && event.data === "ok" && this.status === "encoding") {
+					} else if (event.data && event.data === "ok" && that.status === "encoding") {
 						closeWs();
 						notify.info("recorder.saved");
 						notifyFollowers('saved');

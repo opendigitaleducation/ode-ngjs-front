@@ -1,5 +1,5 @@
 <!-- illustration -->
-<div ng-class="{ 'd-none': !ctrl.isIdle }">
+<div ng-class="{ 'd-none': !(ctrl.isIdle || ctrl.isStopped) }">
     <img class="img-fluid" skin-src="/img/illustrations/recorder-audio.svg" alt="">
 </div>
 
@@ -8,7 +8,7 @@
 </div>
 
 <!-- audio button -->
-<div ng-class="{ 'd-none': !ctrl.isIdle || !ctrl.isAudioCompatible }">
+<div ng-class="{ 'd-none': !(ctrl.isIdle || ctrl.isStopped) || !ctrl.isAudioCompatible }">
     <a class="btn-circle" href="#" i18n-title="embed.audio.title"
             ng-click="ctrl.switchAudioRecord()">
         <i class="fas fa-microphone"></i>

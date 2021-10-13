@@ -1,4 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
+import { NgHelperService } from "../../..";
 import { audio_recorder } from "../../../utils/audio-recorder";
 
 interface IAnyRecorder {
@@ -19,22 +20,22 @@ type RecorderType = "audio" | "video";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    _recorder:IAnyRecorder = audio_recorder;    // Defaults to audio recorder
+    private _recorder:IAnyRecorder = this.setRecorder( "audio" );    // Defaults to audio recorder
+    public isAudioCompatible:boolean = audio_recorder.isCompatible() /* && video_recorder.isCompatible()*/;
+    public isVideoCompatible:boolean = /* video_recorder.isCompatible()*/ false;
 
-    setRecorder( type:RecorderType ) {
+    setRecorder( type:RecorderType ):IAnyRecorder {
         if( type==="audio" ) {
             this._recorder = audio_recorder;
         // } else {
         //     this._recorder = video_recorder;
         }
+        return this._recorder;
     }
 
     get recorder():IAnyRecorder {
         return this._recorder;
     }
-
-    get isAudioCompatible()      { return audio_recorder.isCompatible() /* && video_recorder.isCompatible()*/; }
-    get isVideoCompatible()      { return /* video_recorder.isCompatible()*/ false; }
 
     get isIdle()            { return !this.recorder || this.recorder.status === 'idle'; }
     get isPreparing()       { return this.recorder.status === 'preparing'; }
@@ -112,6 +113,9 @@ interface Scope extends IScope {
 
 /* Directive */
 class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
+    constructor(
+        private helperSvc:NgHelperService
+    ) {}
     restrict = 'EA';
 	template = require("./recorder.directive.html").default;
     scope = {
@@ -136,17 +140,12 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
             return;
         }
 
-        ctrl.recorder.state( function (eventName:string) {
+        ctrl.recorder.state( (eventName:string) => {
             if(eventName === 'saved'){
                 scope.onUpload && scope.onUpload();
             }
-            if( ctrl?.isRecording ) {
-                scope.$apply(); // Force reevaluation of the recorder's field
-            }
+            this.helperSvc.safeApply( scope );   // Force reevaluation of the recorder's field
         });
-
-
-
     }
 }
 
@@ -156,6 +155,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
  * Usage:
  *   &lt;ode-recorder ></ode-recorder&gt;
  */
-export function DirectiveFactory() {
-	return new Directive();
+export function DirectiveFactory(helperSvc:NgHelperService) {
+	return new Directive(helperSvc);
 }
+DirectiveFactory.$inject = ["odeNgHelperService"];
