@@ -147,9 +147,9 @@ export class ThemeHelperService {
     }
 
     /** 
-     * Map between apps and their CSS class.
+     * Map between apps and their CSS code.
      */
-     getIconClass( app:IWebApp ):string {
+     getIconCode( app:IWebApp ):string {
         let appCode = app.icon.trim().toLowerCase() || "";
         if( appCode && appCode.length > 0 ) {
             if(appCode.endsWith("-large"))  appCode = appCode.replace("-large", "");
@@ -173,7 +173,7 @@ export class ThemeHelperService {
             case "cahier de texte 2d":  appCode = "cahier-textes"; break;
 			default: break;
 		}
-		return `ic-app-${appCode} color-app-${appCode}`;
+		return appCode;
 	}
 
     /** @return the CSS class of a widget */

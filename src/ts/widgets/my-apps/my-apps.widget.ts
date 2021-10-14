@@ -13,6 +13,11 @@ class Controller implements IController {
 	redirect( path:string ) {
 		window.location.href = path;
 	};
+
+	getIconClass(app:IWebApp) {
+		const appCode = this.themeSvc.getIconCode(app);
+		return `ic-app-${appCode} color-app-${appCode}`;
+	}
 }
 
 /* Directive */

@@ -44,6 +44,11 @@ export class Controller implements IController {
 			window.location.href = '/searchengine#/' + words;
 		}
 	};
+
+	getIconClass(app:IWebApp) {
+		const appCode = this.themeSvc.getIconCode(app);
+		return `ic-app-${appCode} color-app-${appCode}`;
+	}
 }
 
 /*
