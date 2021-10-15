@@ -20,12 +20,17 @@
 
 <style id="navbar-css">
     ode-navbar header.no-1d img.avatar {
-        width: 1em;
-        max-width: 1em;
+        width: 1.4em;
+        max-width: 1.4em;
+        margin: .5em 0;
+        background-color: #fff;
     }
     ode-navbar header.no-1d i.ic-conversation,
     ode-navbar header.no-1d i.ic-help {
         color: #fff;
+    }
+    ode-navbar .btn:empty {
+        display:none;
     }
 </style>
 
@@ -134,8 +139,8 @@
     </popover>
     
     <div class="btn btn-secondary" 
-            ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')">
-        <span ng-include="ctrl.conversationUnreadUrl"></span>
+            ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
+            ng-include="ctrl.conversationUnreadUrl">
     </div>
 
     <popover class="btn btn-secondary d-none d-sm-block"

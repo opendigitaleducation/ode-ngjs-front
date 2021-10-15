@@ -53,7 +53,7 @@ export class Controller implements IController {
 
 /*
  *	Customized scope for the directive.
- *	Required for compatibility with old portal templates.
+ *	/!\ Required for compatibility with old portal templates. /!\
  */
 interface Scope extends IScope {
 	lang?:IIdiom;
@@ -98,6 +98,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		};
 		scope.goToMessagerie = () => {
 			console.log(scope.messagerieLink);
+			// FIXME This is the old-fashioned way of accessing preferences. Do not reproduce anymore (use ode-ts-client lib instead)
 			http().get('/userbook/preference/zimbra').then( data => {
 				try{
 					if( data.preference? JSON.parse(data.preference)['modeExpert'] && scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|preauth') : false){
