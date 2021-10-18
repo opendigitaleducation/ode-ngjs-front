@@ -1,6 +1,6 @@
 import angular from "angular";
 import { IThemeDesc, IWebApp, IWidget, WidgetName } from "ode-ts-client";
-import { NgHelperService } from "./ngHelper.service";
+import { NgHelperService } from "./ng-helper.service";
 import { conf } from "../utils";
 import $ from 'jquery';
 
