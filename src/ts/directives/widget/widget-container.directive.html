@@ -60,29 +60,23 @@
     }
 </style>
 
-<ul
-    dnd-list
+<ul dnd-list
     dnd-allowed-types="[]"
->
-    <li 
-        ng-repeat="widget in ctrl.lockedWidgets track by widget.platformConf.id" 
+    ng-if="ctrl.lockedWidgets.length">
+    <li ng-repeat="widget in ctrl.lockedWidgets track by widget.platformConf.id" 
         class="widget"
-        ode-widget="widget"
-    >
+        ode-widget="widget">
     </li>
 </ul>
-<ul 
-    dnd-list 
+
+<ul dnd-list 
     dnd-allowed-types="ctrl.allowedDndTypes"
-    dnd-drop="ctrl.onDnDDrop(event, item, index, dropEffect)"
->
-    <li 
-        ng-repeat="widget in ctrl.dndWidgets track by widget.platformConf.id" 
+    dnd-drop="ctrl.onDnDDrop(event, item, index, dropEffect)">
+    <li ng-repeat="widget in ctrl.dndWidgets track by widget.platformConf.id" 
         class="widget"
         ode-widget="widget"
         dnd-draggable="widget.platformConf.id" 
         dnd-type="widget.userPref.position" 
-        dnd-disable-if="ctrl.isMobileView"
-    >
+        dnd-disable-if="ctrl.isMobileView">
     </li>
 </ul>
