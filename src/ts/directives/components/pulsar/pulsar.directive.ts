@@ -127,7 +127,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 			}
 
 			pulsarButton = $(`
-				<div class="pulsar-button" data-index="${scope.pulsarInfos.steps[0].index}">
+				<div class="pulsar-button">
 					<div class="pulse-spot"></div>
 				</div>
 			`).appendTo('body');

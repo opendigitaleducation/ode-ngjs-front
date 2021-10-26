@@ -1,17 +1,24 @@
 <!--Widget Qwant-->
+<style>
+	.widget-qwant .widget-header {
+		border: 0;
+	}
+</style>
 <div class="widget-qwant">
-	<!-- div class="widget-header">
-		<div class="subtitle"><i18n>qwant-widget.widget.title</i18n></div>
-	</div -->
+	<div class="widget-header">
+		<div class="widget-options">
+			<div class="widget-handle"><i class="fas fa-grip-vertical"></i></div>
+		</div>
+	</div>
 
-	<div class="widget-body">
+	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message">
 			<div class="row row-cols-1 align-items-center">
-				<div class="mb-3" style="cursor:'move'">
-					<a href="https://www.qwant.com" target="_blank" dnd-nodrag><img src="/assets/widgets/qwant/logo-qwant.svg" alt="Qwant" style="width: 75px" dnd-nodrag></a>
+				<div class="mb-3">
+					<a href="https://www.qwant.com" target="_blank" ><img src="/assets/widgets/qwant/logo-qwant.svg" alt="Qwant" style="width: 75px"></a>
 				</div>
 			</div>
-			<form method="GET" target="_blank" action="https://www.qwant.com" autocomplete="off" dnd-nodrag>
+			<form method="GET" target="_blank" action="https://www.qwant.com" autocomplete="off">
 				<div class="row row-cols-1 align-items-center">
 					<label class="sr-only" for="inputQwantQ" translate content="search"></label>
 					<div class="input-group mb-2">

@@ -2,12 +2,15 @@
 <div class="widget-rss">
 	<div class="widget-header">
 		<div class="subtitle"><i18n>rss-widget.widget.title</i18n></div>
-		<div class="tools">
-			<a href="" class="tool tool-option" i18n-title="rss-widget.widget.channel.config"
-					ng-if="ctrl.canAddFeed"
-					ng-click="ctrl.display.edition = true">
-				<i class="fas fa-cog"></i>
-			</a>
+		<div class="widget-options">
+			<div class="tools">
+				<a href="#" class="tool tool-option" i18n-title="rss-widget.widget.channel.config"
+						ng-if="ctrl.canAddFeed"
+						ng-click="ctrl.display.edition = true">
+					<i class="fas fa-cog"></i>
+				</a>
+			</div>
+			<div class="widget-handle" title="Déplacer le widget" aria-label="Déplacer le label"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
 		</div>
 	</div>
 

@@ -52,11 +52,17 @@
     }
 
     .dndDragging:not(.dndDraggingSource) {
+        cursor: grabbing !important;
         border: 1px solid rgb(255 133 0);
     }
-
-    .widget .widget-header, .widget .widget-header .subtitle {
-        cursor: move;
+    .dnDragover {
+        cursor: grabbing;
+    }
+    .dndDragging:not(.dndDraggingSource):active,
+    .dndDragging:not(.dndDraggingSource):focus,
+    .dndDragging:not(.dndDraggingSource):hover {
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
     }
 </style>
 
@@ -64,7 +70,7 @@
     dnd-allowed-types="[]"
     ng-if="ctrl.lockedWidgets.length">
     <li ng-repeat="widget in ctrl.lockedWidgets track by widget.platformConf.id" 
-        class="widget"
+        class="widget widget-locked"
         ode-widget="widget">
     </li>
 </ul>
