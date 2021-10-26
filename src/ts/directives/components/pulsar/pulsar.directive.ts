@@ -97,7 +97,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 		let pulsarElement:JQLite|null=null;
 		// content box
 
-		let pulsarSize = 40;
+		let pulsarSize = 30;
 		let pulsarMarge = 5;
 		let pulsarLayerMarge = 10;
 
@@ -369,13 +369,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 		}
 
 		angular.element(window).on('resize', () => {
-			if(!pulsarButton){
-				return;
-			}
-			if($(window).width()??0 <= this.helperSvc.TABLET){
-				pulsarButton.css('display', 'none');
-			}
-			else if(pulsarButton.data('active')){
+			if(pulsarButton && pulsarButton.data('active')){
 				pulsarButton.css('display', '');
 			}
 		});

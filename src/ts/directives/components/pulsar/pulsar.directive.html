@@ -225,8 +225,8 @@
 		position: absolute;
 		z-index: -1;
 		inset: -6px 0 0 -6px;
-		height: 52px;
-		width: 52px;
+		height: 42px;
+		width: 42px;
 		content: "";
 		border-radius: 50%;
 		box-shadow: 0 0 5px 6px rgb(120 218 255 / 60%);
@@ -243,11 +243,11 @@
 	.pulse-spot {
 		position: absolute;
 		cursor: pointer;
-		width: 40px;
-		height: 40px;
+		width: 30px;
+		height: 30px;
 		font-size: 18px;
 		text-align: center;
-		line-height: 31px;
+		line-height: 21px;
 		font-weight: bold;
 		color: #fff;
 		border-radius: 50%;
@@ -291,6 +291,15 @@
 		100% {
 			transform: scale(1.2, 1.2);
 			opacity: 0
+		}
+	}
+
+	.pulsar-button {
+		display: none;
+	}
+	@media (min-width: 992px) {
+		.pulsar-button {
+			display: block;
 		}
 	}
 </style>
