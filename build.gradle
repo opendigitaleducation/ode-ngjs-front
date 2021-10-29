@@ -8,6 +8,44 @@ plugins {
 group = "${modowner}"
 version = "$version"
 
+publishing {
+    publications {
+        // maven(MavenPublication) {
+        //     groupId "${modowner}"
+        //     artifactId "$System.env.OVERRIDE_MODNAME"
+        //     version "$version"
+        //     artifact("build/libs/${modowner}~${System.env.OVERRIDE_MODNAME}~$version-fat.jar") { classifier "fat" }
+        // }
+        maven(MavenPublication) {
+            groupId "${modowner}"
+            artifactId "${modname}"
+            version "$version"
+            artifact("build/libs/${modowner}~${modname}~$version-deployment.jar") { classifier "deployment" }
+        }
+    }
+    repositories {
+        if (version.endsWith("SNAPSHOT")) {
+            maven {
+            name 'Snapshots'
+                url 'https://maven.opendigitaleducation.com/nexus/content/repositories/snapshots/'
+                credentials {
+                username "${odeUsername}"
+                    password "${odePassword}"
+                }
+            }
+        } else {
+            maven {
+            name 'Releases'
+                url 'https://maven.opendigitaleducation.com/nexus/content/repositories/releases/'
+                credentials {
+                username "${odeUsername}"
+                    password "${odePassword}"
+                }
+            }
+        }
+    }
+}
+
 //begin generateTemplate
 task generateDeployment(type: Copy)  {
     from 'conf.deployment'
@@ -32,3 +70,16 @@ task generateTemplate(type: Copy,dependsOn: 'generateDeployment') {
   }
 }
 //end generateTemplate
+
+task deploymentJar(type: Jar) {
+    classifier = 'deployment'
+    archiveName = "${modowner}~${modname}~$version-$classifier.$extension"
+    from "deployment/"
+}
+
+// task fatJar(type: Jar) is replaced in build.sh by a mvn command (this is a tar.gz, no jar here !)
+
+artifacts {
+//  archives fatJar
+  archives deploymentJar
+}
