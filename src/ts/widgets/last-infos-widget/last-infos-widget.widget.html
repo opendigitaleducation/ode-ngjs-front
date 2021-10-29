@@ -23,7 +23,7 @@
 				ng-href="/actualites#/view/thread/[[info.thread_id]]/info/[[info._id]]"
 				>
 			<div class="news-row-image">
-				<img ng-if="!info.thread_icon" class="mw-100" skin-src="/img/illustrations/news.svg" alt="[[info.thread_title]]" />
+				<img ng-if="!info.thread_icon" class="mw-100" skin-src="/img/illustrations/news.svg" alt="[[info.thread_title]]" width="40" height="40" />
 				<img ng-if="info.thread_icon" class="mw-100" ng-src="[[info.thread_icon]]?thumbnail=120x120" alt="[[info.thread_title]]" />
 			</div>
 			<div class="news-row-text">
