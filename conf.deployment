@@ -2,5 +2,5 @@
   "name":"%FULLY-QUALIFIED-VERSION%",
   "type": "js",
   "waitDeploy": true
-  ,"extension":".tar.gz"
+  ,"extension":"-tar.tar.gz"
 }

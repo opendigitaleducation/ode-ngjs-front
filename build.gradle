@@ -10,17 +10,20 @@ version = "$version"
 
 publishing {
     publications {
-        // maven(MavenPublication) {
-        //     groupId "${modowner}"
-        //     artifactId "$System.env.OVERRIDE_MODNAME"
-        //     version "$version"
-        //     artifact("build/libs/${modowner}~${System.env.OVERRIDE_MODNAME}~$version-fat.jar") { classifier "fat" }
-        // }
         maven(MavenPublication) {
             groupId "${modowner}"
             artifactId "${modname}"
             version "$version"
-            artifact("build/libs/${modowner}~${modname}~$version-deployment.jar") { classifier "deployment" }
+            artifact("build/distributions/${modowner}~${modname}~${version}.tar.gz") { 
+                classifier "tar"
+                extension "tar.gz"
+            }
+        }
+        maven(MavenPublication) {
+            groupId "${modowner}"
+            artifactId "${modname}"
+            version "$version"
+            artifact("build/libs/${modowner}~${modname}~${version}-deployment.jar") { classifier "deployment" }
         }
     }
     repositories {
@@ -77,9 +80,16 @@ task deploymentJar(type: Jar) {
     from "deployment/"
 }
 
-// task fatJar(type: Jar) is replaced in build.sh by a mvn command (this is a tar.gz, no jar here !)
+task tarGz(type: Tar) {
+    classifier = 'tar'
+    compression = Compression.GZIP
+    archiveName = "${modowner}~${modname}~${version}.tar.gz"
+
+    includes = ["dist/**"]
+    from "."
+}
 
 artifacts {
-//  archives fatJar
+  archives tarGz
   archives deploymentJar
 }
