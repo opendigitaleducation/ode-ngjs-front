@@ -33,7 +33,7 @@
         <div class="navigation__item"
             ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')">
             <span>
-                <a href="/conversation/conversation" i18n-title="navbar.messages">
+                <a href="/conversation/conversation" i18n-title="navbar.messages" aria-label="navbar.messages">
                     <i class="ic-conversation"><span class="new-mails"
                             ng-if="nbNewMessages">[[nbNewMessages]]</span></i>
                 </a>
@@ -124,16 +124,16 @@
                                 <i18n>navbar.myapps.more</i18n>
                             </div>
                             <div class="bookmarked-app" ng-repeat="app in ctrl.apps track by $index">
-                                <a connector-lightbox-trigger="app" href="[[app.address]]" target="[[app.target]]"
+                                <a connector-lightbox-trigger="app" aria-label=[[app.displayName]] href="[[app.address]]" target="[[app.target]]"
                                     i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
                                     <i class="fs-1" ng-class="ctrl.getIconClass(app)" ng-switch-when="-1"></i>
-                                    <img skin-src="[[app.icon]]" ng-switch-default />
+                                    <img skin-src="[[app.icon]]" ng-switch-default alt=[[app.displayName]] />
                                 </a>
                             </div>
                         </div>
                         <div class="widget-footer border-top border-ghost">
                             <div class="widget-footer-action">
-                                <a href="/welcome"><i18n>plus</i18n></a>
+                                <a class="link" href="/welcome"><i18n>plus</i18n></a>
                             </div>
                         </div>
                     </div>

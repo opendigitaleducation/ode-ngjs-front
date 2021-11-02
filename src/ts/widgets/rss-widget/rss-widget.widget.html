@@ -10,7 +10,7 @@
 					<i class="fas fa-cog"></i>
 				</a>
 			</div>
-			<div class="widget-handle" title="Déplacer le widget" aria-label="Déplacer le label"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
+			<div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
 		</div>
 	</div>
 
@@ -31,7 +31,7 @@
 			<div class="feed-title" ng-click="ctrl.showOrHideFeed($index)">[[feed.title]]</div>
 			<ul class="list" ng-show="ctrl.display.selectedFeed === [[$index]]">
 				<li class="item link" ng-repeat="item in feed.Items track by $index">
-					<a href="[[item.link]]" target="_blank">
+					<a href="[[item.link]]" target="_blank" rel="noopener">
 						<div class="title">[[item.title]]</div>
 						<div class="meta">[[ctrl.formatDate(item.pubDate)]]</div>
 						<div class="meta" ng-bind-html="item.description"></div>
