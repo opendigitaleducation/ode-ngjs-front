@@ -21,12 +21,12 @@ export class ThemeHelperService {
         "notes":                "ic-app-notes",
         "rss-widget":           "ic-rss",
         "bookmark-widget":      "ic-signets",
-        "qwant":                "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "qwant-junior":         "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "agenda-widget":        "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "cursus-widget":        "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "maxicours-widget":     "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "school-widget":        "ic-star",        // FIXME obviously wrong => create missing icon in CSS
+        "qwant":                "ic-app-qwant",        // FIXME obviously wrong => create missing icon in CSS
+        "qwant-junior":         "ic-app-qwant",        // FIXME obviously wrong => create missing icon in CSS
+        "agenda-widget":        "ic-app-agenda",        // FIXME obviously wrong => create missing icon in CSS
+        "cursus-widget":        "ic-app-aide-devoirs",        // FIXME obviously wrong => create missing icon in CSS
+        "maxicours-widget":     "ic-app-maxicours",        // FIXME obviously wrong => create missing icon in CSS
+        "school-widget":        "ic-app-schoolbook",        // FIXME obviously wrong => create missing icon in CSS
     }
 
     constructor( 
