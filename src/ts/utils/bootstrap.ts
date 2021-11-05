@@ -9,8 +9,8 @@ import { conf } from ".";
  */
 (()=>{
     document.addEventListener("DOMContentLoaded", () => {
-            conf().initialize( null, null )
-            .then( () => SessionFrameworkFactory.instance().initialize()) // TODO: get version and CDN from mustache directive.
+            conf().initialize( (window as any).entcore?.deploymentTag, null )
+            .then( () => SessionFrameworkFactory.instance().initialize())
             .then( () => {
                 // Bootstrap angularJS on the <html> tag, requiring the "app" module.
                 angular.bootstrap( document.querySelector('html') as HTMLHtmlElement, ["app"] );
