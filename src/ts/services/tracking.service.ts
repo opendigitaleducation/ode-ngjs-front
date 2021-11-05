@@ -69,23 +69,41 @@ export class TrackingService {
     trackPage( title:string, url:string ) {
         conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
         .then( (params?) => {
-            if( params ) {
+            if( !params ) return;
+
             // Then let's track single-page applications routes, too.
             var _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
             _paq.push(['setDocumentTitle', title]);
             _paq.push(['setCustomUrl', url]);
             _paq.push(['trackPageView']);
+        });
+    }
+
+    trackEvent( category:string, action:string, name?:string, value?:number ) {
+        conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
+        .then( (params?) => {
+            if( !params ) return;
+
+            var _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
+            let event:any[] = ['trackEvent',category,action];
+            if( typeof name==="string" ) {
+                name = name.trim();
+                if( name.length > 0)
+                    event.push( name );
             }
+            if( typeof value==="number" )
+                event.push( value );
+            _paq.push(event);
         });
     }
 
     saveOptIn() {
         conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
         .then( (params?) => {
-            if( params ) {
-                let _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
-                _paq.push( this.hasOptedIn ? ['forgetUserOptOut'] : ['optUserOut'] );
-            }
+            if( !params ) return;
+
+            let _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
+            _paq.push( this.hasOptedIn ? ['forgetUserOptOut'] : ['optUserOut'] );
         });
     }
 }
