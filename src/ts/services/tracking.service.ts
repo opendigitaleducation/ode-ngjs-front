@@ -1,5 +1,5 @@
 import angular, { IDocumentService, ILocationService, IScope } from "angular";
-import { App, IMatomoTrackingParams } from "ode-ts-client";
+import { App, IMatomoTrackingParams, ITrackingParams, IWebApp } from "ode-ts-client";
 import { conf, session } from "../utils";
 
 export class TrackingService {
@@ -15,7 +15,7 @@ export class TrackingService {
     trackApp( app:App ) {
         const analytics = conf().Platform.analytics;
         analytics.parameters<IMatomoTrackingParams>("matomo").then( (params?) => {
-            if( !params ) return;
+            if( !params || !this.shouldTrackCurrentApp(params) ) return;
             try {
                 let _paq:any = (window as any)["_paq"] = (window as any)["_paq"] ?? [];
                 _paq.push(['setRequestMethod', 'POST']);
@@ -69,7 +69,7 @@ export class TrackingService {
     trackPage( title:string, url:string ) {
         conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
         .then( (params?) => {
-            if( !params ) return;
+            if( !params || !this.shouldTrackCurrentApp(params) ) return;
 
             // Then let's track single-page applications routes, too.
             var _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
@@ -82,7 +82,7 @@ export class TrackingService {
     trackEvent( category:string, action:string, name?:string, value?:number ) {
         conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
         .then( (params?) => {
-            if( !params ) return;
+            if( !params || !(name && this.shouldTrackEvent(params, name)) ) return;
 
             var _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
             let event:any[] = ['trackEvent',category,action];
@@ -105,6 +105,59 @@ export class TrackingService {
             let _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
             _paq.push( this.hasOptedIn ? ['forgetUserOptOut'] : ['optUserOut'] );
         });
+    }
+
+    protected shouldTrackCurrentApp( params:ITrackingParams ): boolean {
+        if( !params ) return false;
+        if( params.doNotTrack ) {
+            const apps = this.getCurrentMatchingApps();
+            for (const app of apps) {
+                if (params.doNotTrack.indexOf(app.name) !== -1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    protected shouldTrackEvent( params:ITrackingParams, eventName:string ): boolean {
+        if( !params ) return false;
+        const apps = this.getCurrentMatchingApps();
+        //check included first
+        if( params.trackOnly && params.trackOnly.length > 0 ) {
+            for(const app of apps) {
+                if (params.trackOnly.indexOf(`${app.name}.${eventName}`) !== -1 || params.trackOnly.indexOf(`*.${eventName}`) !== -1) {
+                    return true;
+                }
+            }
+            //if not in whitelist return false
+            return false;
+        }
+        //check excluded then
+        if (params.doNotTrack instanceof Array && params.doNotTrack.length > 0) {
+            for (const app of apps) {
+                if (params.doNotTrack.indexOf(`${app.name}.${eventName}`) !== -1 || params.doNotTrack.indexOf(`*.${eventName}`) !== -1) {
+                    return false;
+                }
+            }
+        }
+        //if not blacklist return true
+        return true;
+    }
+
+    protected getCurrentMatchingApps(): IWebApp[] {
+        const all: IWebApp[] = [];
+        const apps = session().user.apps;
+        if (apps instanceof Array) {
+            // Retrieve app from current URL.
+            for (let i = 0; i < apps.length; i++) {
+                const app = apps[i];
+                if (app && app.address && app.name && location.href.indexOf(app.address) !== -1) {
+                    all.push(app);
+                }
+            }
+        }
+        return all;
     }
 }
 
