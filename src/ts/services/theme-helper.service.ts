@@ -11,22 +11,22 @@ export class ThemeHelperService {
     static $inject =["odeNgHelperService"];
 
     private iconOfWidget:{[name in WidgetName]:string} = {
-        "last-infos-widget":    "ic-app-actualites",
+        "last-infos-widget":    "ic-widget-actualites",
         "birthday":             "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "calendar-widget":      "ic-app-calendar",
-        "carnet-de-bord":       "ic-carnet-de-bord",
-        "record-me":            "ic-microphone",
+        "calendar-widget":      "ic-widget-calendar",
+        "carnet-de-bord":       "ic-widget-carnet-de-bord",
+        "record-me":            "ic-widget-microphone",
         "mood":                 "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "my-apps":              "ic-apps",
-        "notes":                "ic-app-notes",
-        "rss-widget":           "ic-rss",
-        "bookmark-widget":      "ic-signets",
-        "qwant":                "ic-app-qwant",        // FIXME obviously wrong => create missing icon in CSS
-        "qwant-junior":         "ic-app-qwant",        // FIXME obviously wrong => create missing icon in CSS
-        "agenda-widget":        "ic-app-agenda",        // FIXME obviously wrong => create missing icon in CSS
-        "cursus-widget":        "ic-app-aide-devoirs",        // FIXME obviously wrong => create missing icon in CSS
-        "maxicours-widget":     "ic-app-maxicours",        // FIXME obviously wrong => create missing icon in CSS
-        "school-widget":        "ic-app-schoolbook",        // FIXME obviously wrong => create missing icon in CSS
+        "my-apps":              "ic-widget-apps",
+        "notes":                "ic-widget-notes",
+        "rss-widget":           "ic-widget-rss",
+        "bookmark-widget":      "ic-widget-signets",
+        "qwant":                "ic-widget-qwant",
+        "qwant-junior":         "ic-widget-qwant",
+        "agenda-widget":        "ic-widget-agenda",
+        "cursus-widget":        "ic-widget-aide-devoirs",
+        "maxicours-widget":     "ic-widget-maxicours",
+        "school-widget":        "ic-widget-schoolbook",
     }
 
     constructor( 
