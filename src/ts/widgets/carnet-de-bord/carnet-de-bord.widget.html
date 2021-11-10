@@ -13,8 +13,7 @@
         </div>
     
 		<div class="dashboard-choice"
-				ng-if="ctrl.me.type=='PERSRELELEVE' && ctrl.eleves.length > 1 && ctrl.structures"
-			>
+				ng-if="!ctrl.errorMsg && ctrl.description.profiles.indexOf('Relative')>=0 && ctrl.eleves.length>0 && ctrl.structures">
 			<a href="" class="avatar-link"
 					ng-repeat="eleve in ctrl.eleves"
 					ng-click="ctrl.getEleve($index)"
@@ -25,10 +24,9 @@
 			</a>
 		</div>
 
-		<ul class="dashboard-list">
-			<li class="item link-discret delay"
+		<ul class="dashboard-list" ng-if="!ctrl.errorMsg">
+			<li class="item link-discret"
 					ng-repeat="contentType in ctrl.contentTypes"
-					ng-if="contentType.compact"
 					ng-click="ctrl.openLightBox(contentType)">
 				<a href="#" class="item-inner">
 					<div class="left">
@@ -38,7 +36,8 @@
 					</div>
 					<div class="right">
 						<div class="label" translate content="carnet-de-bord.widget.[[contentType.title]]"></div>
-						<div class="info meta">[[contentType.compact]]</div>
+						<div class="info meta" ng-if="contentType.compact">[[contentType.compact]]</div>
+                        <div class="info meta" ng-if="!contentType.compact"><i18n>carnet-de-bord.widget.empty</i18n></div>
 					</div>
 				</a>
 			</li>
