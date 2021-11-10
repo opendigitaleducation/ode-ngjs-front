@@ -19,7 +19,7 @@
 					ng-click="ctrl.getEleve($index)"
                     ng-class="{'active': eleve===ctrl.currentEleve}"
 				>
-				<img ng-src="ctrl.getAvatar($index)"/>
+				<img ng-src="[[ctrl.getAvatar($index)]]"/>
 				<span>[[ ctrl.getTag('Prenom', $index) ]]</span>
 			</a>
 		</div>
