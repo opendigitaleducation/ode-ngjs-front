@@ -13,7 +13,7 @@
 "rss-widget.widget.channel.feed.title": "Titre",
 "rss-widget.widget.channel.feed.update": "Actualiser",
 "rss-widget.widget.channel.feed.url": "Adresse du flux",
-"rss-widget.widget.channel.refresh": "Rafra&icirc;chir",
+"rss-widget.widget.channel.refresh": "Rafraîchir",
 "rss-widget.widget.channel.undefined": "Aucun flux configuré",
 "rss-widget.widget.channel.feed.title.placeholder": "Saisissez le titre du nouveau flux RSS",
 "rss-widget.widget.channel.feed.url.placeholder": "Saisissez l'Url du nouveau flux RSS",
