@@ -55,6 +55,9 @@ class Controller implements IController {
 	}
 	public getUrlStudentsOfMyClasses() {
 		let url = this.getDefaultUrl() + "?filters=groups&profile=Student";
+		if( this.selectedSchool ) {
+			url += "&structure="+this.selectedSchool.id;
+		}
 		for( let clazz of this.me.classes ) {
 			url += "&class="+clazz;
 		}
