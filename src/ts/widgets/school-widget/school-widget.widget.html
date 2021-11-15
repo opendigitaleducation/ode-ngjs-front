@@ -17,7 +17,7 @@
 							<a href="" class="text-white">{{ctrl.selectedSchool.name}}</a>
 						</div>
 						<div class="school-choice dropdown-menu" aria-labelledby="ddSchoolWidgetSchool">
-							<div tabindex="0" role="button"
+							<div tabindex="0" role="button" class="dropdown-item"
 								 ng-repeat="school in ctrl.description.schools"
 							 	 ng-click="ctrl.setSelectedSchool($index)"
 								 ng-keydown="ctrl.setSelectedSchool($index, $event)">
