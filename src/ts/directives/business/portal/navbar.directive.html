@@ -155,7 +155,8 @@
                 <popover-content class="widget searchPortal">
                     <div class="content searchContent">
                         <div class="search-text row">
-                            <input type="text" class="searchInput" name="mysearch" ng-model="ctrl.mysearch"
+                            <label class="sr-only" for="searchInput">mysearch</label>
+                            <input type="text" id="searchInput" class="searchInput" id="searchInput" name="mysearch" ng-model="ctrl.mysearch"
                                 ng-keyup="ctrl.launchSearch($event);" />
                             <button class="searchButton" ng-click="ctrl.launchSearch('link');">
                                 <i18n>ok</i18n>
