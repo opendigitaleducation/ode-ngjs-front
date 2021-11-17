@@ -95,8 +95,8 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
             modalElement.find('#TOC').wrap('<div id="burger-menu" class="burger-menu"></div>');
             burgerMenuElement = modalElement.find('#burger-menu');
             burgerMenuElement.prepend('<button id="burger-button" class="burger-button"><i class="burger-icon"></i></button>');
-            burgerButtonElement = element.find('#burger-button');
-            burgerButtonElement.click(function(e) {
+            burgerButtonElement = modalElement.find('#burger-button');
+            burgerButtonElement.on('click', function(e) {
                 burgerMenuElement.toggleClass('active');
             }); 
             modalElement.find('#TOC > ul li a').on('click', function (e) {
