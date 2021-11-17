@@ -120,7 +120,7 @@
                 <popover-content class="widget">
                     <div class="widget-applications">
                         <div class="widget-body d-flex flex-wrap">
-                            <div ng-if="ctrl.apps.length === 0">
+                            <div class="text-dark" ng-if="ctrl.apps.length === 0">
                                 <i18n>navbar.myapps.more</i18n>
                             </div>
                             <div class="bookmarked-app" ng-repeat="app in ctrl.apps track by $index">
