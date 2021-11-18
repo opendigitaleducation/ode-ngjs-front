@@ -92,27 +92,27 @@
 </div>
 
 <!-- Theme 2D -->
-<header class="no-1d navbar navbar-dark sticky-top bg-secondary" ng-if="ctrl.is2D">
+<header class="no-1d navbar sticky-top bg-secondary" ng-if="ctrl.is2D">
     <div class="container">
         <a class="navbar-brand" href="/timeline/timeline?token=[[ctrl.version]]">
             <img class="logo" skin-src="img/illustrations/logo.png" alt="Logo de l'ENT">
         </a>
 
-        <nav class="navigation">
-            <a href="/timeline/timeline" class="btn" i18n-title="navbar.home">
+        <nav class="navbar-nav">
+            <a href="/timeline/timeline" class="nav-link" i18n-title="navbar.home">
                 <i class="ic-home" aria-hidden="true"></i>
                 <span class="sr-only"><i18n>navbar.home</i18n></span>
             </a>
 
-            <a href="/community" class="btn zero-mobile" i18n-title="navbar.community"
+            <a href="/community" class="nav-link" i18n-title="navbar.community"
                 ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
                 <i class="ic-community" aria-hidden="true"></i>
                 <span class="sr-only"><i18n>navbar.community</i18n></span>
             </a>
 
-            <popover class="btn"
+            <popover
                 pulsar="{index:3, style:{zIndex:1021}, i18n:'portal.pulsar.apps', position:'bottom center'}">
-                <a href="/welcome" class="text-light" i18n-title="navbar.applications" popover-opener>
+                <a href="/welcome" class="nav-link" i18n-title="navbar.applications" popover-opener>
                     <i class="ic-apps" aria-hidden="true"></i>
                     <span class="sr-only"><i18n>navbar.applications</i18n></span>
                 </a>
@@ -140,14 +140,14 @@
                 </popover-content>
             </popover>
 
-            <div class="zimbra-btn"
+            <div class="nav-link"
                 ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
                 ng-include="ctrl.conversationUnreadUrl">
             </div>
 
-            <popover class="btn d-none d-sm-inline-block"
+            <popover class="nav-link d-none d-sm-inline-block"
                 ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
-                <a href="/searchengine" class="text-light" i18n-title="navbar.search" popover-opener
+                <a href="/searchengine" i18n-title="navbar.search" popover-opener
                     ng-click="ctrl.openApps($event)">
                     <i class="ic-search" aria-hidden="true"></i>
                     <span class="sr-only"><i18n>navbar.search</i18n></span>
@@ -166,26 +166,26 @@
                 </popover-content>
             </popover>
 
-            <a href="#" i18n-title="navbar.help" class="btn"
+            <a href="#" i18n-title="navbar.help" class="nav-link"
                 pulsar="{ index:5, style:{zIndex:1021}, i18n:'portal.pulsar.help', position:'bottom center'}"
                 ng-if="ctrl.currentLanguage == 'fr'">
                 <help></help><!-- i18n>help.icon</i18n -->
             </a>
 
-            <a href="/userbook/mon-compte" i18n-title="navbar.myaccount" class="btn d-none d-sm-block"
+            <a href="/userbook/mon-compte" i18n-title="navbar.myaccount" class="nav-link d-none d-sm-block"
                 pulsar="{ index:4, style:{zIndex:1021}, i18n:'portal.pulsar.account', position:'bottom center'}">
                 <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]"
                     width="30" height="30" alt="[[ctrl.username]]" />
                 <span class="sr-only"><i18n>navbar.myaccount</i18n></span>
             </a>
 
-            <a href="#" class="btn d-none d-sm-inline-flex" logout i18n-title="navbar.disconnect">
+            <a href="#" class="nav-link d-none d-sm-inline-flex" logout i18n-title="navbar.disconnect">
                 <i class="ic-disconnect" aria-hidden="true"></i>
                 <span class="sr-only"><i18n>navbar.disconnect</i18n></span>
             </a>
 
             <div class="dropdown d-inline-block d-sm-none">
-                <button id="dropdown-label" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <button id="dropdown-label" type="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <ul class="dropdown-menu dropdown-menu-end" data-bs-popper aria-labelledby="dropdown-label">
                   <li>
                     <a class="dropdown-item" href="/searchengine" i18n-title="navbar.search"
