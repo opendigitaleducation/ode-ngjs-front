@@ -28,28 +28,28 @@
 				</div>
 			</div>
 		</div>
-		<div class="button-list">
+		<div class="btn-group">
 			<!-- Students -->
-			<a href="/userbook/annuaire#/myClass" class="btn btn-alt"
+			<a href="/userbook/annuaire#/myClass" class="btn btn-third rounded-pill"
 				ng-if="ctrl.isStudent"
 				translate content="school-widget.widget.my.classroom"></a>
-			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-alt-outline" 
+			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-outline-third rounded-pill" 
 				ng-if="ctrl.isStudent"
 				translate content="school-widget.widget.my.team"></a>
 
 			<!-- Teachers -->
-			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-alt"
+			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-third rounded-pill"
 				ng-if="ctrl.isTeacher"
 				translate content="school-widget.widget.my.classrooms"></a>
-			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-alt-outline"
+			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-outline-third rounded-pill"
 				ng-if="ctrl.isTeacher"
 				translate content="school-widget.widget.school.team"></a>
 
 			<!-- Relatives -->
-			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-alt-outline"
+			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-third rounded-pill"
 				ng-if="ctrl.isRelative"
 				translate content="school-widget.widget.school.team"></a>
-			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-alt-outline"
+			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-outline-third rounded-pill"
 				ng-if="ctrl.isRelative"
 				translate content="school-widget.widget.school.managers"></a>
 		</div>
