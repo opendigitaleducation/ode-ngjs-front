@@ -15,7 +15,7 @@
 	</div>
 
 	<div class="widget-body" dnd-nodrag>
-		<div class="widget-empty-message link"
+		<div class="widget-empty-message link" ng-click="ctrl.display.edition = true"
 				ng-if="ctrl.channel===undefined || ctrl.channel.feeds.length === 0">
 			<i18n>rss-widget.widget.empty.info</i18n>
 		</div>
