@@ -1,5 +1,4 @@
-import { EventName, EVENT_NAME, IWidget, LayerName, LAYER_NAME, WidgetFrameworkFactory, RxJS, WidgetPosition } from "ode-ts-client";
-import { Controller as WidgetContainer } from "../directives/widget/widget-container.directive";
+import { EventName, EVENT_NAME, IWidget, LayerName, LAYER_NAME, WidgetFrameworkFactory, RxJS } from "ode-ts-client";
 import { notif } from "../utils";
 
 /** The widget loader service. */
