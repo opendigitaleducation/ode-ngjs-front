@@ -82,7 +82,7 @@ class Controller implements IController {
 	}
 	public getUrlSchoolPersonnels() {
 		if( this.selectedSchool )
-			return "/userbook/annuaire#/search?filters=groups&structure="+this.selectedSchool.id+"&profile=Personnel";
+			return "/userbook/annuaire#/search?filters=users&structure="+this.selectedSchool.id+"&profile=Personnel";
 		return this.getDefaultUrl();
 	}
 
