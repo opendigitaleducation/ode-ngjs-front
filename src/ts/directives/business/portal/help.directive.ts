@@ -28,7 +28,6 @@ export class Directive implements IDirective<Scope,JQLite,IAttributes> {
 
         const lang = conf().Platform.idiom;
         const modalElement = $('ode-modal');
-        modalElement.find('.modal').addClass('modal-help');
 
         scope.onHelp = function() {
             if (helpText) {
