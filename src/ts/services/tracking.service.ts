@@ -1,5 +1,5 @@
 import angular, { IDocumentService, ILocationService, IScope } from "angular";
-import { App, IMatomoTrackingParams } from "ode-ts-client";
+import { App, IMatomoTrackingParams, ITrackingParams, IWebApp } from "ode-ts-client";
 import { conf, session } from "../utils";
 
 export class TrackingService {
@@ -12,10 +12,15 @@ export class TrackingService {
 
     private hasOptedIn: boolean = false;
 
+    private _params?:IMatomoTrackingParams;
+
+    private async loadParams() {
+        return this._params = await conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo");
+    }
+
     trackApp( app:App ) {
-        const analytics = conf().Platform.analytics;
-        analytics.parameters<IMatomoTrackingParams>("matomo").then( (params?) => {
-            if( !params ) return;
+        this.loadParams().then( params => {
+            if( !params || !this.shouldTrackCurrentApp() ) return;
             try {
                 let _paq:any = (window as any)["_paq"] = (window as any)["_paq"] ?? [];
                 _paq.push(['setRequestMethod', 'POST']);
@@ -63,30 +68,128 @@ export class TrackingService {
             } catch(e) {
                 console.error('Invalid tracker object. Should look like {"siteId": 99999, "url":"http://your.matomo.server.com/"}"', e);
             }
-        })
+        });
     }
 
     trackPage( title:string, url:string ) {
-        conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
-        .then( (params?) => {
-            if( params ) {
+        this.loadParams().then( params => {
+            if( !params || !this.shouldTrackCurrentApp() ) return;
+
             // Then let's track single-page applications routes, too.
             var _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
             _paq.push(['setDocumentTitle', title]);
             _paq.push(['setCustomUrl', url]);
             _paq.push(['trackPageView']);
+        });
+    }
+
+    willTrackEvent( eventName:string ): boolean {
+        // /!\  This method should not be async so it uses this._params directly, and not loadParams(). 
+        const params = this._params;
+        if( !params ) return false;
+
+        const apps = this.getCurrentMatchingApps();
+        //check included first
+        if( params.trackOnly && params.trackOnly.length > 0 ) {
+            for(const app of apps) {
+                if (params.trackOnly.indexOf(`${app.name}.${eventName}`) !== -1 || params.trackOnly.indexOf(`*.${eventName}`) !== -1) {
+                    return true;
+                }
             }
+            //if not in whitelist return false
+            return false;
+        }
+        //check excluded then
+        if (params.doNotTrack instanceof Array && params.doNotTrack.length > 0) {
+            for (const app of apps) {
+                if (params.doNotTrack.indexOf(`${app.name}.${eventName}`) !== -1 || params.doNotTrack.indexOf(`*.${eventName}`) !== -1) {
+                    return false;
+                }
+            }
+        }
+        //if not blacklist return true
+        return true;
+    }
+
+    trackEvent( category:string, action:string, name?:string, value?:number ) {
+        this.loadParams().then( params => {
+            if( !params ) return;
+
+            var _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
+            let event:any[] = ['trackEvent',category,action];
+            if( typeof name==="string" ) {
+                name = name.trim();
+                if( name.length > 0)
+                    event.push( name );
+            }
+            if( typeof value==="number" )
+                event.push( value );
+            _paq.push(event);
         });
     }
 
     saveOptIn() {
-        conf().Platform.analytics.parameters<IMatomoTrackingParams>("matomo")
-        .then( (params?) => {
-            if( params ) {
-                let _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
-                _paq.push( this.hasOptedIn ? ['forgetUserOptOut'] : ['optUserOut'] );
-            }
+        this.loadParams().then( params => {
+            if( !params ) return;
+            let _paq = (window as any)["_paq"] = (window as any)["_paq"] || [];
+            _paq.push( this.hasOptedIn ? ['forgetUserOptOut'] : ['optUserOut'] );
         });
+    }
+
+    private shouldTrackCurrentApp(): boolean {
+        // /!\  This method should not be async so it uses this._params directly, and not loadParams(). 
+        const params = this._params;
+        if( !params ) return false;
+
+        if( params.doNotTrack ) {
+            const apps = this.getCurrentMatchingApps();
+            for (const app of apps) {
+                if (params.doNotTrack.indexOf(app.name) !== -1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private getCurrentMatchingApps(): IWebApp[] {
+        const all: IWebApp[] = [];
+        const apps = session().user.apps;
+        if (apps instanceof Array) {
+            // Retrieve app from current URL.
+            for (let i = 0; i < apps.length; i++) {
+                const app = apps[i];
+                if (app && app.address && app.name && location.href.indexOf(app.address) !== -1) {
+                    all.push(app);
+                }
+            }
+        }
+        return all;
+    }
+
+    private shouldTrackEvent( params:ITrackingParams, eventName:string ): boolean {
+        if( !params ) return false;
+        const apps = this.getCurrentMatchingApps();
+        //check included first
+        if( params.trackOnly && params.trackOnly.length > 0 ) {
+            for(const app of apps) {
+                if (params.trackOnly.indexOf(`${app.name}.${eventName}`) !== -1 || params.trackOnly.indexOf(`*.${eventName}`) !== -1) {
+                    return true;
+                }
+            }
+            //if not in whitelist return false
+            return false;
+        }
+        //check excluded then
+        if (params.doNotTrack instanceof Array && params.doNotTrack.length > 0) {
+            for (const app of apps) {
+                if (params.doNotTrack.indexOf(`${app.name}.${eventName}`) !== -1 || params.doNotTrack.indexOf(`*.${eventName}`) !== -1) {
+                    return false;
+                }
+            }
+        }
+        //if not blacklist return true
+        return true;
     }
 }
 

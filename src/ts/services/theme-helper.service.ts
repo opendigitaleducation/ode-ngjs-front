@@ -1,6 +1,6 @@
 import angular from "angular";
 import { IThemeDesc, IWebApp, IWidget, WidgetName } from "ode-ts-client";
-import { NgHelperService } from "./ngHelper.service";
+import { NgHelperService } from "./ng-helper.service";
 import { conf } from "../utils";
 import $ from 'jquery';
 
@@ -11,22 +11,22 @@ export class ThemeHelperService {
     static $inject =["odeNgHelperService"];
 
     private iconOfWidget:{[name in WidgetName]:string} = {
-        "last-infos-widget":    "ic-app-actualites",
+        "last-infos-widget":    "ic-widget-actualites",
         "birthday":             "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "calendar-widget":      "ic-app-calendar",
-        "carnet-de-bord":       "ic-carnet-de-bord",
-        "record-me":            "ic-microphone",
+        "calendar-widget":      "ic-widget-calendar",
+        "carnet-de-bord":       "ic-widget-carnet-de-bord",
+        "record-me":            "ic-widget-microphone",
         "mood":                 "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "my-apps":              "ic-apps",
-        "notes":                "ic-app-notes",
-        "rss-widget":           "ic-rss",
-        "bookmark-widget":      "ic-signets",
-        "qwant":                "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "qwant-junior":         "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "agenda-widget":        "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "cursus-widget":        "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "maxicours-widget":     "ic-star",        // FIXME obviously wrong => create missing icon in CSS
-        "school-widget":        "ic-star",        // FIXME obviously wrong => create missing icon in CSS
+        "my-apps":              "ic-widget-apps",
+        "notes":                "ic-widget-notes",
+        "rss-widget":           "ic-widget-rss",
+        "bookmark-widget":      "ic-widget-signets",
+        "qwant":                "ic-widget-qwant",
+        "qwant-junior":         "ic-widget-qwant",
+        "agenda-widget":        "ic-widget-agenda",
+        "cursus-widget":        "ic-widget-aide-devoirs",
+        "maxicours-widget":     "ic-widget-maxicours",
+        "school-widget":        "ic-widget-schoolbook",
     }
 
     constructor( 
@@ -147,9 +147,9 @@ export class ThemeHelperService {
     }
 
     /** 
-     * Map between apps and their CSS class.
+     * Map between apps and their CSS code.
      */
-     getIconClass( app:IWebApp ):string {
+     getIconCode( app:IWebApp ):string {
         let appCode = app.icon.trim().toLowerCase() || "";
         if( appCode && appCode.length > 0 ) {
             if(appCode.endsWith("-large"))  appCode = appCode.replace("-large", "");
@@ -173,7 +173,7 @@ export class ThemeHelperService {
             case "cahier de texte 2d":  appCode = "cahier-textes"; break;
 			default: break;
 		}
-		return `ic-app-${appCode} color-app-${appCode}`;
+		return appCode;
 	}
 
     /** @return the CSS class of a widget */

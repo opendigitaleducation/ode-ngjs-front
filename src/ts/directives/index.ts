@@ -7,6 +7,7 @@ export * as DominoFolder from './business/explorer/domino-folder.directive';
 export * as DominoItem from './business/explorer/domino-item.directive';
 export * as Toaster from './business/toaster/toaster.directive';
 export * as Modal from './components/modal/modal.directive';
+export * as ModalContainer from './components/modal/modal-container.directive';
 export * as PropsPanel from './business/props/props-panel.directive';
 export * as SharePanel from './business/share/share-panel.directive';
 

@@ -69,7 +69,7 @@ class Controller implements IController {
 	
 	getAvatar(index:number):string {
 		if (index < this.eleves.length) {
-			return "/userbook/avatar/[[ ctrl.getChildId($index) ]]?thumbnail=100x100";
+			return `/userbook/avatar/${this.getChildId(index)}?thumbnail=100x100`;
 		} else {
 			return this.themeHelperSvc.toSkinUrl("/img/illustrations/no-avatar.svg?thumbnail=100x100");
 		}

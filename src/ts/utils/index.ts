@@ -1,3 +1,3 @@
 export * from './shorts';
-export * from './bootstrap';
+export * from './ng-bootstrap';
 export * from "./localization";

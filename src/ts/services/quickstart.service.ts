@@ -81,6 +81,7 @@ export class QuickstartService {
 		this.save();
 	};
 	save(cb?: () => void){
+		// FIXME This is the old-fashioned way of accessing preferences. Do not reproduce anymore (use ode-ts-client lib instead)
 		http().putJson('/userbook/preference/quickstart', this.state).then( () => {
 			if(typeof cb === 'function'){
 				cb();
@@ -117,6 +118,7 @@ export class QuickstartService {
 			return;
 		}
 		this.loading = true;
+		// FIXME This is the old-fashioned way of accessing preferences. Do not reproduce anymore (use ode-ts-client lib instead)
 		http().get('/userbook/preference/quickstart').then( pref => {
 			let preferences;
 			if(pref.preference){

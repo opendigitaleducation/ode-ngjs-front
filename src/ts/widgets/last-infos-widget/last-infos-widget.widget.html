@@ -7,10 +7,13 @@
 				<span class="seemore-text"><i18n>last-infos-widget.widget.see.more</i18n></span>
 			</a>
 		</div>
+		<div class="widget-options">
+			<div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
+		</div>
 	</div>
 	<div class="widget-body" dnd-nodrag>
 		
-		<div class="widget-empty-message link"
+		<div class="widget-empty-message"
 				ng-if="ctrl.infos === undefined || ctrl.infos.length === 0">
 			<i18n>last-infos-widget.widget.empty</i18n>
 		</div>
@@ -20,8 +23,8 @@
 				ng-href="/actualites#/view/thread/[[info.thread_id]]/info/[[info._id]]"
 				>
 			<div class="news-row-image">
-				<img ng-if="!info.thread_icon" class="mw-100" skin-src="/img/illustrations/news.svg" alt="[[info.thread_title]]" />
-				<img ng-if="info.thread_icon" class="mw-100" ng-src="[[info.thread_icon]]?thumbnail=120x120" alt="[[info.thread_title]]" />
+				<img ng-if="!info.thread_icon" skin-src="/img/illustrations/news.svg" alt="[[info.thread_title]]" width="40" height="40" />
+				<img ng-if="info.thread_icon" ng-src="[[info.thread_icon]]?thumbnail=120x120" alt="[[info.thread_title]]" width="40" height="40" />
 			</div>
 			<div class="news-row-text">
 				<span class="link d-block">[[info.title]]</span>

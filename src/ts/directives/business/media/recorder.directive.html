@@ -1,14 +1,10 @@
 <!-- illustration -->
-<div ng-class="{ 'd-none': !ctrl.isIdle }">
-    <img class="img-fluid" skin-src="/img/illustrations/recorder-audio.svg" alt="">
-</div>
-
-<div ng-if="!ctrl.isAudioCompatible && !ctrl.isVideoCompatible">
-	<p><i18n>recorder.not.supported</i18n></p>
+<div ng-class="{'d-none': !ctrl.showMenu}">
+    <img class="img-fluid" skin-src="/img/illustrations/recorder-audio.svg" width="100" height="100" alt="recorder">
 </div>
 
 <!-- audio button -->
-<div ng-class="{ 'd-none': !ctrl.isIdle || !ctrl.isAudioCompatible }">
+<div ng-class="{ 'd-none': !ctrl.showMenu || !ctrl.isAudioCompatible }">
     <a class="btn-circle" href="#" i18n-title="embed.audio.title"
             ng-click="ctrl.switchAudioRecord()">
         <i class="fas fa-microphone"></i>
@@ -16,53 +12,54 @@
 </div>
 
 <!-- video button -->
-<div ng-class="{ 'd-none': !ctrl.isIdle || !ctrl.isVideoCompatible }">
+<div ng-class="{ 'd-none': !ctrl.showMenu || !ctrl.isVideoCompatible }">
     <a class="btn-circle" href="#">
         <i class="fas fa-video"></i>
     </a>
 </div>
 
+<div ng-if="!ctrl.isAudioCompatible && !ctrl.isVideoCompatible">
+	<p><i18n>recorder.not.supported</i18n></p>
+</div>
+
 <!-- audio recorder -->
-<div ng-class="{ 'd-none': ctrl.isVideo || ctrl.isIdle || ctrl.isStopped || !ctrl.isAudioCompatible }">
-    <div ng-if="ctrl.showActionButtons">
+<div ng-if="ctrl.showRecorder" ng-class="{ 'd-none': ctrl.showMenu || ctrl.isVideo || !ctrl.isAudioCompatible }">
+    <div class="record-timer">
+        <i class="fas fa-microphone"></i>
+        [[ctrl.time()]]
+    </div>
+    <input type="text" class="form-control" i18n-placeholder="title" ng-model="ctrl.recorder.title" />
+    
+    <div class="record-controls">
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.switchAudioRecord()"
+                ng-disabled="ctrl.isEncoding || ctrl.isUploading">
+            <i class="fas" ng-class="{'fa-microphone': !ctrl.isRecording, 'fa-pause': ctrl.isRecording}"></i>
+            <span class="label" ng-if="!ctrl.isRecording"><i18n>embed.resume</i18n></span>
+            <span class="label" ng-if="ctrl.isRecording"><i18n>embed.suspend</i18n></span>
+        </button>
 
-        <div class="record-timer">
-            <i class="fas fa-microphone"></i>
-            [[ctrl.time()]]
-        </div>
-        <input type="text" class="form-control" i18n-placeholder="title" ng-model="ctrl.recorder.title" />
-        
-        <div class="record-controls">
-            <button type="button" class="btn btn-circle"
-                    ng-click="ctrl.switchAudioRecord()"
-                    ng-disabled="ctrl.isEncoding || ctrl.isUploading">
-                <i class="fas" ng-class="{'fa-microphone': !ctrl.isRecording, 'fa-pause': ctrl.isRecording}"></i>
-                <span class="label" ng-if="!ctrl.isRecording"><i18n>embed.resume</i18n></span>
-                <span class="label" ng-if="ctrl.isRecording"><i18n>embed.suspend</i18n></span>
-            </button>
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.switchPlay()"
+                ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
+            <i class="fas" ng-class="ctrl.isPlaying ? 'fa-pause' : 'fa-play'"></i>
+            <span class="label" ng-if="!ctrl.isPlaying"><i18n>embed.play</i18n></span>
+            <span class="label" ng-if="ctrl.isPlaying"><i18n>embed.pause</i18n></span>
+        </button>
 
-            <button type="button" class="btn btn-circle"
-                    ng-click="ctrl.switchPlay()" 
-                    ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i class="fas" ng-class="{'fa-play': ctrl.showActionButtons, 'fa-pause': ctrl.isPlaying}"></i>
-                <span class="label" ng-if="!ctrl.isPlaying"><i18n>embed.play</i18n></span>
-                <span class="label" ng-if="ctrl.isPlaying"><i18n>embed.pause</i18n></span>
-            </button>
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.recorder.flush()"
+                ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
+            <i class="fas fa-redo-alt"></i>
+            <span class="label"><i18n>embed.redo</i18n></span>
+        </button>
 
-            <button type="button" class="btn btn-circle"
-                    ng-click="ctrl.recorder.flush()" 
-                    ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i class="fas fa-redo-alt"></i>
-                <span class="label"><i18n>embed.redo</i18n></span>
-            </button>
-
-            <button type="button" class="btn btn-circle"
-                    ng-click="ctrl.saveRecord()" 
-                    ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
-                <i ng-class="ctrl.getSaveBtnClass()"></i>
-                <span class="label"><i18n>embed.save</i18n></span>
-            </button>
-        </div>
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.saveRecord()"
+                ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
+            <i ng-class="ctrl.getSaveBtnClass()"></i>
+            <span class="label"><i18n>embed.save</i18n></span>
+        </button>
     </div>
 </div>
 

@@ -44,11 +44,16 @@ export class Controller implements IController {
 			window.location.href = '/searchengine#/' + words;
 		}
 	};
+
+	getIconClass(app:IWebApp) {
+		const appCode = this.themeSvc.getIconCode(app);
+		return `ic-app-${appCode} color-app-${appCode}`;
+	}
 }
 
 /*
  *	Customized scope for the directive.
- *	Required for compatibility with old portal templates.
+ *	/!\ Required for compatibility with old portal templates. /!\
  */
 interface Scope extends IScope {
 	lang?:IIdiom;
@@ -93,6 +98,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		};
 		scope.goToMessagerie = () => {
 			console.log(scope.messagerieLink);
+			// FIXME This is the old-fashioned way of accessing preferences. Do not reproduce anymore (use ode-ts-client lib instead)
 			http().get('/userbook/preference/zimbra').then( data => {
 				try{
 					if( data.preference? JSON.parse(data.preference)['modeExpert'] && scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|preauth') : false){
@@ -110,13 +116,13 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		}
 		scope.refreshMails = () => {
 			if(scope.me?.hasWorkflow('fr.openent.zimbra.controllers.ZimbraController|view')){
-				http().get('/zimbra/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
+				http().get('/zimbra/count/INBOX', {queryParams:{unread: true, _:new Date().getTime()}}).then( nbMessages => {
 					scope.nbNewMessages = nbMessages.count;
 					scope.$apply('nbNewMessages');
 				});
 	
 			} else {
-				http().get('/conversation/count/INBOX', {queryParams:{unread: true}}).then( nbMessages => {
+				http().get('/conversation/count/INBOX', {queryParams:{unread: true, _:new Date().getTime()}}).then( nbMessages => {
 					scope.nbNewMessages = nbMessages.count;
 					scope.$apply('nbNewMessages');
 				});
@@ -144,6 +150,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 				}
 			}
 			ctrl.refreshAvatar();
+			scope.refreshMails && scope.refreshMails();
 
 			ctrl.apps = values[2];
 

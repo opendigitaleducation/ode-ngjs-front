@@ -213,57 +213,47 @@
 
 	.pulsar-button {
 		position: absolute;
-		z-index: 991;
+		z-index: 999;
 		width: 40px;
 		height: 40px;
 	}
 
-	.pulse,
-	.pulse2 {
-		height: 52px;
-		width: 52px;
+	.pulsar-button::before,
+	.pulsar-button::after {
+		content: "";
+		opacity: 0.5;
 		position: absolute;
 		z-index: -1;
-		top: -6px;
-		left: -6px;
+		inset: -6px 0 0 -6px;
+		height: 42px;
+		width: 42px;
+		content: "";
+		border-radius: 50%;
+		box-shadow: 0 0 5px 6px rgb(120 218 255 / 60%);
+		transform: scale(0.1, 0.1);
+		transition: all 250ms ease;
+		animation: pulsate 1s ease-out;
+		animation-iteration-count: infinite;
+	}
+
+	.pulsar-button::after {
+		animation-delay: .3s;
 	}
 
 	.pulse-spot {
 		position: absolute;
-		box-sizing: border-box;
-		width: 40px;
-		height: 40px;
 		cursor: pointer;
-		border-radius: 50%;
-		border: 4px solid transparent;
+		width: 30px;
+		height: 30px;
 		font-size: 18px;
 		text-align: center;
-		line-height: 31px;
+		line-height: 21px;
 		font-weight: bold;
 		color: #fff;
+		border-radius: 50%;
+		border: 4px solid transparent;
 		background: #FF8500;
 		transition: all 250ms ease;
-	}
-
-	.pulse::after,
-	.pulse2::after {
-		transform: scale(0.1, 0.1);
-		content: "";
-		border-radius: 50%;
-		height: 52px;
-		width: 52px;
-		position: absolute;
-		left: 0;
-		top: 0;
-		box-shadow: 0 0 5px 6px rgb(120 218 255 / 60%);
-		animation: pulsate 1s ease-out;
-		animation-iteration-count: infinite;
-		opacity: 0.5;
-		transition: all 250ms ease;
-	}
-
-	.pulse2::after {
-		animation-delay: .3s;
 	}
 
 	.pulse-spot::before {
@@ -301,6 +291,15 @@
 		100% {
 			transform: scale(1.2, 1.2);
 			opacity: 0
+		}
+	}
+
+	.pulsar-button {
+		display: none;
+	}
+	@media (min-width: 992px) {
+		.pulsar-button {
+			display: block;
 		}
 	}
 </style>

@@ -8,6 +8,47 @@ plugins {
 group = "${modowner}"
 version = "$version"
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "${modowner}"
+            artifactId "${modname}"
+            version "$version"
+            artifact("build/distributions/${modowner}~${modname}~${version}.tar.gz") { 
+                classifier "tar"
+                extension "tar.gz"
+            }
+        }
+        maven(MavenPublication) {
+            groupId "${modowner}"
+            artifactId "${modname}"
+            version "$version"
+            artifact("build/libs/${modowner}~${modname}~${version}-deployment.jar") { classifier "deployment" }
+        }
+    }
+    repositories {
+        if (version.endsWith("SNAPSHOT")) {
+            maven {
+            name 'Snapshots'
+                url 'https://maven.opendigitaleducation.com/nexus/content/repositories/snapshots/'
+                credentials {
+                username "${odeUsername}"
+                    password "${odePassword}"
+                }
+            }
+        } else {
+            maven {
+            name 'Releases'
+                url 'https://maven.opendigitaleducation.com/nexus/content/repositories/releases/'
+                credentials {
+                username "${odeUsername}"
+                    password "${odePassword}"
+                }
+            }
+        }
+    }
+}
+
 //begin generateTemplate
 task generateDeployment(type: Copy)  {
     from 'conf.deployment'
@@ -32,3 +73,23 @@ task generateTemplate(type: Copy,dependsOn: 'generateDeployment') {
   }
 }
 //end generateTemplate
+
+task deploymentJar(type: Jar) {
+    classifier = 'deployment'
+    archiveName = "${modowner}~${modname}~$version-$classifier.$extension"
+    from "deployment/"
+}
+
+task tarGz(type: Tar) {
+    classifier = 'tar'
+    compression = Compression.GZIP
+    archiveName = "${modowner}~${modname}~${version}.tar.gz"
+
+    includes = ["dist/**"]
+    from "."
+}
+
+artifacts {
+  archives tarGz
+  archives deploymentJar
+}

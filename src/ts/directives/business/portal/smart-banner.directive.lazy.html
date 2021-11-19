@@ -1,14 +1,15 @@
 <div ng-if="showBanner"  class="smartbanner">
     <style>
         .smartbanner {
-            position: sticky;
-            position: -webkit-sticky;
+            /* position: sticky;
+            position: -webkit-sticky; */
+            position: fixed;
             bottom:0;
             left:0;
             width:100%;
             height:78px;
             background:#fff;
-            z-index: 1000000;
+            z-index: 999;
             overflow: hidden;
             border: 1px solid #ccc;
             margin-bottom: 5px;
@@ -83,7 +84,7 @@
             <div class="smartbanner-title"><i18n>smartbanner.name</i18n></div>
             <div><i18n>smartbanner.description</i18n></div>
         </div>
-        <a href="[[appRef]]" target="_blank" class="smartbanner-button">
+        <a href="[[appRef]]" target="_blank" rel="noopener" class="smartbanner-button">
             <span class="smartbanner-button-text"><i18n>smartbanner.action</i18n></span>
         </a>
     </div>

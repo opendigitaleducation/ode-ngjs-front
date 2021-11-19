@@ -2,4 +2,5 @@
   "name":"%FULLY-QUALIFIED-VERSION%",
   "type": "js",
   "waitDeploy": true
+  ,"extension":"-tar.tar.gz"
 }

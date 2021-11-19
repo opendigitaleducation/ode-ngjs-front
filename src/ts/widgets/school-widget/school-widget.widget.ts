@@ -49,12 +49,20 @@ class Controller implements IController {
 	}
 	
 	public getUrlTeachersOfMyClass() {
-		if( this.me.classes && this.me.classes.length>0 )
-			return "/userbook/annuaire#/search?filters=groups&class="+this.me.classes[0]+"&profile=Teacher";
-		return this.getDefaultUrl();
+		let url = this.getDefaultUrl();
+		if( this.me.classes && this.me.classes.length>0 ) {
+			url += "?filters=groups&profile=Teacher";
+			for( let clazz of this.me.classes ) {
+				url += "&class="+clazz;
+			}
+		}
+		return url;
 	}
 	public getUrlStudentsOfMyClasses() {
 		let url = this.getDefaultUrl() + "?filters=groups&profile=Student";
+		if( this.selectedSchool ) {
+			url += "&structure="+this.selectedSchool.id;
+		}
 		for( let clazz of this.me.classes ) {
 			url += "&class="+clazz;
 		}
@@ -74,7 +82,7 @@ class Controller implements IController {
 	}
 	public getUrlSchoolPersonnels() {
 		if( this.selectedSchool )
-			return "/userbook/annuaire#/search?filters=groups&structure="+this.selectedSchool.id+"&profile=Personnel";
+			return "/userbook/annuaire#/search?filters=users&structure="+this.selectedSchool.id+"&profile=Personnel";
 		return this.getDefaultUrl();
 	}
 

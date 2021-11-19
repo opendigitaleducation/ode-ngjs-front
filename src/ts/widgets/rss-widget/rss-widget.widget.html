@@ -2,17 +2,20 @@
 <div class="widget-rss">
 	<div class="widget-header">
 		<div class="subtitle"><i18n>rss-widget.widget.title</i18n></div>
-		<div class="tools">
-			<a href="" class="tool tool-option" i18n-title="rss-widget.widget.channel.config"
-					ng-if="ctrl.canAddFeed"
-					ng-click="ctrl.display.edition = true">
-				<i class="fas fa-cog"></i>
-			</a>
+		<div class="widget-options">
+			<div class="tools">
+				<a href="#" class="tool tool-option" i18n-title="rss-widget.widget.channel.config"
+						ng-if="ctrl.canAddFeed"
+						ng-click="ctrl.display.edition = true">
+					<i class="fas fa-cog"></i>
+				</a>
+			</div>
+			<div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
 		</div>
 	</div>
 
 	<div class="widget-body" dnd-nodrag>
-		<div class="widget-empty-message link"
+		<div class="widget-empty-message link" ng-click="ctrl.display.edition = true"
 				ng-if="ctrl.channel===undefined || ctrl.channel.feeds.length === 0">
 			<i18n>rss-widget.widget.empty.info</i18n>
 		</div>
@@ -28,7 +31,7 @@
 			<div class="feed-title" ng-click="ctrl.showOrHideFeed($index)">[[feed.title]]</div>
 			<ul class="list" ng-show="ctrl.display.selectedFeed === [[$index]]">
 				<li class="item link" ng-repeat="item in feed.Items track by $index">
-					<a href="[[item.link]]" target="_blank">
+					<a href="[[item.link]]" target="_blank" rel="noopener">
 						<div class="title">[[item.title]]</div>
 						<div class="meta">[[ctrl.formatDate(item.pubDate)]]</div>
 						<div class="meta" ng-bind-html="item.description"></div>
@@ -39,12 +42,10 @@
 	</div>
 </div>
 
-<ode-modal visible="ctrl.display.edition" on-close="ctrl.display.edition = false" >
+<ode-modal visible="ctrl.display.edition" on-close="ctrl.display.edition = false" dnd-nodrag>
 	<ode-modal-title>
-		<h2>
-			<i18n ng-if="!ctrl.display.feedEdition">rss-widget.widget.channel.feed.list</i18n>
-			<i18n ng-if="ctrl.display.feedEdition">rss-widget.widget.channel.feed.edit</i18n>
-		</h2>
+		<i18n ng-if="!ctrl.display.feedEdition">rss-widget.widget.channel.feed.list</i18n>
+		<i18n ng-if="ctrl.display.feedEdition">rss-widget.widget.channel.feed.edit</i18n>
 	</ode-modal-title>
 	
 	<ode-modal-body>

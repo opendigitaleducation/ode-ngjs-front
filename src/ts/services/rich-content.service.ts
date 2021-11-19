@@ -50,7 +50,9 @@ export class RichContentService {
             });
         }
         */
-        element.html( this.$compile(htmlContent)(scope.$parent).html() );
+
+        element.html( this.$compile(htmlContent)(scope.$parent) as any ); //WARNING: The "as any" cast here is REQUIRED
+
         //weird browser bug with audio tags
         element.find('audio').each(function(index, item){
             let parent = $(item).parent();

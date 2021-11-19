@@ -1,4 +1,4 @@
-import angular from "angular";
+import angular, { IScope } from "angular";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 
@@ -7,6 +7,20 @@ import $ from "jquery"; // FIXME : remove jQuery dependency
  * //FIXME This would be a pain to maintain natively => thinking about integrating another lib.
  */
 export class NgHelperService {
+
+    public safeApply( $scope:IScope, exp?:string|((scope:IScope) => any) ) {
+        const phase = $scope.$root.$$phase;
+        if(phase == '$apply' || phase == '$digest') {
+            if( angular.isFunction(exp) ) {
+                exp($scope);
+            }
+        } else {
+            // The following syntax is just for Typescript compiler pleasure.
+            if( typeof exp==="string" )         $scope.$apply(exp);
+            else if( angular.isFunction(exp) )  $scope.$apply(exp);
+            else                                $scope.$apply();
+        }
+    }
 
     // /** Replacement for $(selector) a.k.a. jQuery(selector)  */
     // public querySelect(selector:string):JQLite {

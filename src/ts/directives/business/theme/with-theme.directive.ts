@@ -1,6 +1,6 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ConfigurationFrameworkFactory } from "ode-ts-client";
-import { ThemeHelperService } from "../../../services/themeHelper.service";
+import { ThemeHelperService } from "../../../services/theme-helper.service";
 
 export class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'EA';

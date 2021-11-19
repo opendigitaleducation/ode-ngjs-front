@@ -1,16 +1,19 @@
 <div class="widget-bookmarks">
 	<div class="widget-header">
 		<div class="subtitle"><i18n>bookmark-widget.widget.title</i18n></div>
-		<div class="tools">
-			<a href="" class="tool tool-option" i18n-title="bookmark-widget.widget.manage.bookmarks"
-					ng-click="ctrl.display.manage = true">
-				<i class="fas fa-cog"></i>
-			</a>
+		<div class="widget-options">
+			<div class="tools">
+				<a href="" class="tool tool-option" i18n-title="bookmark-widget.widget.manage.bookmarks"
+						ng-click="ctrl.display.manage = true">
+					<i class="fas fa-cog"></i>
+				</a>
+			</div>
+			<div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
 		</div>
 	</div>
 
 	<div class="widget-body">
-		<div class="widget-empty-message link" ng-if="ctrl.bookmarks.length === 0">
+		<div class="widget-empty-message link" ng-click="ctrl.display.manage = true" ng-if="ctrl.bookmarks.length === 0">
 			<i18n>bookmark-widget.widget.empty</i18n>
 		</div>
 
@@ -23,9 +26,9 @@
 	</div>
 </div>
 
-<ode-modal size="lg" visible="ctrl.display.manage" on-close="ctrl.display.manage = false">
+<ode-modal size="lg" visible="ctrl.display.manage" on-close="ctrl.display.manage = false" dnd-nodrag>
 	<ode-modal-title>
-		<h2><i18n>bookmark-widget.widget.manage.title</i18n></h2>
+		<i18n>bookmark-widget.widget.manage.title</i18n>
 	</ode-modal-title>
 
 	<ode-modal-body>

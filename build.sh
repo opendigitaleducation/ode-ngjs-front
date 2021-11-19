@@ -22,6 +22,14 @@ then
   export GROUP_GID=1000
 fi
 
+if [ -e "?/.gradle" ] && [ ! -e "?/.gradle/gradle.properties" ]
+then
+  echo "odeUsername=$NEXUS_ODE_USERNAME" > "?/.gradle/gradle.properties"
+  echo "odePassword=$NEXUS_ODE_PASSWORD" >> "?/.gradle/gradle.properties"
+  echo "sonatypeUsername=$NEXUS_SONATYPE_USERNAME" >> "?/.gradle/gradle.properties"
+  echo "sonatypePassword=$NEXUS_SONATYPE_PASSWORD" >> "?/.gradle/gradle.properties"
+fi
+
 # options
 SPRINGBOARD="recette"
 for i in "$@"
@@ -37,7 +45,7 @@ esac
 done
 
 clean () {
-  rm -rf node_modules dist .gradle package.json package-lock.json deployment
+  rm -rf node_modules dist build .gradle package.json package-lock.json deployment
 }
 
 init () {
@@ -81,37 +89,25 @@ publishNPM () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm publish --tag $LOCAL_BRANCH"
 }
 
-packageJar () {
-  rm -rf ode-ngjs-front.tar.gz ode-ngjs-front
-  mkdir ode-ngjs-front && mv dist/version.txt ode-ngjs-front && cp -R dist/bundle/* ode-ngjs-front
-  tar cfzh ode-ngjs-front.tar.gz ode-ngjs-front
-}
-
 publishNexus () {
   VERSION=`grep "version="  gradle.properties| sed 's/version=//g'`
   case "$VERSION" in
     *SNAPSHOT) nexusRepository='snapshots' ;;
     *)         nexusRepository='releases' ;;
   esac
-  publishCmd "mvn deploy:deploy-file -DgroupId=com.opendigitaleducation -DartifactId=ode-ngjs-front -Dversion=$VERSION -Dpackaging=tar.gz -Dfile=ode-ngjs-front.tar.gz -Duser.home=/var/maven -DrepositoryId=wse -Durl=https://maven.opendigitaleducation.com/nexus/content/repositories/$nexusRepository/"
+  if [ -e "?/.gradle" ] && [ ! -e "?/.gradle/gradle.properties" ]
+  then
+    echo "odeUsername=$NEXUS_ODE_USERNAME" > "?/.gradle/gradle.properties"
+    echo "odePassword=$NEXUS_ODE_PASSWORD" >> "?/.gradle/gradle.properties"
+    echo "sonatypeUsername=$NEXUS_SONATYPE_USERNAME" >> "?/.gradle/gradle.properties"
+    echo "sonatypePassword=$NEXUS_SONATYPE_PASSWORD" >> "?/.gradle/gradle.properties"
+  fi
+  docker-compose run --rm -u "$USER_UID:$GROUP_GID" gradle sh -c "gradle deploymentJar tarGz publish"
 }
 
 publishMavenLocal(){
   VERSION=`grep "version="  gradle.properties| sed 's/version=//g'`
-  publishCmd "mvn install:install-file -DgroupId=com.opendigitaleducation -DartifactId=ode-ngjs-front -Dversion=$VERSION -Dpackaging=tar.gz -Dfile=ode-ngjs-front.tar.gz -Duser.home=/var/maven"
-  rm -rf ode-ngjs-front ode-ngjs-front.tar.gz
-}
-
-publishCmd(){
-  local deploymentString=$1
-  echo "Publish command is: $ $deploymentString"
-  docker-compose run \
-    --rm \
-    --no-deps \
-    -u "$USER_UID:$GROUP_GID" \
-    -w /usr/src \
-    -e MAVEN_CONFIG=/var/maven/.m2 \
-    maven sh -c "$deploymentString"
+  docker-compose run --rm -u "$USER_UID:$GROUP_GID" gradle sh -c "gradle deploymentJar tarGz publishToMavenLocal"
 }
 
 for param in "$@"
@@ -130,7 +126,7 @@ do
       build
       ;;
     install)
-      build && packageJar && publishMavenLocal
+      build && publishMavenLocal && rm -rf build
       ;;
     watch)
       watch
@@ -139,7 +135,7 @@ do
       publishNPM
       ;;
     publishNexus)
-      packageJar && publishNexus
+      publishNexus
       ;;
     *)
       echo "Invalid argument : $param"

@@ -2,6 +2,9 @@
 <div class="widget-dashboard">
 	<div class="widget-header">
 		<div class="subtitle"><i18n>carnet-de-bord.widget.title</i18n></div>
+        <div class="widget-options">
+            <div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
+        </div>
 	</div>
     
 	<div class="widget-body" dnd-nodrag>
@@ -10,22 +13,20 @@
         </div>
     
 		<div class="dashboard-choice"
-				ng-if="ctrl.me.type=='PERSRELELEVE' && ctrl.eleves.length > 1 && ctrl.structures"
-			>
+				ng-if="!ctrl.errorMsg && ctrl.description.profiles.indexOf('Relative')>=0 && ctrl.eleves.length>0 && ctrl.structures">
 			<a href="" class="avatar-link"
 					ng-repeat="eleve in ctrl.eleves"
 					ng-click="ctrl.getEleve($index)"
                     ng-class="{'active': eleve===ctrl.currentEleve}"
 				>
-				<img ng-src="ctrl.getAvatar($index)"/>
+				<img ng-src="[[ctrl.getAvatar($index)]]"/>
 				<span>[[ ctrl.getTag('Prenom', $index) ]]</span>
 			</a>
 		</div>
 
-		<ul class="dashboard-list">
-			<li class="item link-discret delay"
+		<ul class="dashboard-list" ng-if="!ctrl.errorMsg">
+			<li class="item link-discret"
 					ng-repeat="contentType in ctrl.contentTypes"
-					ng-if="contentType.compact"
 					ng-click="ctrl.openLightBox(contentType)">
 				<a href="#" class="item-inner">
 					<div class="left">
@@ -35,23 +36,22 @@
 					</div>
 					<div class="right">
 						<div class="label" translate content="carnet-de-bord.widget.[[contentType.title]]"></div>
-						<div class="info meta">[[contentType.compact]]</div>
+						<div class="info meta" ng-if="contentType.compact">[[contentType.compact]]</div>
+                        <div class="info meta" ng-if="!contentType.compact"><i18n>carnet-de-bord.widget.empty</i18n></div>
 					</div>
 				</a>
 			</li>
 		</ul>
 	</div>
 
-    <ode-modal visible="ctrl.showLightbox" on-close="ctrl.showLightbox=false">
+    <ode-modal visible="ctrl.showLightbox" on-close="ctrl.showLightbox=false" dnd-nodrag>
         <ode-modal-title>
-            <h2>
-                <span translate content="[[ctrl.currentContentType.lightboxTitle]]"></span>
+            <span translate content="[[ctrl.currentContentType.lightboxTitle]]"></span>
 
-                <span ng-if="ctrl.me.type !== 'ELEVE' ">
-                    <i18n>carnet-de-bord.widget.of</i18n>
-                    [[ctrl.getCurrentTag('Prenom')]]
-                </span>
-            </h2>
+            <span ng-if="ctrl.me.type !== 'ELEVE' ">
+                <i18n>carnet-de-bord.widget.of</i18n>
+                [[ctrl.getCurrentTag('Prenom')]]
+            </span>
         </ode-modal-title>
 
         <ode-modal-body>
@@ -63,7 +63,7 @@
                     </p>
 
                     <p ng-if="!item.subsections && item.pageUrl">
-                        <a target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
+                        <a target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
                             <span>•</span>[[ item.value ]]
                             <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                         </a>
@@ -75,7 +75,7 @@
                         [[ item.value ]]
                     </h4>
                     <h4 ng-if="item.subsections && item.pageUrl">
-                        <a target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
+                        <a target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
                             [[ item.value ]]
                             <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                         </a>
@@ -86,7 +86,7 @@
 
                             <b ng-if="!subsection.pageUrl">[[ subsection.header ]]</b>
 
-                            <a ng-if="subsection.pageUrl" target="_blank" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ subsection.pageUrl ]]">
+                            <a ng-if="subsection.pageUrl" target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ subsection.pageUrl ]]">
                                 <b>[[ subsection.header ]]
                                     <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                                 </b>

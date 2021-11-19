@@ -10,7 +10,7 @@
     "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
     "karma": "npx karma start src/test/config/karma.js",
     "build": "npx webpack",
-    "watch": "npx webpack --config webpack.config.watch.js --env build_target=${webpackWatchSpringboard}/assets/ode-ngjs-front --watch"
+    "watch": "npx webpack --config webpack.config.watch.js --env build_target=${webpackWatchSpringboard}/assets/js/ode-ngjs-front --watch"
   },
   "repository": {
     "type": "git",
@@ -50,7 +50,7 @@
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^4.0.1",
     "moment-locales-webpack-plugin": "~1.2.0",
-    "ode-ts-client": "^0.6.0-explorer",
+    "ode-ts-client": "~1.0.0-dev",
     "terser-webpack-plugin": "5.1.4",
     "ts-loader": "^8.0.18",
     "typescript": "4.2.2",

@@ -2,6 +2,9 @@ import { L10n, conf } from ".";
 import { notify } from "../services/notify.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
+/** These statuses are sent to the callbacks registered with the state(cb) method. */
+type RecorderStatus = 'idle'|'preparing'|'recording'|'suspended'|'paused'|'playing'|'stop'|'uploading'|'encoding'|'saved';
+
 declare const Zlib: any;
 
 let _zlib:any = null;
@@ -105,11 +108,15 @@ export var audio_recorder = (function () {
 	}
 
 	function notifyFollowers(status:any, data?:any) {
-		followers.forEach(function (follower) {
-			if (typeof follower === 'function') {
-				follower(status, data);
-			}
-		})
+		try {
+			followers.forEach(function (follower) {
+				if (typeof follower === 'function') {
+					follower(status, data);
+				}
+			});
+		} catch {
+			// void: just don't stop the recorder process when a follower throws an error.
+		}
 	}
 
 	return {
@@ -119,6 +126,7 @@ export var audio_recorder = (function () {
 			loaded = true;
 
 			const handleMediaStream = (mediaStream:MediaStream) => {
+				this.permission = 'granted';
 				context = new (resolvedNavigatorModules.AudioContext)();
 				encoder.postMessage(["init", context.sampleRate])
 				var audioInput = context.createMediaStreamSource(mediaStream);
@@ -151,7 +159,12 @@ export var audio_recorder = (function () {
 			if (resolvedNavigatorModules.getUserMedia !== undefined) {
 				resolvedNavigatorModules.getUserMedia.call(navigator.mediaDevices, { audio: true })
 					.then(handleMediaStream)
-					.catch(err => { console.log("err:", err) })
+					.catch(err => {
+						if (err) {
+							this.permission = 'denied';
+							console.log("err:", err);
+						}
+					})
 			} else if (resolvedNavigatorModules.getUserMediaLegacy !== undefined) {
 				// Legacy. Prevent crash in that motherfu**ing IE 💩
 				resolvedNavigatorModules.getUserMediaLegacy({ audio: true },
@@ -227,7 +240,7 @@ export var audio_recorder = (function () {
 						console.log(event.data);
 						closeWs();
 						notify.error(event.data);
-					} else if (event.data && event.data === "ok" && this.status === "encoding") {
+					} else if (event.data && event.data === "ok" && that.status === "encoding") {
 						closeWs();
 						notify.info("recorder.saved");
 						notifyFollowers('saved');
@@ -270,6 +283,7 @@ export var audio_recorder = (function () {
 		},
 		title: "",
 		status: 'idle',
+		permission: 'idle',
 		save: function () {
 			sendWavChunk();
 			ws && ws.send("save-" + this.title);

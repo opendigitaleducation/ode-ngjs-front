@@ -34,7 +34,21 @@ declare var require: {
 };
 
 //------------------------------------------------ Types
-type KnownWidget = "maxicours-widget"|"cursus-widget"|"school-widget"|"record-me"|"agenda-widget"|"qwant"|"bookmark-widget"|"rss-widget"|"my-apps"|"carnet-de-bord"|"dicodelazone-widget"|"calendar-widget"|"last-infos-widget";
+export enum KnownWidget {
+    maxicours       = "maxicours-widget",
+    cursus          = "cursus-widget",
+    school          = "school-widget",
+    recordMe        = "record-me",
+    agenda          = "agenda-widget",
+    qwant           = "qwant",
+    bookmark        = "bookmark-widget",
+    rss             = "rss-widget",
+    myApps          = "my-apps",
+    carnetDeBord    = "carnet-de-bord",
+    dicoDeLaZone    = "dicodelazone-widget",
+    calendar        = "calendar-widget",
+    lastInfos       = "last-infos-widget"
+};
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
 //------------------------------------------------ Create an angular module and an external loader.
@@ -44,19 +58,19 @@ const module = angular.module("odeWidgets", [])
     return async (widgetName:KnownWidget) => {
         // Load the widget, if known.
         switch( widgetName ) {
-            case "maxicours-widget": await loadMaxicoursWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "cursus-widget": await loadCursusWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "school-widget": await loadSchoolWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "record-me": await loadRecordMeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "agenda-widget": await loadAgendaWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "qwant": await loadQwantWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "bookmark-widget": await loadBookmarkWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "rss-widget": await loadRssWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "my-apps": await loadMyAppsWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "carnet-de-bord": await loadCarnetDeBordWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "dicodelazone-widget": await loadDicoDeLaZoneWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "calendar-widget": await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
-            case "last-infos-widget": await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.maxicours: await loadMaxicoursWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.cursus: await loadCursusWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.school: await loadSchoolWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.recordMe: await loadRecordMeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.agenda: await loadAgendaWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.qwant: await loadQwantWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.bookmark: await loadBookmarkWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.rss: await loadRssWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.myApps: await loadMyAppsWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.carnetDeBord: await loadCarnetDeBordWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.dicoDeLaZone: await loadDicoDeLaZoneWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.calendar: await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.lastInfos: await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             default: throw `Unknown widget "${widgetName}"`;
         }
     };
