@@ -140,9 +140,7 @@
                 </popover-content>
             </popover>
 
-            <div class="nav-link"
-                ng-if="me.hasWorkflow('org.entcore.conversation.controllers.ConversationController|view')"
-                ng-include="ctrl.conversationUnreadUrl">
+            <div class="nav-link conversation" ng-include="ctrl.conversationUnreadUrl">
             </div>
 
             <popover class="nav-link d-none d-sm-inline-block"
