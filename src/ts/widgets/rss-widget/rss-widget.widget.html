@@ -31,7 +31,8 @@
 			<div class="feed-title" ng-click="ctrl.showOrHideFeed($index)">[[feed.title]]</div>
 			<ul class="list" ng-show="ctrl.display.selectedFeed === [[$index]]">
 				<li class="item link" ng-repeat="item in feed.Items track by $index">
-					<a href="[[item.link]]" target="_blank" rel="noopener">
+					<a href="[[item.link]]" target="_blank" rel="noopener"
+							ng-click="trackEvent($event, {detail:{'open':item.link} })">
 						<div class="title">[[item.title]]</div>
 						<div class="meta">[[ctrl.formatDate(item.pubDate)]]</div>
 						<div class="meta" ng-bind-html="item.description"></div>

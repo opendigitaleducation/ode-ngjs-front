@@ -1,5 +1,6 @@
-import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { conf, L10n, notif, http } from "../../utils"; 
+import angular, { IAttributes, IController, IDirective } from "angular";
+import { conf, L10n, notif, http, TrackedActionFromWidget } from "../../utils"; 
+import { TrackedAction, TrackedScope } from "../../utils/TrackedScope";
 
 type ResourceMetadata = {
 	_id: string;
@@ -103,7 +104,7 @@ class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<TrackedScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./agenda-widget.widget.html').default;
 	scope = {};
@@ -112,7 +113,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	controllerAs = 'ctrl';
 	require = ['odeAgendaWidget'];
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
+    link(scope:TrackedScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
         if( !ctrl ) {
             return;
@@ -121,6 +122,22 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			ctrl.setEvents( events );
 			scope.$apply();
 		});
+
+		// Give an opportunity to track some events from outside of this widget.
+		scope.trackEvent = (e:Event, p:CustomEventInit<TrackedAction>) => {
+			// Allow events to bubble up.
+			if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+			let event = null;
+			if( p && p.detail?.open==='app' ) {
+				event = new CustomEvent( TrackedActionFromWidget.agenda, p );
+			} else if( p && p.detail?.open==='event' ) {
+				event = new CustomEvent( TrackedActionFromWidget.agenda, p );
+			}
+			if( event && e.currentTarget ) {
+				e.currentTarget.dispatchEvent(event);
+			}
+		}
 	}
 }
 

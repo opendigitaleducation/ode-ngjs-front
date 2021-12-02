@@ -8,13 +8,19 @@
 
 	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message link" ng-if="ctrl.apps.length===0">
-			<a href="/welcome"><i18n>my-apps.widget.more</i18n></a>
+			<a href="/welcome"
+					ng-click="trackEvent($event, {detail:{'open':'more'} })">
+				<i18n>my-apps.widget.more</i18n>
+			</a>
 		</div>
 
 		<ul class="icon-grid" ng-if="ctrl.apps.length>0">
-			<li class="icon-grid-item"
-					ng-repeat="app in ctrl.apps">
-				<a connector-lightbox-trigger="app" ng-href="[[app.address]]" aria-label=[[app.displayName]] target="[[app.target]]" rel="noopener" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
+			<li class="icon-grid-item" ng-repeat="app in ctrl.apps">
+				<a connector-lightbox-trigger="app" ng-href="[[app.address]]"
+						ng-click="trackEvent($event, {detail:{'open':'app', 'app':app} })"
+						aria-label=[[app.displayName]] target="[[app.target]]" rel="noopener" 
+						i18n-title="[[app.displayName]]" 
+						ng-switch="app.icon.indexOf('/')">
 					<i ng-class="ctrl.getIconClass(app)" ng-switch-when="-1"></i>
 					<img skin-src="[[app.icon]]" ng-switch-default alt="[[app.displayName]]" />
 				</a>
@@ -24,7 +30,10 @@
 
 	<div class="widget-footer border-top border-ghost" ng-if="ctrl.apps.length!==0">
 		<div class="widget-footer-action">
-			<a class="link" href="/welcome"><i18n>my-apps.widget.options</i18n></a>
+			<a class="link" href="/welcome"
+					ng-click="trackEvent($event, {detail:{'open':'more'} })">
+				<i18n>my-apps.widget.options</i18n>
+			</a>
 		</div>
 	</div>	
 </div>

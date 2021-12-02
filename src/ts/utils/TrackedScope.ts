@@ -1,13 +1,14 @@
 import { IScope } from "angular";
 import { ActionType } from "ode-ts-client";
-import { KnownWidget } from "../modules/widgets.module";
 
 /**
  * User actions that components emit as javascript custom events.
- * For example: { 'open': 'news link' }
+ * For example: { 'open': 'news link' } or { 'create':'audio', 'audio':myAudioObject }
  */
 export type TrackedAction = {
     [action in ActionType]?: string;
+} & {
+    [metadata: string]: any;
 }
 
 /** 

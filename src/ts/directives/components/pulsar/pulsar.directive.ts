@@ -1,6 +1,6 @@
 import angular, { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
 import { NgHelperService, QuickstartService } from "../../../services";
-import { conf, session, http } from "../../../utils";
+import { conf, session, http, TrackedAction } from "../../../utils";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
 /* Local types */
@@ -33,6 +33,7 @@ interface Scope extends IScope {
 	goTo: (step:PulsarInfos) => void;
 	next: () => void;
 	previous: () => void;
+    trackEvent: (target:EventTarget, p:CustomEventInit<TrackedAction>)=>void;
 }
 
 type XPosition = "center"|"left"|"right";
@@ -324,13 +325,18 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 					.fadeIn("slow");
 			};
 
-			pulsarButton.on('click', () => {
+			pulsarButton.on('click', (e) => {
 				$('body').css('pointer-events', 'none');
 				$('body').on('scroll touchmove mousewheel', function(e){
 				  e.preventDefault();
 				  e.stopPropagation();
 				  return false;
-				})
+				});
+
+				// Track the '"click pulsar button" event'
+				if( scope.pulsarInfos.index <= 0 ) {
+					scope.trackEvent( elem[0], {detail:{'open':'true'}} );
+				}
 
 				scope.pulsarInfos.steps = [];
 				pulsars = $('[pulsar]');
@@ -434,22 +440,29 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 		};
 
 		scope.next = () => {
-			undraw();
+			undraw();	// hide current step
 			let index = this.quickstartSvc.nextAppStep();
-			let item = scope.pulsarInfos.steps.find(item => item.index===index);
+			let item = scope.pulsarInfos.steps.find(item => item.index===index); // look for next step
 			if( item === undefined){
+				// Next step is undefined, so look for any other one after it.
 				if( scope.pulsarInfos.steps.find(item => item.index>index) !== undefined ) {
 					scope.next();
+					return;
 				}
 			} else {
 				if(item.el){
 					if(angular.element(item.el).data('skip-pulsar')){
+						// This step is intended to be skipped => find the next one
 						scope.next();
-						return;
+					} else {
+						// Next step found and painted
+						(angular.element(item.el).scope() as Scope).paintPulsar();
 					}
-					(angular.element(item.el).scope() as Scope).paintPulsar();
+					return;
 				}
 			}
+			// That was the last step ! Track this event.
+			scope.trackEvent( elem[0], {detail:{'open':'false'}} );
 		};
 
 		scope.previous = () => {
@@ -472,6 +485,17 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 				}
 			}
 		};
+
+		// Give an opportunity to track some events from outside of this component.
+		scope.trackEvent = (target:EventTarget, p:CustomEventInit<TrackedAction>) => {
+			// Allow events to bubble up.
+			if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+			let event = new CustomEvent( "pulsar", p );
+			if( event && target ) {
+				target.dispatchEvent(event);
+			}
+		}
 
 		this.quickstartSvc.load( () => {
 			if(this.quickstartSvc.appIndex() === pulsarInfos.index){

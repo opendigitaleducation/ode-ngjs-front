@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { L10n, conf, notif, http } from "../../utils";
+import { L10n, conf, notif, http, TrackedAction, TrackedScope, TrackedActionFromWidget } from "../../utils";
 
 type Feed = {title:string, link:string, show?:number};
 type Channel = {
@@ -191,14 +191,14 @@ class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<TrackedScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./rss-widget.widget.html').default;
 	controller = [Controller];
 	controllerAs = 'ctrl';
     require = ['odeRssWidget'];
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
+    link(scope:TrackedScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
 		if( ! ctrl ) return;
 
@@ -206,6 +206,20 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		ctrl.initFeeds().then( () => {
 			scope.$apply();
 		});
+
+		// Give an opportunity to track some events from outside of this widget.
+		scope.trackEvent = (e:Event, p:CustomEventInit<TrackedAction>) => {
+			// Allow events to bubble up.
+			if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+			let event = null;
+			if( p && typeof p.detail?.open==='string' ) {
+				event = new CustomEvent( TrackedActionFromWidget.rss, p );
+			}
+			if( event && e.currentTarget ) {
+				e.currentTarget.dispatchEvent(event);
+			}
+		}
 	}
 }
 

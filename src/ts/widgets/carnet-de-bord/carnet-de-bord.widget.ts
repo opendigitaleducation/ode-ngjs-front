@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { L10n, conf, notif, session, http } from "../../utils";
+import { L10n, conf, notif, session, http, TrackedAction, TrackedActionFromWidget } from "../../utils";
 import { ILastInfosModel, IUserDescription, IUserInfo } from "ode-ts-client";
 import { ThemeHelperService } from "../../services";
 
@@ -111,10 +111,29 @@ class Controller implements IController {
 		}
 	}
 
-	openLightBox(contentType:any){
+	openLightBox(contentType:any, e:Event){
 		this.currentContentType = contentType;
 		this.showLightbox = true;
+
+        // Track this event.
+        if( e.currentTarget ) {
+            this.trackEvent(e, { detail:{'properties':'any'} });
+        }
 	}
+
+    // Give an opportunity to track some events from outside of this component.
+    protected trackEvent(e:Event, p:CustomEventInit<TrackedAction>) {
+        // Allow events to bubble up.
+        if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+        let event = null;
+        if( p && (typeof p.detail?.open==='string'||typeof p.detail?.properties==='string') ) {
+            event = new CustomEvent( TrackedActionFromWidget.carnetDeBord, p );
+        }
+        if( event && e.currentTarget ) {
+            e.currentTarget.dispatchEvent(event);
+        }
+    }
 
 	private getContent( contentType:ContentType, eleve:any ) {
 		const lang = conf().Platform.idiom;

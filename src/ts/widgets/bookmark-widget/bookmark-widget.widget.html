@@ -20,7 +20,10 @@
 		<ul class="bookmark-list" ng-if="!ctrl.bookmarks.isEmpty()">
 			<li class="bookmark-item"
 					ng-repeat="bookmark in ctrl.bookmarks | orderBy:'name'">
-				<a class="link" href="[[bookmark.url]]" target="_blank">[[bookmark.name]]</a>
+				<a class="link" href="[[bookmark.url]]" target="_blank"
+						ng-click="trackEvent($event, {detail:{'open':bookmark.url} })">
+					[[bookmark.name]]
+				</a>
 			</li>
 		</ul>
 	</div>

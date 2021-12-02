@@ -1,6 +1,7 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { conf, notif, http } from "../../utils";
+import { conf, notif, http, TrackedAction, TrackedScope, TrackedActionFromWidget } from "../../utils";
 import { notify } from "../../services";
+
 
 // UTILS
 function isEmpty(str:string) {
@@ -184,14 +185,14 @@ class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<TrackedScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./bookmark-widget.widget.html').default;
 	controller = [Controller];
 	controllerAs = 'ctrl';
 	require = ['odeBookmarkWidget'];
 
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
+    link(scope:TrackedScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
 		if( ! ctrl ) return;
 
@@ -203,6 +204,19 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 			scope.$apply();
 		};
 
+		// Give an opportunity to track some events from outside of this widget.
+		scope.trackEvent = (e:Event, p:CustomEventInit<TrackedAction>) => {
+			// Allow events to bubble up.
+			if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+			let event = null;
+			if( p && typeof p.detail?.open==='string' ) {
+				event = new CustomEvent( TrackedActionFromWidget.bookmark, p );
+			}
+			if( event && e.currentTarget ) {
+				e.currentTarget.dispatchEvent(event);
+			}
+		}
 	}
 }
 

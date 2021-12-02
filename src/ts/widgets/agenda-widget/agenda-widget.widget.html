@@ -2,7 +2,9 @@
 <div class="widget-calendar">
 	<div class="widget-header">
 		<div class="subtitle">
-			<a class="seemore" href="/calendar" i18n-title="agenda-widget.widget.see.all"><i18n>agenda-widget.widget.title</i18n>
+			<a class="seemore" href="/calendar" i18n-title="agenda-widget.widget.see.all"
+					ng-click="trackEvent($event, { detail:{'open':'app'} })">
+				<i18n>agenda-widget.widget.title</i18n>
 				<span class="seemore-text"><i18n>agenda-widget.widget.see.more</i18n></span>
 			</a>
 		</div>
@@ -29,7 +31,7 @@
 							ng-repeat="event in ctrl.userEvents | filter:{displayedGroup: group}">
 						<span class="icon"><i class="fas fa-calendar-alt"></i></span>
 						<span class="hour" ng-if="!event.allday">[[event.displayedDate]]</span>
-						<span class="link"><a href="/calendar">[[event.title]]</a></span>
+						<span class="link"><a href="/calendar"ng-click="trackEvent($event, { detail:{'open':'event'} })">[[event.title]]</a></span>
 					</li>
 				</ul>
 			</li>

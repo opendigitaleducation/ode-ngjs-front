@@ -1,6 +1,6 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { IIdiom, ITheme, IWebApp } from "ode-ts-client";
-import { conf, session, http } from "../../../utils";
+import { conf, session, http, TrackedAction, TrackedScope, TrackedActionFromWidget } from "../../../utils";
 import { SessionService, NgHelperService, ThemeHelperService } from "../../../services";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
 
@@ -35,10 +35,13 @@ export class Controller implements IController {
 		}
 	}
 
-	launchSearch(event:any) {
+	launchSearch(event:Event, from:string) {
 		let words = this.mysearch;
-		if (event != "link") event.stopPropagation();
-		if ((event == "link" ||  event.keyCode == 13)) {
+		if (from === "key") event.stopPropagation();
+		if (from === "button" ||  (event as KeyboardEvent).keyCode == 13) {
+			// Track this search
+			this.trackEvent( event, {detail:{'open':'searchengine', 'from':'search'}} );
+			// Then search
 			words = (!words || words === '') ? ' ' : words;
 			this.mysearch = "";
 			window.location.href = '/searchengine#/' + words;
@@ -48,6 +51,17 @@ export class Controller implements IController {
 	getIconClass(app:IWebApp) {
 		const appCode = this.themeSvc.getIconCode(app);
 		return `ic-app-${appCode} color-app-${appCode}`;
+	}
+
+    // Give an opportunity to track some events from outside of this component.
+    protected trackEvent(e:Event, p:CustomEventInit<TrackedAction>) {
+        // Allow events to bubble up.
+        if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+		let event = new CustomEvent( "ode-navbar", p );
+        if( event && e.currentTarget ) {
+            e.currentTarget.dispatchEvent(event);
+        }
 	}
 }
 
@@ -70,7 +84,7 @@ interface Scope extends IScope {
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 //	replace = true; // requires a template with a single root HTML element to work.
 	template = require('./navbar.directive.html').default;

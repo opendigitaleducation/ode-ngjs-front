@@ -27,7 +27,7 @@
 		<ul class="dashboard-list" ng-if="!ctrl.errorMsg">
 			<li class="item link-discret"
 					ng-repeat="contentType in ctrl.contentTypes"
-					ng-click="ctrl.openLightBox(contentType)">
+					ng-click="ctrl.openLightBox(contentType, $event)">
 				<a href="#" class="item-inner">
 					<div class="left">
 						<div class="icon">
@@ -63,7 +63,8 @@
                     </p>
 
                     <p ng-if="!item.subsections && item.pageUrl">
-                        <a target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
+                        <a target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]"
+                                ng-click="ctrl.trackEvent($event, {detail:{'open':'any'} })">
                             <span>•</span>[[ item.value ]]
                             <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                         </a>
@@ -75,7 +76,8 @@
                         [[ item.value ]]
                     </h4>
                     <h4 ng-if="item.subsections && item.pageUrl">
-                        <a target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]">
+                        <a target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ item.pageUrl ]]"
+                                ng-click="ctrl.trackEvent($event, {detail:{'open':'any'} })">
                             [[ item.value ]]
                             <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                         </a>
@@ -86,7 +88,8 @@
 
                             <b ng-if="!subsection.pageUrl">[[ subsection.header ]]</b>
 
-                            <a ng-if="subsection.pageUrl" target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ subsection.pageUrl ]]">
+                            <a ng-if="subsection.pageUrl" target="_blank" rel="noopener" href="[[ctrl.structureAddress]]/[[ctrl.userStatus()]].html?page=[[ subsection.pageUrl ]]"
+                                    ng-click="ctrl.trackEvent($event, {detail:{'open':'any'} })">
                                 <b>[[ subsection.header ]]
                                     <i class="new-tab right-magnet" i18n-title="carnet-de-bord.widget.target.tooltip"></i>
                                 </b>

@@ -94,29 +94,32 @@
 <!-- Theme 2D -->
 <header class="no-1d navbar sticky-top bg-secondary" ng-if="ctrl.is2D">
     <div class="container">
-        <a class="navbar-brand" href="/timeline/timeline?token=[[ctrl.version]]">
+        <a class="navbar-brand" href="/timeline/timeline?token=[[ctrl.version]]"
+                ng-click="ctrl.trackEvent($event, {detail:{'open':'timeline', 'from':'logo'} })">
             <img class="logo" skin-src="img/illustrations/logo.png" alt="Logo de l'ENT">
         </a>
 
         <nav class="navbar-nav">
-            <a href="/timeline/timeline" class="nav-link" i18n-title="navbar.home">
+            <a href="/timeline/timeline" class="nav-link" i18n-title="navbar.home"
+                    ng-click="ctrl.trackEvent($event, {detail:{'open':'timeline', 'from':'menu'} })">
                 <i class="ic-home" aria-hidden="true"></i>
                 <span class="sr-only"><i18n>navbar.home</i18n></span>
             </a>
 
             <a href="/community" data-community class="nav-link d-none d-sm-block" i18n-title="navbar.community"
-                ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
+                    ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')"
+                    ng-click="ctrl.trackEvent($event, {detail:{'open':'community'} })">
                 <i class="ic-community" aria-hidden="true"></i>
                 <span class="sr-only"><i18n>navbar.community</i18n></span>
             </a>
 
             <popover
                 pulsar="{index:3, style:{zIndex:1021}, i18n:'portal.pulsar.apps', position:'bottom center'}">
-                <a
-                    href="/welcome"
-                    class="nav-link pe-mobile"
-                    i18n-title="navbar.applications"
-                    popover-opener>
+                <a href="/welcome"
+                        class="nav-link pe-mobile"
+                        i18n-title="navbar.applications"
+                        popover-opener
+                        ng-click="ctrl.trackEvent($event, {detail:{'open':'welcome', 'from':'menu'} })">
                     <i class="ic-apps" aria-hidden="true"></i>
                     <span class="sr-only"><i18n>navbar.applications</i18n></span>
                 </a>
@@ -129,7 +132,8 @@
                             </div>
                             <div class="bookmarked-app" ng-repeat="app in ctrl.apps track by $index">
                                 <a connector-lightbox-trigger="app" aria-label=[[app.displayName]] href="[[app.address]]" target="[[app.target]]"
-                                    i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')">
+                                        i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')"
+                                        ng-click="ctrl.trackEvent($event, {detail:{'open':'app', 'app':app} })">
                                     <i class="fs-1" ng-class="ctrl.getIconClass(app)" ng-switch-when="-1"></i>
                                     <img skin-src="[[app.icon]]" ng-switch-default alt=[[app.displayName]] />
                                 </a>
@@ -137,23 +141,28 @@
                         </div>
                         <div class="widget-footer border-top border-ghost">
                             <div class="widget-footer-action">
-                                <a class="link" href="/welcome"><i18n>plus</i18n></a>
+                                <a class="link" href="/welcome" 
+                                    ng-click="ctrl.trackEvent($event, {detail:{'open':'welcome', 'from':'more'} })">
+                                <i18n>plus</i18n>
+                            </a>
                             </div>
                         </div>
                     </div>
                 </popover-content>
             </popover>
 
-            <div class="nav-link conversation" ng-include="ctrl.conversationUnreadUrl">
+            <div class="nav-link conversation"
+                    ng-include="ctrl.conversationUnreadUrl"
+                    ng-click="ctrl.trackEvent($event, {detail:{'open':'conversation'} })">
             </div>
 
             <popover class="nav-link d-none d-sm-inline-block"
                 ng-if="me.hasWorkflow('fr.openent.searchengine.controllers.SearchEngineController|view')">
-                <a
-                    href="/searchengine"
-                    i18n-title="navbar.search"
-                    popover-opener
-                    class="pe-mobile">
+                <a href="/searchengine"
+                        i18n-title="navbar.search"
+                        popover-opener
+                        class="pe-mobile"
+                        ng-click="ctrl.trackEvent($event, {detail:{'open':'searchengine', 'from':'menu'} })">
                     <i class="ic-search" aria-hidden="true"></i>
                     <span class="sr-only"><i18n>navbar.search</i18n></span>
                 </a>
@@ -162,8 +171,8 @@
                         <div class="search-text row">
                             <label class="sr-only" for="searchInput">mysearch</label>
                             <input type="text" id="searchInput" class="searchInput" id="searchInput" name="mysearch" ng-model="ctrl.mysearch"
-                                ng-keyup="ctrl.launchSearch($event);" />
-                            <button class="searchButton" ng-click="ctrl.launchSearch('link');">
+                                ng-keyup="ctrl.launchSearch($event, 'key');" />
+                            <button class="searchButton" ng-click="ctrl.launchSearch($event, 'button');">
                                 <i18n>ok</i18n>
                             </button>
                         </div>
@@ -172,13 +181,15 @@
             </popover>
 
             <a href="#" i18n-title="navbar.help" class="nav-link"
-                pulsar="{ index:5, style:{zIndex:1021}, i18n:'portal.pulsar.help', position:'bottom center'}"
-                ng-if="ctrl.currentLanguage == 'fr'">
+                    pulsar="{ index:5, style:{zIndex:1021}, i18n:'portal.pulsar.help', position:'bottom center'}"
+                    ng-if="ctrl.currentLanguage == 'fr'"
+                    ng-click="ctrl.trackEvent($event, {detail:{'open':'help'} })">
                 <help></help><!-- i18n>help.icon</i18n -->
             </a>
 
             <a href="/userbook/mon-compte" i18n-title="navbar.myaccount" class="nav-link d-none d-sm-block"
-                pulsar="{ index:4, style:{zIndex:1021}, i18n:'portal.pulsar.account', position:'bottom center'}">
+                    pulsar="{ index:4, style:{zIndex:1021}, i18n:'portal.pulsar.account', position:'bottom center'}"
+                    ng-click="ctrl.trackEvent($event, {detail:{'open':'myaccount'} })">
                 <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]"
                     width="30" height="30" alt="[[ctrl.username]]" />
                 <span class="sr-only"><i18n>navbar.myaccount</i18n></span>
@@ -199,13 +210,15 @@
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="/userbook/mon-compte" i18n-title="navbar.myaccount">
+                    <a class="dropdown-item" href="/userbook/mon-compte" i18n-title="navbar.myaccount"
+                            ng-click="ctrl.trackEvent($event, {detail:{'open':'myaccount'} })">
                         <img class="avatar" data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" width="20" height="20" alt="[[ctrl.username]]" />
                         &nbsp;<i18n>navbar.myaccount</i18n>
                     </a>
                   </li>
                   <li data-community ng-if="me.hasWorkflow('net.atos.entng.community.controllers.CommunityController|view')">
-                    <a class="dropdown-item" href="/community" i18n-title="navbar.community">
+                    <a class="dropdown-item" href="/community" i18n-title="navbar.community"
+                            ng-click="ctrl.trackEvent($event, {detail:{'open':'community'} })">
                         <i class="ic-community" aria-hidden="true"></i>
                         &nbsp;<i18n>navbar.community</i18n>
                     </a>

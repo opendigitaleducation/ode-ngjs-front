@@ -1,6 +1,8 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { IWidget, WidgetFrameworkFactory, WidgetPosition } from "ode-ts-client";
 import { NgHelperService, WidgetService } from "../../services";
+import { TrackedAction, TrackedScope, TrackedActionFromWidget } from "../../utils";
+
 
 /* Controller for the directive */
 export class Controller implements IController {
@@ -53,7 +55,7 @@ export class Controller implements IController {
 
 	onDnDDrop(event:DragEvent, itemId:string, index:number, dropEffect:string) {
 		if( this.dndWidgets && 0<=index && index<=this.dndWidgets.length ) {
-			const oldIdx = this.dndWidgets.findIndex( (w) => {
+			const oldIdx = this.dndWidgets.findIndex( w => {
 				return w.platformConf.id===itemId
 			});
 			if( oldIdx===-1 || oldIdx === index ) {
@@ -69,12 +71,26 @@ export class Controller implements IController {
 			}
 			this.dndWidgets.splice( index, 0, item );
 
+			// DnD tracking : indexes are 1-based
+			this.trackEvent(event, {detail:{'move':item.platformConf.name, 'from':oldIdx+1, 'to':index+1} });
+
 			this.updateAndSave();
 
 			// return true when the function takes care of inserting the element, see doc https://github.com/marceljuenemann/angular-drag-and-drop-lists
 			return true;
 		}
 		return false;
+	}
+
+    // Give an opportunity to track some events from outside of this component.
+    protected trackEvent(e:Event, p:CustomEventInit<TrackedAction>) {
+        // Allow events to bubble up.
+        if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+		let event = new CustomEvent( "ode-widget-container", p );
+        if( event && e.currentTarget ) {
+            e.currentTarget.dispatchEvent(event);
+        }
 	}
 }
 

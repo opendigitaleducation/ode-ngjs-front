@@ -1,10 +1,26 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
-import { conf, notif } from "../../utils";
+import { conf, notif, TrackedAction, TrackedScope, TrackedActionFromWidget } from "../../utils";
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<TrackedScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./qwant-widget.widget.html').default;
+
+	link(scope:TrackedScope) {
+		// Give an opportunity to track some events from outside of this widget.
+		scope.trackEvent = (e:Event, p:CustomEventInit<TrackedAction>) => {
+			// Allow events to bubble up.
+			if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+			let event = null;
+			if( p && (p.detail?.open==='qwant' || typeof p.detail?.search==='string') ) {
+				event = new CustomEvent( TrackedActionFromWidget.qwant, p );
+			}
+			if( event && e.currentTarget ) {
+				e.currentTarget.dispatchEvent(event);
+			}
+		}
+	}
 }
 
 /** The qwant widget. */

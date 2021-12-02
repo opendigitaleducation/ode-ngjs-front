@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { NgHelperService } from "../../..";
+import { NgHelperService, TrackedAction } from "../../..";
 import { audio_recorder } from "../../../utils/audio-recorder";
 
 interface IAnyRecorder {
@@ -70,6 +70,26 @@ export class Controller implements IController {
             this.recorder?.suspend();
         } else {
             this.recorder?.record();
+            
+            // Track this event.
+            const btn = document.getElementById("btnAudioRecorder");
+            if( btn ) {
+                this.trackEvent(btn, { detail:{'open':'audio'} });
+            }
+        }
+    }
+
+    // Give an opportunity to track some events from outside of this component.
+    private trackEvent(e:HTMLElement, p:CustomEventInit<TrackedAction>) {
+        // Allow events to bubble up.
+        if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+        let event = null;
+        if( p && p.detail?.open==='audio' ) {
+            event = new CustomEvent( 'ode-recorder', p );
+        }
+        if( event && e ) {
+            e.dispatchEvent(event);
         }
     }
 

@@ -3,7 +3,8 @@
 		<div class="widget-school-header" ng-style="ctrl.getWidgetStyle()">
 			<div class="d-flex align-items-center">
 				<div class="me-4">
-					<a href="/userbook/mon-compte" class="avatar-link" i18n-title="navbar.myaccount">
+					<a href="/userbook/mon-compte" class="avatar-link" i18n-title="navbar.myaccount"
+							ng-click="trackEvent($event, {detail:{'open':'profile'} })">
 						<img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" alt="{{ctrl.description.displayName}}" />
 					</a>
 				</div>
@@ -32,25 +33,31 @@
 			<!-- Students -->
 			<a href="/userbook/annuaire#/myClass" class="btn btn-third rounded-pill"
 				ng-if="ctrl.isStudent"
+				ng-click="trackEvent($event, {detail:{'open':'student.class'} })"
 				translate content="school-widget.widget.my.classroom"></a>
 			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-outline-third rounded-pill" 
 				ng-if="ctrl.isStudent"
+				ng-click="trackEvent($event, {detail:{'open':'student.teachers'} })"
 				translate content="school-widget.widget.my.team"></a>
 
 			<!-- Teachers -->
 			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-third rounded-pill"
 				ng-if="ctrl.isTeacher"
+				ng-click="trackEvent($event, {detail:{'open':'teacher.students'} })"
 				translate content="school-widget.widget.my.classrooms"></a>
 			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-outline-third rounded-pill"
 				ng-if="ctrl.isTeacher"
+				ng-click="trackEvent($event, {detail:{'open':'teacher.teachers'} })"
 				translate content="school-widget.widget.school.team"></a>
 
 			<!-- Relatives -->
 			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-third rounded-pill"
 				ng-if="ctrl.isRelative"
+				ng-click="trackEvent($event, {detail:{'open':'relative.teachers'} })"
 				translate content="school-widget.widget.school.team"></a>
 			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-outline-third rounded-pill"
 				ng-if="ctrl.isRelative"
+				ng-click="trackEvent($event, {detail:{'open':'relative.direction'} })"
 				translate content="school-widget.widget.school.managers"></a>
 		</div>
 	</div>

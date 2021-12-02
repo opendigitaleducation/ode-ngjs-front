@@ -15,15 +15,22 @@
 		<div class="widget-empty-message">
 			<div class="row row-cols-1 align-items-center">
 				<div class="mb-3">
-					<a href="https://www.qwant.com" target="_blank" rel="noopener"><img src="/assets/widgets/qwant/logo-qwant.svg" width="77" height="75" alt="Qwant"></a>
+					<a href="https://www.qwant.com" target="_blank" rel="noopener"
+							ng-click="trackEvent($event, {detail:{'open':'qwant'} })">
+						<img src="/assets/widgets/qwant/logo-qwant.svg" width="77" height="75" alt="Qwant">
+					</a>
 				</div>
 			</div>
 			<form method="GET" target="_blank" action="https://www.qwant.com" autocomplete="off">
 				<div class="row row-cols-1 align-items-center">
 					<label class="sr-only" for="inputQwantQ" translate content="search"></label>
 					<div class="input-group mb-2">
-						<input type="text" id="inputQwantQ" class="form-control" name="q" maxlength="255" i18n-placeholder="search" value="" /> <input type="hidden" name="l" value="fr" />
-						<button class="btn btn-outline-secondary" aria-labelledby="inputQwantQ"><i class="ic-search"></i></button>
+						<input type="text" id="inputQwantQ" class="form-control" name="q" maxlength="255" i18n-placeholder="search" />
+						<input type="hidden" name="l" value="fr" />
+						<button class="btn btn-outline-secondary" aria-labelledby="inputQwantQ"
+								ng-click="trackEvent($event, {detail:{'search':'launch'} })">
+							<i class="ic-search"></i>
+						</button>
 					</div>
 				</div>
 			</form>

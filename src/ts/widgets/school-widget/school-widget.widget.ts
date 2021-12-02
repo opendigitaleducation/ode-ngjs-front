@@ -1,6 +1,6 @@
-import angular, { IAttributes, IController, IDirective, IScope } from "angular";
+import angular, { IAttributes, IController, IDirective } from "angular";
 import { IUserDescription, IUserInfo, School } from "ode-ts-client";
-import { conf, notif, session } from "../../utils";
+import { conf, notif, session, TrackedScope, TrackedAction, TrackedActionFromWidget } from "../../utils";
 import { ThemeHelperService } from "../../services";
 
 /* Controller for the directive */
@@ -102,19 +102,38 @@ class Controller implements IController {
 }
 
 /* Directive */
-class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
+class Directive implements IDirective<TrackedScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./school-widget.widget.html').default;
 	controller = ["odeThemeHelperService", Controller];
 	controllerAs = 'ctrl';
 	require = ['odeSchoolWidget'];
 
-    async link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]) {
+    async link(scope:TrackedScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]) {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
 		if( ! ctrl ) return;
 
 		await ctrl.initialize();
 		scope.$apply();
+
+		// Give an opportunity to track some events from outside of this widget.
+		scope.trackEvent = (e:Event, p:CustomEventInit<TrackedAction>) => {
+			// Allow events to bubble up.
+			if(typeof p.bubbles === "undefined") p.bubbles = true;
+
+			let event = null;
+			if( p?.detail?.open &&
+					['student.class'		,'student.teachers'
+					,'teacher.students'		,'teacher.teachers'
+					,'relative.teachers'	,'relative.direction'
+					,'profile'
+					].indexOf(p.detail.open)!==-1 ) {
+				event = new CustomEvent( TrackedActionFromWidget.school, p );
+			}
+			if( event && e.currentTarget ) {
+				e.currentTarget.dispatchEvent(event);
+			}
+		}
 	}
 }
 
