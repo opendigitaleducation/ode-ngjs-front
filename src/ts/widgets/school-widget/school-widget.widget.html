@@ -20,8 +20,8 @@
 						<div class="school-choice dropdown-menu" aria-labelledby="ddSchoolWidgetSchool">
 							<div tabindex="0" role="button" class="dropdown-item"
 								 ng-repeat="school in ctrl.description.schools"
-							 	 ng-click="ctrl.setSelectedSchool($index)"
-								 ng-keydown="ctrl.setSelectedSchool($index, $event)">
+							 	 ng-click="ctrl.onSchoolSelected($index)"
+								 ng-keydown="ctrl.onSchoolSelected($index, $event)">
 								{{school.name}}
 							</div>
 						</div>

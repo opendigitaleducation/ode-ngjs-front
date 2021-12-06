@@ -12,7 +12,9 @@ export class Controller implements IController {
 		) {
     }
     position?: WidgetPosition;
+	/** Ordered list of widgets, which the user can reorder by DnD. */
 	dndWidgets?: IWidget[];
+	/** Ordered list of widgets, which the user can NOT reorder by DnD. */
 	lockedWidgets?: IWidget[];
 
 	/** Prepare the list of widgets targeting this container. */

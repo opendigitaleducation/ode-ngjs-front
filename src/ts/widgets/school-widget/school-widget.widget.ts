@@ -1,5 +1,5 @@
 import angular, { IAttributes, IController, IDirective } from "angular";
-import { IUserDescription, IUserInfo, School } from "ode-ts-client";
+import { IUserDescription, IUserInfo, School, WidgetFrameworkFactory, WidgetUserPref, WIDGET_NAME } from "ode-ts-client";
 import { conf, notif, session, TrackedScope, TrackedAction, TrackedActionFromWidget } from "../../utils";
 import { ThemeHelperService } from "../../services";
 
@@ -8,38 +8,61 @@ class Controller implements IController {
 	constructor( 
 		private themeHelperSvc:ThemeHelperService
 	) {}
+
 	private get me():IUserInfo {
 		return session().user;
 	}
-	private get description():IUserDescription {
+	protected get description():IUserDescription {
 		return session().description;
 	}
-	public get avatar():string {
+	protected get avatar():string {
 		return session().avatarUrl;
 	}
 
+	private _userPref?:WidgetUserPref;
+
 	public async initialize() {
+		this._userPref = WidgetFrameworkFactory.instance().list.find( w => w.platformConf.name===WIDGET_NAME.SCHOOL)?.userPref;
 		this.themePath = await this.themeHelperSvc.getBootstrapThemePath();
 		await notif().onSessionReady().promise;
-		this.setSelectedSchool( 0 );
+
+		// #WB-22, memorize the latest school choice
+		let defaultIndex = 0;
+		if( this._userPref?.schoolId && angular.isArray(this.description.schools) ) {
+			defaultIndex = this.description.schools.findIndex( school => school.id===this._userPref?.schoolId );
+			if( defaultIndex < 0 ) {
+				defaultIndex = 0;
+			}
+		}
+		this.setSelectedSchool( defaultIndex );
 	}
 
 	private selectedSchool?:School;
-	public themePath?:string;
+	private themePath?:string;
 
-	public getWidgetStyle() {
+	protected getWidgetStyle() {
 		return {
 			'background-image': "url("+ this.themePath +"/images/widget-3.png)"
 		};
 	}
 
-	public setSelectedSchool( idx:number, ev?:JQuery.Event ) {
-		if( 0 <= idx && idx < this.description.schools.length ) {
-			// If an event is given, and related to pressing the enter or spacebar key.
-			if( !ev || (ev.type==='keydown' && (ev.which===13 || ev.which===32)) ) {	
-				this.selectedSchool = this.description.schools[idx];
-				return true;
+	protected onSchoolSelected( idx:number, ev?:JQuery.Event ) {
+		// If an event is given, and related to pressing the enter or spacebar key.
+		if( !ev || (ev.type==='keydown' && (ev.which===13 || ev.which===32)) ) {	
+			if( this._userPref && this.setSelectedSchool(idx) ) {
+				// Selected school changed => #WB-22, memorize the latest school choice
+				this._userPref.schoolId = this.selectedSchool?.id;
+				WidgetFrameworkFactory.instance().saveUserPrefs();
 			}
+			return true;
+		}
+		return false;
+	}
+
+	private setSelectedSchool( idx:number ):boolean {
+		if( 0 <= idx && idx < this.description.schools.length && this.selectedSchool !== this.description.schools[idx]) {
+			this.selectedSchool = this.description.schools[idx];
+			return true;
 		}
 		return false;
 	}
@@ -48,7 +71,7 @@ class Controller implements IController {
 		return "/userbook/annuaire#/search";
 	}
 	
-	public getUrlTeachersOfMyClass() {
+	protected getUrlTeachersOfMyClass() {
 		let url = this.getDefaultUrl();
 		if( this.me.classes && this.me.classes.length>0 ) {
 			url += "?filters=groups&profile=Teacher";
@@ -58,7 +81,7 @@ class Controller implements IController {
 		}
 		return url;
 	}
-	public getUrlStudentsOfMyClasses() {
+	protected getUrlStudentsOfMyClasses() {
 		let url = this.getDefaultUrl() + "?filters=groups&profile=Student";
 		if( this.selectedSchool ) {
 			url += "&structure="+this.selectedSchool.id;
@@ -68,35 +91,35 @@ class Controller implements IController {
 		}
 		return url;
 	}
-	public getUrlSchoolTeachers() {
+	protected getUrlSchoolTeachers() {
 		if( this.selectedSchool )
 			return "/userbook/annuaire#/search?filters=groups&structure="+this.selectedSchool.id+"&profile=Teacher";
 		return this.getDefaultUrl();
 	}
-	public getUrlTeachersOfMyChildren() {
+	protected getUrlTeachersOfMyChildren() {
 		let url = this.getDefaultUrl() + "?filters=groups&profile=Teacher";
 		for( let clazz of this.me.classes ) {
 			url += "&class="+clazz;
 		}
 		return url;
 	}
-	public getUrlSchoolPersonnels() {
+	protected getUrlSchoolPersonnels() {
 		if( this.selectedSchool )
 			return "/userbook/annuaire#/search?filters=users&structure="+this.selectedSchool.id+"&profile=Personnel";
 		return this.getDefaultUrl();
 	}
 
-	get hasManySchools() {
+	protected get hasManySchools() {
 		return this.description.schools.length > 1;
 	}
 
-	get isStudent():boolean {
+	protected get isStudent():boolean {
 		return this.me.type==="ELEVE";
 	}
-	get isTeacher():boolean {
+	protected get isTeacher():boolean {
 		return this.me.type==="ENSEIGNANT";
 	}
-	get isRelative():boolean {
+	protected get isRelative():boolean {
 		return this.me.type==="PERSRELELEVE";
 	}
 }
