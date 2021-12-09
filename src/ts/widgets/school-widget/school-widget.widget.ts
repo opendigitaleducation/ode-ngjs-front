@@ -108,6 +108,18 @@ class Controller implements IController {
 			return "/userbook/annuaire#/search?filters=users&structure="+this.selectedSchool.id+"&profile=Personnel";
 		return this.getDefaultUrl();
 	}
+	protected getUrlSchoolPersonnelsAndTeachers() {
+		if( this.selectedSchool )
+			return "/userbook/annuaire#/search?filters=users&structure="+this.selectedSchool.id+"&profile=Personnel&profile=Teacher";
+		return this.getDefaultUrl();
+	}
+	protected getUrlStudents() { 
+		let url = this.getDefaultUrl() + "?filters=groups&profile=Student";
+		if( this.selectedSchool ) {
+			url += "&structure="+this.selectedSchool.id;
+		}
+		return url;
+	}
 
 	protected get hasManySchools() {
 		return this.description.schools.length > 1;
@@ -121,6 +133,9 @@ class Controller implements IController {
 	}
 	protected get isRelative():boolean {
 		return this.me.type==="PERSRELELEVE";
+	}
+	protected get isPersonnel():boolean {
+		return this.me.type==="PERSEDUCNAT";
 	}
 }
 
