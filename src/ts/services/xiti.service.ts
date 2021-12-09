@@ -4,25 +4,71 @@ import { conf, http } from "../utils";
 // 2021 implementation of XiTi
 declare var ATInternet: any;
 
+/** Model : XiIi mapping for CAS connectors. */
+type CasMapping = {
+    xitiService: string,
+    xitiOutil: string
+}
+
 /** The xiti loader service. */
 export class XitiService {
 
-    /** Apply XiTi tracking. */
+    /** Apply XiTi tracking (navigation). */
     public runScript() {
-        conf().Platform.analytics.xiti()
-        .then( conf => {
+        return Promise.all( [
+            conf().Platform.analytics.xiti(),
+            this.loadScript()
+        ]).then( tuple => {
+            const conf = tuple[0];
             if(!conf) return;
             console.debug("XiTi conf="+JSON.stringify(conf));
-            (async () => await this.loadScript(conf))();
+            return this.run( conf );
+        }).catch( () => {
+            // Something went wrong. Continue processing the rest of the page silently.
         });
     }
 
-    private async loadScript( xitiConf:IXitiTrackingParams, locationPath:string=window.location.pathname ) {
-        // 2021 implementation of XiTi
-        const scriptPath = '/xiti/public/js/lib/smarttag_ENT.js';
-        const response = await http().get<string>(scriptPath, {headers:{'Accept':'application/javascript'}});
-        if (http().latestResponse.status != 200) return;
-        eval(response);
+    /** Apply XiTi tracking (click). */
+    public trackClick(name: string, element: Element) {
+        return Promise.all( [
+            conf().Platform.analytics.xiti(),
+            this.loadScript(),
+            this.loadCasMapping(name)
+        ]).then( tuple => {
+            const conf = tuple[0];
+            if(!conf) return;
+            console.debug("XiTi conf="+JSON.stringify(conf));
+            return this.click( conf, tuple[2], name, element );
+        }).catch( () => {
+            // Something went wrong. Continue processing the rest of the page silently.
+        });
+    }
+
+    /** Load XiTi implementation, if needed. */
+    private async loadScript() {
+        if (!ATInternet) {
+            const scriptPath = '/xiti/public/js/lib/smarttag_ENT.js';
+            const response = await http().get<string>(scriptPath, {headers:{'Accept':'application/javascript'}});
+            if (http().latestResponse.status != 200) throw 'Error while loading XiTi script';
+            eval(response);
+        }
+    }
+
+    /** Load XiTi CAS mapping for @param name. */
+    private async loadCasMapping( name:string ) {
+        const scriptPath = `/xiti/cas-infos/${name}`;
+        const casMapping = await http().get<CasMapping>(scriptPath);
+        if (http().latestResponse.status != 200) throw 'Error while loading XiTi CAS mapping';
+        if (!casMapping.xitiService || !casMapping.xitiOutil) throw 'Malformed XiTi CAS mapping';
+        return casMapping;
+    }
+
+    /** 
+     * 2021 implementation of XiTi.
+     * @requires loadScript() must be called and its Promise resolved beforehand.
+     */
+    private async run( xitiConf:IXitiTrackingParams, locationPath:string=window.location.pathname ) {
+        if (!ATInternet) return;
 
 		// SERVICE
         let SERVICE = xitiConf.LIBELLE_SERVICE.default || null;
@@ -106,4 +152,47 @@ export class XitiService {
         //     jQuery.getScript(scriptPath, function(){ console.log("xiti ready"); });
         // }
     }
+
+    /** 
+     * Track clicks on connector.
+     * @requires loadScript() must be called and its Promise resolved beforehand.
+     */
+    private click(xitiConf:IXitiTrackingParams, casMapping:CasMapping, name: string, element: Element) {
+        if (!ATInternet) return;
+
+        console.debug("xiti click !!!");
+    
+        //SERVICE
+        const SERVICE = casMapping.xitiService;
+    
+        //OUTIL
+        const OUTIL = casMapping.xitiOutil;
+    
+        const props = {
+            "SERVICE": SERVICE,
+            "TYPE": "TIERS",
+            "OUTIL": OUTIL,
+        }
+    
+        // NAME
+        const NAME = name;
+    
+        // TYPE
+        const TYPE = "navigation";
+    
+        // UAI
+        const UAI = xitiConf.STRUCT_UAI;
+    
+        let ATTag = new ATInternet.Tracker.Tag({site: xitiConf.STRUCT_ID});
+    
+        ATTag.setProp(props, false); 
+    
+        ATTag.click.send({
+            elem: element,
+            name: NAME,
+            type: TYPE,
+            level2: UAI,
+        }); 
+    }
+    
 }

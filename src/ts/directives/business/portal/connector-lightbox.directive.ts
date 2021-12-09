@@ -1,9 +1,11 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { APP, IWebApp, RxJS } from "ode-ts-client";
+import { XitiService } from "../../..";
 import { conf } from "../../../utils";
 
 type AppEvent = {
     app:IWebApp,
+    element:Element,
     $mutex?:boolean,
     ctrlKey:boolean,   // Was CTRL key pressed ?
     metaKey: boolean   // Was Command key pressed? (Apple keyboard)
@@ -28,6 +30,7 @@ class TriggerDirective implements IDirective<ITriggerScope,JQLite,IAttributes> {
         elem.on('click', (event: JQuery.ClickEvent) => {
             const appEvent = {
                 app: scope.connectorLightboxTrigger,
+                element: elem[0],
                 $mutex: false,
                 ctrlKey: !!event.ctrlKey,
                 metaKey: !!event.metaKey
@@ -83,13 +86,13 @@ export class Controller {
             conf().User.preferences
               .update('authenticatedConnectorsAccessed', this.authenticatedConnectorsAccessed)
               .save('authenticatedConnectorsAccessed');
-            window.open(_app.address, target);
+            this.windowOpen(_app.address, target);
         } else {
             (async () => {
                 await conf().User.preferences
-                .update('authenticatedConnectorsAccessed', this.authenticatedConnectorsAccessed)
-                .save('authenticatedConnectorsAccessed');
-                window.open(_app.address, target);
+                 .update('authenticatedConnectorsAccessed', this.authenticatedConnectorsAccessed)
+                 .save('authenticatedConnectorsAccessed');
+                this.windowOpen(_app.address, target);
             })();
         }
     }
@@ -122,8 +125,20 @@ export class Controller {
             this.display.showAuthenticatedConnectorLightbox = true;
             this.apply && this.apply();
         } else {
-            window.open(app.address, target);
+            this.windowOpen(app.address, target);
         }
+    }
+
+    private async windowOpen(address:string, target:string) {
+        if( this._currentAppEvent && this._currentAppEvent.app.isExternal ) {
+            await this.xitiSvc.trackClick(this._currentAppEvent.app.name, this._currentAppEvent.element);
+        }
+        window.open(address, target);
+    }
+
+    constructor( 
+        private xitiSvc:XitiService
+    ) {
     }
 }
 
@@ -134,7 +149,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict= 'E';
     template = require('./connector-lightbox.directive.html').default;
     scope= {};
-	controller = [Controller];
+	controller = ['odeXiti', Controller];
 	controllerAs = 'ctrl';
     require = ['connectorLightbox'];
 
