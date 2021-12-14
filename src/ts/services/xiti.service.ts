@@ -56,7 +56,7 @@ export class XitiService {
 
     /** Load XiTi CAS mapping for @param name. */
     private async loadCasMapping( name:string ) {
-        const scriptPath = `/xiti/cas-infos/${name}`;
+        const scriptPath = `/xiti/cas-infos?connector=${name}`;
         const casMapping = await http().get<CasMapping>(scriptPath);
         if (http().latestResponse.status != 200) throw 'Error while loading XiTi CAS mapping';
         if (!casMapping.xitiService || !casMapping.xitiOutil) throw 'Malformed XiTi CAS mapping';
