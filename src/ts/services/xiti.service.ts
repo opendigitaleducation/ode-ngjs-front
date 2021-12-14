@@ -48,7 +48,7 @@ export class XitiService {
 
     /** Load XiTi implementation, if needed. */
     private async loadScript() {
-        if (!ATInternet) {
+        if (typeof ATInternet==="undefined") {
             const scriptPath = '/xiti/public/js/lib/smarttag_ENT.js';
             const response = await http().get<string>(scriptPath, {headers:{'Accept':'application/javascript'}});
             if (http().latestResponse.status != 200) throw 'Error while loading XiTi script';
