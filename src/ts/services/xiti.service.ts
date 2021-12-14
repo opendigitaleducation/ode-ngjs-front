@@ -23,8 +23,9 @@ export class XitiService {
             if(!conf) return;
             console.debug("XiTi conf="+JSON.stringify(conf));
             return this.run( conf );
-        }).catch( () => {
+        }).catch( e => {
             // Something went wrong. Continue processing the rest of the page silently.
+            e && console.debug("XiTi: run script error="+JSON.stringify(e));
         });
     }
 
@@ -39,8 +40,9 @@ export class XitiService {
             if(!conf) return;
             console.debug("XiTi conf="+JSON.stringify(conf));
             return this.click( conf, tuple[2], name, element );
-        }).catch( () => {
+        }).catch( e => {
             // Something went wrong. Continue processing the rest of the page silently.
+            e && console.debug("XiTi: track click error="+JSON.stringify(e));
         });
     }
 
