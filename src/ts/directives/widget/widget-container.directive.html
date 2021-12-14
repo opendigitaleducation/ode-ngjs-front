@@ -19,6 +19,14 @@
     */
     ul[dnd-list][dnd-drop] {
         min-height: 42px;
+        transition: all .1s ease-in-out 0s;
+    }
+    ul[dnd-list][dnd-dragover].dndReject {
+        display: block;
+        background-color: #ff8c8c;
+        min-height: 90px;
+        border-radius: 6px;
+        margin-bottom: 2em;
     }
 
     /**
@@ -76,7 +84,8 @@
 </ul>
 
 <ul dnd-list 
-    dnd-allowed-types="ctrl.allowedDndTypes"
+    dnd-allowed-types="['left','right']"
+    dnd-dragover="ctrl.onDnDDragOver(event, index, type, dropEffect)"
     dnd-drop="ctrl.onDnDDrop(event, item, index, dropEffect)">
     <li ng-repeat="widget in ctrl.dndWidgets track by widget.platformConf.id" 
         class="widget"

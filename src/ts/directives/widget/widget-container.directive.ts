@@ -17,6 +17,9 @@ export class Controller implements IController {
 	/** Ordered list of widgets, which the user can NOT reorder by DnD. */
 	lockedWidgets?: IWidget[];
 
+	/** Animation helper function to signal that drag'n'drop is not allowed. */
+	signalReject?: ()=>void;
+
 	/** Prepare the list of widgets targeting this container. */
 	loadWidgets() {
 		const onIndex = (a:IWidget,b:IWidget) => {
@@ -53,6 +56,16 @@ export class Controller implements IController {
 
 	get isMobileView():boolean {
 		return this.helperSvc.viewport<992;
+	}
+
+	/* return true when the item can be dropped at specified index; see doc https://github.com/marceljuenemann/angular-drag-and-drop-lists */
+	onDnDDragOver(event:DragEvent, index:number, type:string, dropEffect:string) {
+		const allowed = type===this.position;
+		console.log( "index="+index+", type="+type+", dropEffect="+dropEffect+", allowed="+allowed );
+		if( !allowed ) {
+			this.signalReject && this.signalReject();
+		}
+		return allowed;
 	}
 
 	onDnDDrop(event:DragEvent, itemId:string, index:number, dropEffect:string) {
@@ -120,6 +133,16 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		}
 		if( !attr.position ) {
 			attr.position = "left";
+		}
+
+		ctrl.signalReject = () => {
+			const pulse = 'dndReject';
+			const on = elem.children("ul[dnd-list][dnd-dragover]");
+			if( ! on.hasClass(pulse) ) {
+				on.addClass(pulse);
+				// Removed it after a moment.
+				setTimeout( ()=>{on.removeClass(pulse);}, 1500 );
+			}
 		}
 
 		ctrl.widgetSvc.initialize()
