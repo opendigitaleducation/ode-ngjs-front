@@ -187,7 +187,7 @@ export class XitiService {
     
         let ATTag = new ATInternet.Tracker.Tag({site: xitiConf.STRUCT_ID});
     
-        ATTag.setProp(props, false); 
+        ATTag.setProps(props, false);
     
         ATTag.click.send({
             elem: element,
