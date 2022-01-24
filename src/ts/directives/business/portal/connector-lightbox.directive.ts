@@ -129,11 +129,26 @@ export class Controller {
         }
     }
 
-    private async windowOpen(address:string, target:string) {
+    private windowOpen(address:string, target:string) {
         if( this._currentAppEvent && this._currentAppEvent.app.isExternal ) {
-            await this.xitiSvc.trackClick(this._currentAppEvent.app.name, this._currentAppEvent.element);
+            if (target == '_self') {
+                /* If target is the same page, we must ensure 'window.xiti.click' method has terminated
+                    before opening the connector
+                */
+                this.xitiSvc.trackClick(this._currentAppEvent.app.name, this._currentAppEvent.element)
+                .finally(() => { window.open(address, target); });
+            } else {
+                /* If target is a new page, Firefox would block the connector as a popup, hence we don't
+                    wait for 'window.xiti.click' response, which is ok because its execution cannot be
+                    interrupted as the connector opens in a new page
+                */
+               this.xitiSvc.trackClick(this._currentAppEvent.app.name, this._currentAppEvent.element)
+               .finally(() => { /* the 'finally' block is necessary in order to ensure the Promise is run */});
+               window.open(address, target);
+            }
+        } else {
+            window.open(address, target);
         }
-        window.open(address, target);
     }
 
     constructor( 

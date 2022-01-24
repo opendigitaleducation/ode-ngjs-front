@@ -3,6 +3,7 @@ import { conf, http } from "../utils";
 
 // 2021 implementation of XiTi
 declare var ATInternet: any;
+let ATTag: any;
 
 /** Model : XiIi mapping for CAS connectors. */
 type CasMapping = {
@@ -91,7 +92,7 @@ export class XitiService {
             }
         })(locationPath);
 
-        let ATTag = new ATInternet.Tracker.Tag({site: xitiConf.STRUCT_ID});
+        ATTag = new ATInternet.Tracker.Tag({site: xitiConf.STRUCT_ID});
     
         ATTag.setProps({
             "SERVICE": SERVICE,
@@ -160,7 +161,7 @@ export class XitiService {
      * @requires loadScript() must be called and its Promise resolved beforehand.
      */
     private click(xitiConf:IXitiTrackingParams, casMapping:CasMapping, name: string, element: Element) {
-        if (!ATInternet) return;
+        if (!ATInternet || !ATTag) return;
 
         console.debug("xiti click !!!");
     
@@ -184,9 +185,7 @@ export class XitiService {
     
         // UAI
         const UAI = xitiConf.STRUCT_UAI;
-    
-        let ATTag = new ATInternet.Tracker.Tag({site: xitiConf.STRUCT_ID});
-    
+
         ATTag.setProps(props, false);
     
         ATTag.click.send({
