@@ -25,6 +25,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
     restrict = 'E';
 	template = require('./sidebar.directive.html').default;
 	scope = {};
+	replace = true
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
