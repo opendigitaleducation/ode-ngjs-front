@@ -43,6 +43,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	scope = {
         folder:"="
     };
+    replace= true
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
