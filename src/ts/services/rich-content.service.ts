@@ -24,7 +24,7 @@ export class RichContentService {
         htmlVal.find('script').remove();
         htmlVal.find('*').each((index, item: HTMLElement) => {
             let attributes = item.attributes;
-            for(let i = 0; i < attributes.length; i++){
+            for(let i=attributes.length-1; i>=0; i--){
                 if(attributes[i].name.startsWith('on')){
                     item.removeAttribute(attributes[i].name);
                 }
