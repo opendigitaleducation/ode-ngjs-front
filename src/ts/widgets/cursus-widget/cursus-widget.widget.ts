@@ -40,8 +40,8 @@ class Controller implements IController {
   getCardNb() {
     return conf().User.preferences
       .load(USER_PREFS.CURSUS)
-      .then(data => {
-        this.cardNb = data;
+      .then(({cardNb}) => {
+        this.cardNb = cardNb;
       });
   }
 
@@ -110,11 +110,9 @@ class Directive implements IDirective<IScope, JQLite, IAttributes, IController[]
   link(scope: IScope, elem: JQLite, attrs: IAttributes, controllers?: IController[]): void {
     const ctrl: Controller | null = controllers ? controllers[0] as Controller : null;
     if (!ctrl) return;
-
     ctrl.apply = () => {
       scope.$apply();
     };
-
     ctrl.loads = true;
     ctrl.getCardNb().then(() => {
       return ctrl.getSales();

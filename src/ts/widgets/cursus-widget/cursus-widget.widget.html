@@ -3,13 +3,22 @@
     .widget-cursus img {
         width: 100%;
     }
+    ::placeholder {
+        font-size: 15px;
+    }
+    .p-4 {
+        padding: 2rem !important;
+    }
+    .heading-5 {
+        font-size: 18px;
+    }
 </style>
 <div class="widget-cursus">
     <div class="widget-header p-0">
         <img class="subtitle" src="/cursus/public/img/logo.png" draggable="false" />
     </div>
 
-    <div class="widget-body m-3" dnd-nodrag>
+    <div class="widget-body p-4" dnd-nodrag>
 
         <div class="loading-panel" ng-if="ctrl.loads">
             <h1 translate content="loading"></h1>
@@ -18,30 +27,28 @@
         <form ng-if="!ctrl.loads">
             <div ng-if="!ctrl.cardNb || ctrl.error">
                 <p ng-if="!ctrl.error"><i18n>cursus-widget.widget.inactive.text</i18n></p>
-                <p ng-if="ctrl.error" class="text-warning"><i18n>cursus-widget.widget.error.text</i18n></p>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label text-primary" for="cursusInputCardNb" translate content="cursus-widget.widget.cardNb"></label>
-                    <div class="col-sm-7">
-                        <input class="form-control form-control-sm" id="cursusInputCardNb" type="text" ng-model="inputCardNb">
-                    </div>
+                <div ng-if="ctrl.error">
+                    <p><i18n>cursus-widget.widget.error.text</i18n></p>
+                    <p><i18n>cursus-widget.widget.error.retry</i18n></p>
                 </div>
 
-                <div class="d-flex justify-content-center mt-1">
-                    <button class="btn btn-outline-secondary"
-                            ng-click="ctrl.connect(inputCardNb)" ng-disabled="!inputCardNb" 
-                            translate content="cursus-widget.widget.validate"></button>
+                <div class="form-group row">
+                    <label class="visually-hidden" for="cursusInputCardNb" translate content="cursus-widget.widget.cardNb"></label>
+                    <div class="col-sm-8">
+                        <input class="form-control form-control-lg" id="cursusInputCardNb" type="text" ng-model="inputCardNb" i18n-placeholder="cursus-widget.widget.cardNb">
+                    </div>
+                    <div class="col-sm-4 d-grid">
+                        <button class="btn btn-outline-secondary btn-md"
+                        ng-click="ctrl.connect(inputCardNb)" ng-disabled="!inputCardNb" 
+                        translate content="cursus-widget.widget.validate"></button>
+                    </div>
                 </div>
             </div>
 
             <div ng-if="ctrl.cardNb && !ctrl.error">
-                <div class="mb-3">
-                    <h2><i18n>cursus-widget.widget.my.wallets</i18n></h2>
-                    <table class="twelve centered-text">
-                        <thead>
-                            <th translate content="cursus-widget.widget.wallet"></th>
-                            <th translate content="cursus-widget.widget.sale"></th>
-                        </thead>
+                <div>
+                    <h2 class="heading-5"><i18n>cursus-widget.widget.my.wallets</i18n></h2>
+                    <table class="twelve centered-text w-100">
                         <tbody ng-if="ctrl.sales">
                             <tr ng-repeat="sale in ctrl.sales">
                                 <td>[[sale.wallet.libelle]]</td>
@@ -51,11 +58,11 @@
                     </table>
                 </div>
 
-                <div>
-                    <h2><i18n>cursus-widget.widget.update.cardNb.title</i18n></h2>
+                <div class="mt-4">
+                    <h2 class="heading-5"><i18n>cursus-widget.widget.update.cardNb.title</i18n></h2>
                     <i18n>cursus-widget.widget.update.cardNb.text</i18n>.
-                    <div class="d-flex justify-content-center mt-3">
-                        <button class="btn btn-outline-secondary"
+                    <div class="d-grid mt-3">
+                        <button class="btn btn-outline-secondary btn-lg"
                             ng-click="ctrl.logout()" 
                             translate content="cursus-widget.widget.update.cardNb.button"></button>
                     </div>
