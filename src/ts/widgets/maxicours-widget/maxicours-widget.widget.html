@@ -15,9 +15,9 @@
         </p>
     </div>
 
-    <div class="widget-body m-3"  ng-if="ctrl.showWidget()" dnd-nodrag>
+    <div class="widget-body p-4"  ng-if="ctrl.showWidget()" dnd-nodrag>
         <i class="ic-maxicours" ng-if="ctrl.controllerData.id < 0"></i>
-        <p>
+        <p ng-if="ctrl.controllerData.id >= 0">
             <a data-maxicours-href href="[[ctrl.controllerData.connectorEndpoint]]" target="_blank" rel="noopener"
                     i18n-title="maxicours-widget"
                     ng-if="ctrl.controllerData.id >= 0">
@@ -40,20 +40,22 @@
         <!-- Active user -->
         <div ng-if="!ctrl.loads && ctrl.controllerData.id >= 0">
             <div>
-                <i18n>maxicours-widget.widget.my.points</i18n>: <span>[[ ctrl.controllerData.userInfo.activityScore ]]</span>
+                <i18n>maxicours-widget.widget.my.points</i18n> : <span>[[ ctrl.controllerData.userInfo.activityScore ]]</span>
             </div>
             <div>
-                <div ng-if="ctrl.controllerData.userInfo.hasSessionOfTheDay">
+                <div ng-if="ctrl.controllerData.userInfo.hasSessionOfTheDay" class="mt-4">
                     <h4><a ng-href="[[ctrl.controllerData.userInfo.sessionOfTheDayUrl]]" target="_blank" rel="noopener"><i18n>maxicours-widget.widget.daily.session</i18n></a></h4>
-                    <div ng-if="ctrl.controllerData.userInfo.hasSessionOfTheDay === 'true'">
-                        <div class="activity row" ng-repeat="activity in ctrl.controllerData.userInfo.sessionOfTheDayActivities">
-                            <img class="picto" ng-src="[[activity.picto]]"></img>
-                            <div>
-                                <div><strong>[[activity.title]]</strong></div>
-                                <div>[[activity.label]]</div>
+                    <ul ng-if="ctrl.controllerData.userInfo.hasSessionOfTheDay === 'true'">
+                        <li class="activity row border-top py-3 mx-1 align-items-center" ng-repeat="activity in ctrl.controllerData.userInfo.sessionOfTheDayActivities">
+                            <div class="col-auto">
+                                <img class="picto" ng-src="[[activity.picto]]"></img>
                             </div>
-                        </div>
-                    </div>
+                            <div class="col-auto">
+                                <strong>[[activity.title]]</strong>
+                                <p class="mb-0">[[activity.label]]</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
                 <div ng-if="ctrl.controllerData.userInfo.newPersonnalCourses.length > 0">
