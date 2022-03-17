@@ -4,7 +4,7 @@ import { IBehaviours } from "../../../legacy/Behaviours";
 import { HttpPromisified } from "../../../legacy/http";
 import { Idiom } from "../../../legacy/idiom";
 import { Shareable, ShareVisible, SharePayload, ShareInfos, ShareAction } from "../../../legacy/rights";
-import { UiModel } from "../../../models/ui.model";
+import { SearchStore } from "../../../stores/search.store";
 import { NotifyService } from '../../../services/notify.service';
 
 // FIXME legacy stuff
@@ -88,12 +88,12 @@ export class SharePanelController implements IController {
     //-- Constructor
     constructor( private $scope:IDirectiveScope, private notify:NotifyService ) {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as UiModel;
+        this.model = null as unknown as SearchStore;
     }
 
     //------------------
     //-- Bound attributes
-    model: UiModel;
+    model: SearchStore;
     autoClose?: boolean;
     onValidate?(args: {
         $data: SharePayload,

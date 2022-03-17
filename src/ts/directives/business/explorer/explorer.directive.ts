@@ -1,10 +1,10 @@
 import { IAttributes, IController, IDirective, ILocationService, IScope, IWindowService } from "angular";
 import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory } from "ode-ts-client";
-import { UiModel } from "../../../models/ui.model";
+import { SearchStore } from "../../../stores/search.store";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    model:UiModel;
+    model:SearchStore;
     private app:App;
     private resource:ResourceType;
 
@@ -12,7 +12,7 @@ export class Controller implements IController {
                 ,private $window:IWindowService
     ) {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as UiModel;
+        this.model = null as unknown as SearchStore;
         this.app = null as unknown as App;
         this.resource = null as unknown as ResourceType;
     }
@@ -20,18 +20,18 @@ export class Controller implements IController {
     $onInit() {
         if( !this.app ) throw new Error("App undefined for explorer.");
         if( !this.resource ) throw new Error("Resource undefined for explorer.");
-        this.model = new UiModel( this.app, this.resource );
+        this.model = new SearchStore( this.app, this.resource );
     }
     
     getSortClass( sort:IOrder ) {
-        const sortOrders = this.model?.searchParameters.orders;
+        const sortOrders = this.model.searchParameters.orders;
         if( sortOrders && sortOrders[sort.id]===SORT_ORDER.ASC ) {
             return { active: true }
         }
     }
 
     toggleSortOrder( sort:IOrder ) {
-        const search = this.model?.searchParameters;
+        const search = this.model.searchParameters;
         if( search ) {
             search.orders = search.orders || {};
             search.orders[sort.id] = search.orders[sort.id] 
@@ -79,15 +79,7 @@ class Directive implements IDirective {
 
 /** The ode-explorer directive.
  *
- * Usage:
- * 1) import your directive's factory,
- *      import { Explorer } from 'ode-ngjs-front';
- * 2) Add it to your angular module,
- *      ng.directives.push( ng.directive("odeExplorer", Explorer.DirectiveFactory) );
- * 3) Use it,
- *      &lt;ode-explorer app="blog" resource="blog"></ode-explorer&gt;
- * 
- * 4) TODO unit-testing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
+ * TODO unit-testing : https://docs.angularjs.org/guide/unit-testing#testing-a-controller
  */
 export function DirectiveFactory() {
 	return new Directive();

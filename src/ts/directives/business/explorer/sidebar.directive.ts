@@ -1,16 +1,16 @@
 import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { GetResourcesResult } from "ode-ts-client";
-import { UiModel } from "../../../models/ui.model";
+import { SearchStore } from "../../../stores/search.store";
 import { FolderController } from "./sidebar-folder.directive";
 
 /* Controller for the directive */
 export class Controller implements IController {
     constructor() {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as UiModel;
+        this.model = null as unknown as SearchStore;
     }
-    model: UiModel;
+    model: SearchStore;
 
 	onSelectFolder(folderCtrl:FolderController):void {
 		this.model.searchParameters.filters.folder = folderCtrl.folder?.id;

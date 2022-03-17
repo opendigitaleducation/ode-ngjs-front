@@ -1,15 +1,15 @@
 import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ISearchResults } from "ode-ts-client";
-import { UiModel } from "../../../models/ui.model";
+import { SearchStore } from "../../../stores/search.store";
 
 /* Controller for the directive */
 export class Controller implements IController {
     constructor() {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as UiModel;
+        this.model = null as unknown as SearchStore;
     }
-    model: UiModel;
+    model: SearchStore;
 
     display( resultset:ISearchResults ) {
         // If pagination starts at 0, this is a new resultset.

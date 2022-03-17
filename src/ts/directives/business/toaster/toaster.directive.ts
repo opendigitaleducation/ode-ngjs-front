@@ -1,14 +1,14 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
-import { UiModel } from "../../../models/ui.model";
+import { SearchStore } from "../../../stores/search.store";
 import { NotifyService } from '../../../services/notify.service';
 
 /* Controller for the directive */
 export class Controller implements IController {
 	constructor( private $scope:IScope, private notify:NotifyService ) {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as UiModel;
+        this.model = null as unknown as SearchStore;
 
 		// Following actions are not displayed in the toaster.
 		// TODO Could be done in CSS
@@ -24,7 +24,7 @@ export class Controller implements IController {
 		this.mobileFilter[ACTION.PRINT]		= true;
 		this.mobileFilter[ACTION.PUBLISH]	= true;
 	}
-    model: UiModel;
+    model: SearchStore;
 	private actionFilter:{[actionId:string]:boolean} = {};
 	private mobileFilter:{[actionId:string]:boolean} = {};
 

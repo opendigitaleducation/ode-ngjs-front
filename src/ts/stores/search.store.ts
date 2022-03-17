@@ -1,6 +1,6 @@
 import { App, ExplorerFrameworkFactory, GetResourcesResult, IContext, IExplorerContext, IFolder, IResource, ISearchParameters, ResourceType } from "ode-ts-client";
 
-export class UiModel {
+export class SearchStore {
     app:App;
     resourceType:ResourceType;
     explorer:IExplorerContext;

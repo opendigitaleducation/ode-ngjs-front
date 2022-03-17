@@ -1,16 +1,16 @@
 import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { IFolder } from "ode-ts-client";
-import { UiModel } from "../../../models/ui.model";
+import { SearchStore } from "../../../stores/search.store";
 
 /* Controller for the directive */
 export class Controller implements IController {
     constructor() {
         // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as UiModel;
+        this.model = null as unknown as SearchStore;
         this.folder = null  as unknown as IFolder;
     }
-    model: UiModel;
+    model: SearchStore;
     folder:IFolder;
     private selected:boolean = false;
 

@@ -16,7 +16,6 @@ const module = angular.module("odeExplorerModule", []);
     .directive("odeDominoFolder", DominoFolder.DirectiveFactory)
     .directive("odeDominoItem", DominoItem.DirectiveFactory)
     .directive("odeToaster", Toaster.DirectiveFactory)
-    .directive("odeModal", Modal.DirectiveFactory)
     .directive("odePropsPanel", PropsPanel.DirectiveFactory)
     .directive("odeSharePanel", SharePanel.DirectiveFactory)
 
