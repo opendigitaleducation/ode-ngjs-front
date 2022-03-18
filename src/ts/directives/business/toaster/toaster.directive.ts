@@ -74,11 +74,23 @@ export class Controller implements IController {
 			return;
 		
 		switch( action.id ) {
+			case ACTION.OPEN: {
+				if( this.model.selectedItems.length ) {
+					this.model.explorer.open(
+						this.model.resourceType,
+						this.model.selectedItems[0].id
+					);
+					// TODO catch Promise errors
+				}
+			}
+			break;
+
 			case ACTION.DELETE: {
 				this.model.explorer.delete( 
 					this.model.selectedItems.map(i => i.id), 
 					this.model.selectedFolders.map(f => f.id)
 				);
+				// TODO catch Promise errors
 			}
 			break;
 
