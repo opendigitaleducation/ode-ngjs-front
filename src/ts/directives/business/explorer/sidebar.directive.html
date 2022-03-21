@@ -3,6 +3,36 @@
     <ul class="sidebar-tree sidebar__tree">
         <li ng-repeat="f in ctrl.model.context.folders track by f.id" ode-sidebar-folder="f" on-select="ctrl.onSelectFolder(folderCtrl)"></li>
     </ul>
-    <a class="btn btn-outline-secondary btn-block"><i18n>explorer.sidebar.btn.create.label</i18n></a>
-    <a class="btn btn-outline-secondary btn-block"><i18n>explorer.sidebar.btn.import.label</i18n></a>
+    <a class="btn btn-outline-secondary btn-block"
+            ng-click="ctrl.display.showNewFolder=true">
+        <i18n>explorer.sidebar.btn.create.label</i18n>
+    </a>
+    <a class="btn btn-outline-secondary btn-block">
+        <i18n>explorer.sidebar.btn.import.label</i18n>
+    </a>
+
+    <ode-modal visible="ctrl.display.showNewFolder" on-close="ctrl.display.showNewFolder=false">
+        <ode-modal-title>
+            <i18n>explorer.modal.form.create.folder.title</i18n>
+        </ode-modal-title>
+    
+        <ode-modal-body>
+            <form id="formCreateFolder" class="col" ng-submit="ctrl.onCreateFolder()">
+                <div class="form-group">
+                  <label for="inputCreateFolderName"><i18n>explorer.sidebar.form.create.folder.input</i18n></label>
+                  <input type="text" autocomplete="off" class="form-control" id="inputCreateFolderName" ng-model="ctrl.folderName">
+                </div>
+              </form>
+        </ode-modal-body>
+    
+        <ode-modal-footer>
+            <button class="btn btn-light text-primary" 
+                    ng-click="ctrl.display.showNewFolder=false">
+                <i18n>cancel</i18n>
+            </button>
+            <button class="btn btn-primary" form="formCreateFolder" type="submit">
+                <i18n>confirm</i18n>
+            </button>
+        </ode-modal-footer>
+    </ode-modal>    
 </aside>
