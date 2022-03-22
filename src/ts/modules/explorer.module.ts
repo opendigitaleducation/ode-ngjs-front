@@ -1,6 +1,7 @@
 import angular, { IModule } from "angular";
-import { DominoFolder, DominoItem, Explorer, SidebarFolder, Modal, ResourceList, SharePanel, Sidebar, Toaster, PropsPanel } from "../directives";
+import { DominoFolder, DominoItem, Explorer, SidebarFolder, ResourceList, SharePanel, Sidebar, Toaster, PropsPanel } from "../directives";
 import { NotifyService } from "../services";
+import { ExplorerModel as ExplorerModel } from "../stores/explorer.model";
 
 const module = angular.module("odeExplorerModule", []);
 
@@ -20,5 +21,6 @@ const module = angular.module("odeExplorerModule", []);
     .directive("odeSharePanel", SharePanel.DirectiveFactory)
 
     .service("odeNotify", NotifyService)
+    .service("odeExplorerModel", ExplorerModel)
     ;
  }

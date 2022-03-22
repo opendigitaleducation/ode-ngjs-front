@@ -1,24 +1,15 @@
 import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ISearchResults } from "ode-ts-client";
-import { SearchStore } from "../../../stores/search.store";
+import { IFolder, IResource, ISearchResults } from "ode-ts-client";
+import { ExplorerModel } from "../../../stores/explorer.model";
+import { NgHelperService } from '../../../services';
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor() {
-        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as SearchStore;
-    }
-    model: SearchStore;
+    // Shortcut for updating the view.
+	public requestUpdate?:()=>void;
 
-    display( resultset:ISearchResults ) {
-        // If pagination starts at 0, this is a new resultset.
-        if( resultset.pagination.startIdx===0) {
-            this.model.loadedFolders = resultset.folders ?? [];
-            this.model.loadedItems   = resultset.resources ?? [];
-        } else {
-            this.model.loadedItems.concat( resultset.resources );
-        }
+    constructor( public model:ExplorerModel ) {
     }
 }
 
@@ -32,29 +23,27 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         folders: "odeListFolder",
         items:   "odeListItem"
     };
-	controller = [Controller];
+	controller = ["odeExplorerModel", Controller];
 	controllerAs = 'ctrl';
-	require = ["odeResourceList", "^^odeExplorer"];
+	require = ["odeResourceList"];
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		if( !controllers ) return;
         const ctrl:Controller = controllers[0] as Controller;
-        const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
-        ctrl.model = odeExplorer.model;
 
-        let subscription = ctrl.model.explorer.latestResources().subscribe({
-            next: resultset => { 
-                ctrl?.display(resultset.output);
-                scope.$apply();
-            }
-        });
-
-        scope.$on('$destroy', (ev)=>{
-            if( subscription ) {
-                subscription.unsubscribe();
-            }
+        ctrl.requestUpdate = () => {
+			this.helperSvc.safeApply( scope );
+		};
+        document.addEventListener( "explorer.view.updated", ctrl.requestUpdate );
+        scope.$on('$destroy', ev=>{
+            // @ts-ignore: just remove the customevent listener.
+            document.removeEventListener( "explorer.view.updated", ctrl.requestUpdate );
         });
     }
+
+    constructor(
+        private helperSvc:NgHelperService
+    ) {}
 }
 
 /** The ode-resource-list directive.
@@ -69,6 +58,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  *   where {{$parent.item}} is an IResource
  * 
  */
-export function DirectiveFactory() {
-	return new Directive();
+export function DirectiveFactory(helperSvc: NgHelperService) {
+	return new Directive(helperSvc);
 }
+DirectiveFactory.$inject = ["odeNgHelperService"];

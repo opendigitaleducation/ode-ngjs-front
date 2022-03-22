@@ -1,17 +1,11 @@
-import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { IResource } from "ode-ts-client";
-import { SearchStore } from "../../../stores/search.store";
+import { ExplorerModel } from "../../../stores/explorer.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    constructor() {
-        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as SearchStore;
-        this.item = null  as unknown as IResource;
-    }
-    model:SearchStore;
-    item:IResource;
+    // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
+    item:IResource  = null  as unknown as IResource;
     private selected:boolean = false;
 
     toggleSelect( selected?:boolean ):void {
@@ -30,6 +24,9 @@ export class Controller implements IController {
             }
         }
     }
+
+    constructor( public model:ExplorerModel ) {
+    }
 }
 
 /* Directive */
@@ -40,17 +37,8 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
         item:"="
     };
 	bindToController = true;
-	controller = [Controller];
+	controller = ["odeExplorerModel", Controller];
 	controllerAs = 'ctrl';
-	require = ["odeDominoItem", "^odeExplorer"];
-
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
-		if( !controllers ) return;
-        const ctrl:Controller = controllers[0] as Controller;
-        const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
-        ctrl.model = odeExplorer.model;
-    }
-
 }
 
 /** The ode-domino-item directive.

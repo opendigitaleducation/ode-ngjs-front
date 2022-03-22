@@ -4,7 +4,7 @@ import { IBehaviours } from "../../../legacy/Behaviours";
 import { HttpPromisified } from "../../../legacy/http";
 import { Idiom } from "../../../legacy/idiom";
 import { Shareable, ShareVisible, SharePayload, ShareInfos, ShareAction } from "../../../legacy/rights";
-import { SearchStore } from "../../../stores/search.store";
+import { ExplorerModel } from "../../../stores/explorer.model";
 import { NotifyService } from '../../../services/notify.service';
 
 // FIXME legacy stuff
@@ -86,14 +86,14 @@ export class SharePanelController implements IController {
 
     //------------------
     //-- Constructor
-    constructor( private $scope:IDirectiveScope, private notify:NotifyService ) {
-        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as SearchStore;
+    constructor( 
+        private $scope:IDirectiveScope, 
+        private notify:NotifyService, 
+        private model:ExplorerModel ) {
     }
 
     //------------------
     //-- Bound attributes
-    model: SearchStore;
     autoClose?: boolean;
     onValidate?(args: {
         $data: SharePayload,
@@ -710,15 +710,13 @@ class Directive implements IDirective<IDirectiveScope,JQLite,IAttributes,IContro
         autoClose: '='
     };
 	bindToController = true;
-	controller = ["$scope", "odeNotify", SharePanelController];
+	controller = ["$scope", "odeNotify", "odeExplorerModel", SharePanelController];
 	controllerAs = 'ctrl';
-	require = ["odeSharePanel", "^^odeExplorer"];
+	require = ["odeSharePanel"];
 
     link(scope:IDirectiveScope, element:JQLite, attrs:IAttributes, controllers?:IController[]): void {
 		if( !controllers ) return;
         const ctrl:SharePanelController = controllers[0] as SharePanelController;
-        const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
-        ctrl.model = odeExplorer.model;
 
         scope.$watch('resources', function () {
             ctrl.actions = [];

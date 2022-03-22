@@ -1,10 +1,8 @@
-
-<a ng-class="ctrl.getClass()" href="" ng-click="ctrl.toggle()">
-    <!--TODO begin : remove the following temporary artefact-->
-    <span ng-if="ctrl.hasChildren">>&nbsp;</span>
-    <!--TODO end -->
-    {{ctrl.folder.name}}
+<a href="" 
+        ng-class="{active: ctrl.model.currentFolder===ctrl.folderModel}"
+        ng-click="ctrl.select()">
+    {{ctrl.folderModel.folder.name}}
 </a>
-<ul ng-if="ctrl.showSubfolders">
-    <li ng-repeat="f in ctrl.subfolders track by f.id" ode-sidebar-folder="f" on-select="ctrl.onSelect({folderCtrl:folderCtrl})"></li>
+<ul ng-if="ctrl.expanded">
+    <li ng-repeat="f in ctrl.folderModel.subfolders" ode-sidebar-folder="f"></li>
 </ul>

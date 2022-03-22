@@ -1,30 +1,56 @@
-import { IAttributes, IController, IDirective, ILocationService, IScope, IWindowService } from "angular";
-import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory } from "ode-ts-client";
-import { SearchStore } from "../../../stores/search.store";
+import { IAttributes, IController, IDirective, ILocationService, IRootScopeService, IScope, IWindowService } from "angular";
+import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory, IFolder } from "ode-ts-client";
+import { ExplorerModel } from "../../../stores/explorer.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
-    model:SearchStore;
-    private app:App;
-    private resource:ResourceType;
+    // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
+    private app:App = null as unknown as App;
+    private resource:ResourceType = null as unknown as ResourceType;
 
-    constructor( private $location:ILocationService
-                ,private $window:IWindowService
-    ) {
-        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as SearchStore;
-        this.app = null as unknown as App;
-        this.resource = null as unknown as ResourceType;
-    }
+    constructor(
+        private $location:ILocationService,
+        private $window:IWindowService,
+        public $rootScope:IRootScopeService,
+        public model:ExplorerModel
+    ){}
 
     $onInit() {
         if( !this.app ) throw new Error("App undefined for explorer.");
         if( !this.resource ) throw new Error("Resource undefined for explorer.");
-        this.model = new SearchStore( this.app, this.resource );
+
+        // Explorer has 2 folders by default :
+        const defaultFolder:IFolder = {
+            id: "default",
+            name: "Mes blogs", // TODO appliquer une clé de trad, en fonction du type de ressource stocké dans ce dossier.
+            childNumber: 0, // will be adjusted below
+            type: "default"
+        };
+        const binFolder:IFolder = {
+            id: "bin",
+            name: "Corbeille", // TODO appliquer une clé de trad.
+            childNumber: 0,
+            type: "bin"
+        };
+
+        this.model.indexFolder( defaultFolder );
+        this.model.indexFolder( binFolder );
+
+        this.model.initialize( this.app, this.resource )
+        .then( ctx => {
+            const defaultModel = this.model.getFolderModel('default');
+            defaultModel.folder.childNumber = ctx.folders.length;
+            ctx.folders.forEach( f => {
+                this.model.indexFolder( f, 'default' );
+                defaultModel.subfolders.push(f.id);
+            });
+            this.model.currentFolder = defaultModel;
+            this.$rootScope.$apply();
+        });
     }
     
     getSortClass( sort:IOrder ) {
-        const sortOrders = this.model.searchParameters.orders;
+        const sortOrders = this.model.searchParameters?.orders;
         if( sortOrders && sortOrders[sort.id]===SORT_ORDER.ASC ) {
             return { active: true }
         }
@@ -56,24 +82,26 @@ export class Controller implements IController {
     }
 }
 
+type Scope = IScope & {
+    app:App;
+    resource:ResourceType;
+}
+
 /* Directive */
-class Directive implements IDirective {
-    restrict = 'E';
+class Directive implements IDirective<Scope> {
+    restrict = "E";
 	template = require('./explorer.directive.html').default;
 	scope = {
         app:"@",
         resource:"@"
     };
 	bindToController = true;
-	controller = ['$location','$window',Controller];
-	controllerAs = 'ctrl';
+	controller = ["$location","$window","$rootScope","odeExplorerModel",Controller];
+	controllerAs = "ctrl";
 
-    link(scope:IScope, elem:JQLite, attr:IAttributes, controller:IController|undefined): void {
-        let ctrl:Controller = controller as Controller;
+    async link(scope:Scope, elem:JQLite, attr:IAttributes, controller:IController|undefined) {
+        const ctrl:Controller = controller as Controller;
         if( !ctrl.model ) throw new Error("Data model undefined for explorer.");
-        ctrl.model.initialize().then( ctx => {
-            scope.$apply();
-        });
     }
 }
 

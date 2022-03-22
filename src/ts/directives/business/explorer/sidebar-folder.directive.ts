@@ -1,65 +1,72 @@
-import { IController, IDirective, IRootScopeService } from "angular";
-import { IFolder } from "ode-ts-client";
+import { IAttributes, IController, IDirective, IRootScopeService, IScope } from "angular";
+import { ID } from "ode-ts-client";
+import { ExplorerModel, FolderModel } from "../../../stores/explorer.model";
 
 type OnSelectParam = {folderCtrl:FolderController};
 
 /* Controller for the directive */
 export class FolderController implements IController {
-	constructor(private $rootScope:IRootScopeService) {
-		this.$rootScope = $rootScope;
-	}
-    folder?:IFolder;
-    onSelect?:(param:OnSelectParam)=>void;
+    folderModel?:FolderModel = null as unknown as FolderModel;
 
-    private _isSelected:boolean = false;
-    private _subfolders:IFolder[] = [];
+    public expanded:boolean = false;
 
-    get isSelected():boolean {
-        return this._isSelected;
-    }
+    // Shortcut for updating the view.
+	public requestUpdate?:()=>void;
 
     get hasChildren():boolean {
-        return (typeof this.folder==="object") && this.folder.childNumber > 0;
+        if( this.folderModel )
+            return this.folderModel.folder.childNumber > 0;
+        return false;
     }
 
-    get showSubfolders():boolean {
-        return this._isSelected && this._subfolders.length > 0;
+    select() {
+        this.expanded = true;
+        this.model.openFolder( this.folderModel?.folder )
+        .then( r => {
+            this.requestUpdate?.call(this);
+        });
     }
 
-    get subfolders():IFolder[] {
-        return this._subfolders;
-    }
+    constructor(
+        public model:ExplorerModel
+    ) {}
+}
 
-    set subfolders( subFolders:IFolder[] ) {
-        this._subfolders = subFolders;
-        this.$rootScope.$apply();
-    }
-
-    getClass():{[classname:string]: boolean} {
-        return {
-            active: this._isSelected
-        };
-    }
-
-    toggle( open?:boolean ):void {
-        this._isSelected = open ?? !this._isSelected;
-        if( this._isSelected && typeof this.onSelect==="function") {
-            this.onSelect( {folderCtrl:this} );
-        }
-    }
+type Scope = IScope & {
+    folderId:ID;
+    onSelect:(param:OnSelectParam)=>void;
 }
 
 /* Directive */
-class Directive implements IDirective {
+class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
 	templateUrl = require('./sidebar-folder.directive.lazy.html').default;
 	scope = {
-        folder:"<odeSidebarFolder",
+        folderId:"<odeSidebarFolder",
         onSelect:"&"
     };
-	bindToController = true;
-	controller = ["$rootScope",FolderController];
+	controller = ["odeExplorerModel", FolderController];
 	controllerAs = 'ctrl';
+    require=["odeSidebarFolder"];
+
+    link(scope:Scope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
+		if( !controllers ) return;
+		const ctrl:FolderController = controllers[0] as FolderController;
+
+        ctrl.folderModel = ctrl.model.getFolderModel( scope.folderId );
+        if( ! ctrl.folderModel ) throw 'Bad folder model';
+        // Auto-expand default folder when linked
+        if( scope.folderId==='default' ) {
+            ctrl.expanded = true;
+        }
+		ctrl.requestUpdate = () => {
+			this.$rootScope.$applyAsync();
+		};
+	}
+
+    constructor(
+		private $rootScope:IRootScopeService
+    ) {}
 }
 
 /** The folder directive.
@@ -67,6 +74,7 @@ class Directive implements IDirective {
  * Usage (pseudo-code):
  *      &lt;div ode-sidebar-folder="IFolder" on-select="selectFolderCallback(OnSelectParam)"></div&gt;
  */
-export function DirectiveFactory() {
-	return new Directive();
+ export function DirectiveFactory($rootScope:IRootScopeService) {
+	return new Directive($rootScope);
 }
+DirectiveFactory.$inject = ["$rootScope"];

@@ -1,15 +1,16 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
-import { SearchStore } from "../../../stores/search.store";
+import { ExplorerModel } from "../../../stores/explorer.model";
 import { NotifyService } from '../../../services/notify.service';
 
 /* Controller for the directive */
 export class Controller implements IController {
-	constructor( private $scope:IScope, private notify:NotifyService ) {
-        // Remove transpilation warnings due to the "bindToController", which angularjs already checks.
-        this.model = null as unknown as SearchStore;
-
+	constructor( 
+			private $scope:IScope, 
+			private notify:NotifyService, 
+			private model:ExplorerModel
+		) {
 		// Following actions are not displayed in the toaster.
 		// TODO Could be done in CSS
 		this.actionFilter[ACTION.INITIALIZE]= true;
@@ -24,7 +25,6 @@ export class Controller implements IController {
 		this.mobileFilter[ACTION.PRINT]		= true;
 		this.mobileFilter[ACTION.PUBLISH]	= true;
 	}
-    model: SearchStore;
 	private actionFilter:{[actionId:string]:boolean} = {};
 	private mobileFilter:{[actionId:string]:boolean} = {};
 
@@ -73,10 +73,14 @@ export class Controller implements IController {
 		if( !action?.available )
 			return;
 		
+		// keep the compiler happy
+		if( !this.model || ! this.model.resourceType || !this.model.explorer )
+			return;
+		
 		switch( action.id ) {
 			case ACTION.OPEN: {
 				if( this.model.selectedItems.length ) {
-					this.model.explorer.open(
+					this.model.explorer?.open(
 						this.model.resourceType,
 						this.model.selectedItems[0].id
 					);
@@ -93,7 +97,7 @@ export class Controller implements IController {
 				// TODO catch Promise errors
 			}
 			break;
-
+/*
 			case ACTION.MANAGE: {
 				this.model.explorer.manageProperties( 
 					this.model.resourceType,
@@ -111,7 +115,7 @@ export class Controller implements IController {
 				this.editShares( this.model.selectedItems );
 			}
 			break;
-			
+*/
 			default: alert( `"${action.id}" is not implemented.` );
 		}
 	}
@@ -161,17 +165,8 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./toaster.directive.html').default;
 	scope = {};
 	bindToController = true;
-	controller = ["$scope", "odeNotify", Controller];
+	controller = ["$scope", "odeNotify", "odeExplorerModel", Controller];
 	controllerAs = 'ctrl';
-	require = ["odeToaster", "^^odeExplorer"];
-
-    link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
-		if( controllers ) {
-			const ctrl:Controller = controllers[0] as Controller;
-			const odeExplorer:Explorer.Controller = controllers[1] as Explorer.Controller;
-			ctrl.model = odeExplorer.model;
-		}
-	}
 }
 
 /** The toaster directive.
