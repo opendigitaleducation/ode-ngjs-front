@@ -12,21 +12,9 @@ export class Controller implements IController {
     folder:IFolder = null as unknown as IFolder;
     private selected:boolean = false;
 
-    toggleSelect( selected?:boolean ):void {
-        const idx = this.model.selectedFolders.findIndex(f => f.id===this.folder.id);
-        if( idx===-1 || selected===true ) {
-            // Select it if needed.
-            if( !this.selected ) {
-                this.model.selectedFolders.push( this.folder );
-                this.selected = true;
-            }
-        } else {
-            // De-select it, if needed.
-            if( idx>=0 ) {
-                this.model.selectedFolders.splice(idx,1);
-                this.selected = false;
-            }
-        }
+    toggleSelect():void {
+        this.selected = !this.selected;
+        this.model.updateSelection( this.folder, this.selected );
     }
 
     openSubfolder():void {
@@ -41,7 +29,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	scope = {
         folder:"="
     };
-    replace= true
+    replace = true
 	bindToController = true;
 	controller = ["odeExplorerModel", Controller];
 	controllerAs = 'ctrl';

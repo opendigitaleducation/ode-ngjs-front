@@ -60,6 +60,10 @@ export class ExplorerModel {
         return this.context;
     }
 
+    requestUpdate() {
+        document.dispatchEvent( new CustomEvent("explorer.view.updated") );
+    }
+
     getFolderModel( id:ID ) {
         return this.index[id];
     }
@@ -80,9 +84,17 @@ export class ExplorerModel {
                     // Then update current folder content
                     parent.subfolders.push( f.id );
                     this.displayedFolders.push( f );
-                    document.dispatchEvent( new CustomEvent("explorer.view.updated") );
+                    this.requestUpdate();
                 }
             }
+        }
+    }
+
+    unindexFolder( folderId:ID ) {
+        const folder = this.index[folderId];
+        if( typeof folder === "object" ) {
+            delete this.index[folderId];
+            folder.subfolders.forEach( sf => this.unindexFolder(sf) );
         }
     }
 
@@ -116,6 +128,48 @@ export class ExplorerModel {
             this.indexFolder( r, parentFolderId );
             return r;
         })
+    }
+
+    updateSelection<T extends IFolder|IResource>( o:T, select:boolean ) {
+        // @ts-ignore we manually check the typeof 1st parameter.
+        const selections:Array<T> = (typeof o.childNumber==='number') ? this.selectedFolders : this.selectedItems;
+
+        const idx = selections.findIndex(f => f.id===o.id );
+        if( select && idx < 0 ) {
+            // Select it.
+            selections.push( o );
+            this.requestUpdate();
+        } else if( !select && idx >= 0 ) {
+            // De-select it.
+            selections.splice(idx,1);
+            this.requestUpdate();
+        }
+    }
+
+    /** Delete selected folders and/or resources. */
+    deleteSelection() {
+        this.explorer?.delete( this.selectedItems.map(i=>i.id), this.selectedFolders.map(i=>i.id) ).then( () => {
+            // Remove displayed items
+            this.selectedItems.forEach( i => {
+                const idx = this.displayedItems.indexOf(i);
+                if( idx ) {
+                    this.displayedItems.splice( idx, 1 );
+                }
+            });
+
+            if( this.currentFolder ) {
+                // Update item number in this folder
+                this.currentFolder.folder.childNumber -= this.selectedItems.length;
+                if( this.currentFolder.folder.childNumber < 0 )
+                    this.currentFolder.folder.childNumber = 0;
+            }
+
+            // Remove indexed folders
+            this.selectedFolders.forEach( f => this.unindexFolder(f.id) );
+
+            // Update view
+            this.requestUpdate();
+        });
     }
 
 }

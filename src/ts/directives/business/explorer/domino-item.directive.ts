@@ -8,21 +8,9 @@ export class Controller implements IController {
     item:IResource  = null  as unknown as IResource;
     private selected:boolean = false;
 
-    toggleSelect( selected?:boolean ):void {
-        const idx = this.model.selectedItems.findIndex(f => f.id===this.item.id);
-        if( idx===-1 || selected===true ) {
-            // Select it.
-            if( !this.selected ) {
-                this.model.selectedItems.push( this.item );
-                this.selected = true;
-            }
-        } else {
-            // De-select it.
-            if( idx>=0 ) {
-                this.model.selectedItems.splice(idx,1);
-                this.selected = false;
-            }
-        }
+    toggleSelect():void {
+        this.selected = !this.selected;
+        this.model.updateSelection( this.item, this.selected );
     }
 
     constructor( public model:ExplorerModel ) {
@@ -36,6 +24,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	scope = {
         item:"="
     };
+    replace= true;
 	bindToController = true;
 	controller = ["odeExplorerModel", Controller];
 	controllerAs = 'ctrl';

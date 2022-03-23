@@ -1,8 +1,8 @@
-<article
-        ng-class="{active: ctrl.selected}"
-        ng-click="ctrl.toggleSelect()"
-        ng-dblclick="ctrl.openSubfolder()"
-        >
+<article class="folder"
+         ng-class="{active: ctrl.selected}"
+         ng-click="ctrl.toggleSelect()"
+         ng-dblclick="ctrl.openSubfolder()">
+    <a class="toaster__open" ng-class="{checked: ctrl.selected}" title="Sélectionner le dossier"></a>
     <div class="domino-image">
         <i class="fas ic-folder text-secondary"></i>
     </div>

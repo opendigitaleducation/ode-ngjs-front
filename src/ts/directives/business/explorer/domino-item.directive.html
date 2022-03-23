@@ -1,7 +1,7 @@
-<article
-        ng-class="{active: ctrl.selected}" 
-        ng-click="ctrl.toggleSelect()"
-        >
+<article class="item thumbnail"
+         ng-class="{active: ctrl.selected}" 
+         ng-click="ctrl.toggleSelect()">
+    <a class="toaster__open" ng-class="{checked: ctrl.selected}" title="Sélectionner la ressource"></a>
     <div class="domino-image">
         <div class="domino-overlay transition-hover">
             <div class="domino-overlay--left">
