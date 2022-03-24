@@ -42,12 +42,15 @@ export class ExplorerModel {
         this.resourceType = resourceType;
         this.explorer = ExplorerFrameworkFactory.instance().createContext( [resourceType], app );
 
+        // WATCH RESOURCES
         const subscription = this.explorer.latestResources().subscribe({
             next: resultset => { 
                 // If pagination starts at 0, this is a new resultset.
                 if( resultset.output.pagination.startIdx===0) {
                     this.displayedFolders = resultset.output.folders ?? [];
                     this.displayedItems   = resultset.output.resources ?? [];
+                    this.selectedFolders  = [];
+                    this.selectedItems    = [];
                 } else {
                     this.displayedItems.concat( resultset.output.resources );
                 }
@@ -110,10 +113,9 @@ export class ExplorerModel {
                 delete this.searchParameters.filters.folder;
             }
             this.currentFolder = this.getFolderModel( f.id );
+            // The following triggers the WATCH RESOURCES (see initialize())
             return this.explorer?.getResources()
-            .then( r=>{
-                r.folders.forEach( folder => this.indexFolder(folder, f.id) );
-            });
+            .then( r=> r.folders.forEach(folder => this.indexFolder(folder, f.id)) );
         } else {
             throw "Search context not initialized";
         }

@@ -1,6 +1,6 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ACTION, IAction, IProperty, IResource } from "ode-ts-client";
+import { ACTION, IAction, ID, IProperty, IResource } from "ode-ts-client";
 import { ExplorerModel } from "../../../stores/explorer.model";
 import { NotifyService } from '../../../services/notify.service';
 
@@ -28,16 +28,24 @@ export class Controller implements IController {
 	private actionFilter:{[actionId:string]:boolean} = {};
 	private mobileFilter:{[actionId:string]:boolean} = {};
 
+	/** Flag to show/hide the move modal. */
+	showMove = false;
+	moveToFolderId?:ID;
 	/** Flag to show/hide the properties modal. */
-	showProps:boolean  = false;
+	showProps = false;
 	/** Flag to show/hide the sharing modal. */
-	showShares:boolean = false;
+	showShares = false;
 	props?:IProperty[];
 	items?:IResource[];
 
     getClass( action:IAction ):{[classname:string]: boolean} {
+		let show = this.model.selectedFolders.length>0 || this.model.selectedItems.length>0;
+		if( show && this.model.context ) {
+			// Check that at least 1 action will be visible.
+			show = this.model.context.actions.some( a => a.available && this.isActivable(a) );
+		}
 		return {
-			"d-none": this.model.selectedFolders.length===0 && this.model.selectedItems.length===0
+			"d-none": !show
 		};
 	}
 
@@ -62,10 +70,15 @@ export class Controller implements IController {
 	isActivable( action:IAction ):boolean {
 		const onlyOneItemSelected =  this.model.selectedItems.length===1 && this.model.selectedFolders.length===0;
 		switch( action.id ) {
-			case ACTION.OPEN: return onlyOneItemSelected;
-			case ACTION.SHARE: return onlyOneItemSelected;
-			case ACTION.MANAGE: return onlyOneItemSelected;
-			default: return true;
+			case ACTION.OPEN:	return onlyOneItemSelected;
+			case ACTION.DELETE:	return true;
+			case ACTION.COPY:	return true;
+			case ACTION.MOVE:	return true;
+			case ACTION.SHARE:	return true;
+			case ACTION.MANAGE:	return onlyOneItemSelected;
+			case ACTION.PUBLISH:return onlyOneItemSelected;
+			case ACTION.PRINT:	return onlyOneItemSelected;
+			default: return false;
 		}
 	}
 
@@ -74,7 +87,7 @@ export class Controller implements IController {
 			return;
 		
 		// keep the compiler happy
-		if( !this.model || ! this.model.resourceType || !this.model.explorer )
+		if( !this.model || !this.model.resourceType || !this.model.explorer )
 			return;
 		
 		switch( action.id ) {
@@ -97,6 +110,28 @@ export class Controller implements IController {
 				// TODO catch Promise errors
 			}
 			break;
+
+			case ACTION.MOVE: {
+				if( this.model.selectedItems.length || this.model.selectedFolders.length ) {
+					if( !this.showMove ) {
+						// Show the lightbox
+						this.showMove = true;
+					} else {
+						// Validate the move
+						this.model.explorer.move( 
+							this.moveToFolderId ?? 'default',
+							this.model.selectedItems.map(i => i.id), 
+							this.model.selectedFolders.map(f => f.id)
+						).then( () => {
+							// Once moved, the model needs cleaning
+							// TODO
+						});
+						// TODO catch Promise errors
+						this.closeMove();
+					}
+				}
+			}
+			break;
 /*
 			case ACTION.MANAGE: {
 				this.model.explorer.manageProperties( 
@@ -116,8 +151,13 @@ export class Controller implements IController {
 			}
 			break;
 */
-			default: alert( `"${action.id}" is not implemented.` );
+			default: this.notify.error( `"${action.id}" is not implemented.` );
 		}
+	}
+
+	closeMove() {
+		delete this.moveToFolderId;
+		this.showMove = false;
 	}
 
 	/**

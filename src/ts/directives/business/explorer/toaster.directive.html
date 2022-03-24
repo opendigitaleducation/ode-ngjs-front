@@ -6,21 +6,37 @@
         ng-class="ctrl.getActionClass(a)"
         ng-click="ctrl.activate(a)"
         >{{ctrl.getI18nKey(a)|i18n}}</a>
-    <!-- Bouton "Partager" forcé pour tests -->
+    <!-- Bouton "Partager" forcé pour tests
     <a  href=""
         ng-class="ctrl.getActionClass({id:'share', available:true})"
         ng-click="ctrl.activate({id:'share', available:true})"
         >{{ctrl.getI18nKey({id:'share', available:true})|i18n}}</a>
+    -->
 </div>
 
+<!-- Modale de déplacement de ressources -->
+<ode-modal id="moveResource" 
+           ng-if="ctrl.showMove"
+           visible="ctrl.showMove"
+           on-close="ctrl.closeMove()">
+    <ode-modal-title><i18n>explorer.modal.move.title</i18n></ode-modal-title>
+    <ode-modal-body>
+        TODO
+    </ode-modal-body>
+    <ode-modal-footer>
+        <button type="button" class="btn btn-link" data-dismiss="modal"
+                ng-click="ctrl.closeMove()"><i18n>explorer.modal.move.btn.cancel.label</i18n></button>
+        <button type="button" class="btn btn-primary"
+                ng-click="ctrl.activate({id:'move',available:true})"><i18n>explorer.modal.move.btn.move.label</i18n></button>
+    </ode-modal-footer>
+</ode-modal>
+
 <!-- Modale de propriétés -->
-<ode-modal 
-        id="editProperty" 
-        ng-if="ctrl.showProps"
-        visible="ctrl.showProps"
-        on-close="ctrl.closeProps()"
-        >
-    <ode-modal-title><i18n>explorer.modal.props.title</i18n> "Titre de la ressource"</ode-modal-title>
+<ode-modal id="editProperty" 
+           ng-if="ctrl.showProps"
+           visible="ctrl.showProps"
+           on-close="ctrl.closeProps()">
+    <ode-modal-title><i18n>explorer.modal.props.title</i18n> {{ctrl.model.selectedItems[0].name}}</ode-modal-title>
     <ode-modal-body>
         <ode-props-panel 
             props="ctrl.props" item="ctrl.items[0]"
@@ -34,12 +50,10 @@
 </ode-modal>
 
 <!-- Modale de partage -->
-<ode-modal 
-        id="shareProperty"
-        ng-if="ctrl.showShares"
-        visible="ctrl.showShares"
-        on-close="ctrl.closeShares()"
-        >
+<ode-modal id="shareProperty"
+           ng-if="ctrl.showShares"
+           visible="ctrl.showShares"
+           on-close="ctrl.closeShares()">
     <ode-modal-title><i18n>share.title</i18n></ode-modal-title>
 
     <ode-modal-body>
