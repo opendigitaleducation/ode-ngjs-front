@@ -1,5 +1,6 @@
-import { IAttributes, IController, IDirective, IRootScopeService, IScope, ITimeoutService } from "angular";
+import { IAttributes, IController, IDirective, IScope, ITimeoutService } from "angular";
 import { IFolder } from "ode-ts-client";
+import { NgHelperService } from "../../../services";
 import { ExplorerModel } from "../../../stores/explorer.model";
 
 /* Controller for the directive */
@@ -22,7 +23,7 @@ export class Controller implements IController {
 
 	onSelect(folder:IFolder) {
         this.model.openFolder( folder )
-		.then( () => this.requestUpdate?.call(this) );
+//		.then( () => this.requestUpdate?.call(this) );
 	}
 
 	onCreate() {
@@ -31,7 +32,7 @@ export class Controller implements IController {
 			.then( r => {
 				this.folderName = "";
 				this.showNewFolder = false;
-				this.requestUpdate?.call(this);
+//				this.requestUpdate?.call(this);
 			});
 		}
 	}
@@ -57,12 +58,17 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 		if( !controllers ) return;
 		const ctrl:Controller = controllers[0] as Controller;
 		ctrl.requestUpdate = () => {
-			this.$rootScope.$applyAsync();
+			this.helperSvc.safeApply( scope );
 		};
+        document.addEventListener( "explorer.view.updated", ctrl.requestUpdate );
+        scope.$on('$destroy', ev=>{
+            // @ts-ignore: just remove the customevent listener.
+            document.removeEventListener( "explorer.view.updated", ctrl.requestUpdate );
+        });
 	}
 
     constructor(
-		private $rootScope:IRootScopeService
+		private helperSvc:NgHelperService
     ) {}
 }
 
@@ -71,7 +77,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
  * Usage:
  *      &lt;ode-sidebar></ode-sidebar&gt;
  */
-export function DirectiveFactory($rootScope:IRootScopeService) {
-	return new Directive($rootScope);
+export function DirectiveFactory(helperSvc:NgHelperService) {
+	return new Directive(helperSvc);
 }
-DirectiveFactory.$inject = ["$rootScope"];
+DirectiveFactory.$inject = ["odeNgHelperService"];

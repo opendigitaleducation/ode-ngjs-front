@@ -1,6 +1,4 @@
-import * as Explorer from './explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { IFolder, IResource, ISearchResults } from "ode-ts-client";
 import { ExplorerModel } from "../../../stores/explorer.model";
 import { NgHelperService } from '../../../services';
 

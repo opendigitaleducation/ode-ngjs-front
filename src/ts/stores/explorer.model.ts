@@ -55,7 +55,7 @@ export class ExplorerModel {
                 } else {
                     this.displayedItems.concat( resultset.output.resources );
                 }
-                document.dispatchEvent( new CustomEvent("explorer.view.updated") );
+                this.requestUpdate();
             }
         });
 
@@ -151,16 +151,19 @@ export class ExplorerModel {
         if( select && idx < 0 ) {
             // Select it.
             selections.push( o );
-            this.requestUpdate();
+//            this.requestUpdate();
         } else if( !select && idx >= 0 ) {
             // De-select it.
             selections.splice(idx,1);
-            this.requestUpdate();
+//            this.requestUpdate();
         }
     }
 
     /** Move selection to another folder. */
     moveSelectionToFolder( moveToFolder:IFolder ) {
+        if( this.currentFolder?.folder === moveToFolder ) {
+            return;
+        }
         // Check that we do not move a folder inside itself.
         if( this.selectedFolders.some( f => f.id===moveToFolder.id ) ) {
             throw 'A folder cannot contain itself';
@@ -170,7 +173,7 @@ export class ExplorerModel {
             this.selectedItems.map(i => i.id), 
             this.selectedFolders.map(f => f.id)
         ).then( () => {
-            // Once moved, the model needs cleaning
+            // Once moved, the model needs to be synced
             for( let idx=this.displayedItems.length-1; idx>=0; idx-- ) {
                 if( this.selectedItems.indexOf(this.displayedItems[idx]) >= 0 ) {
                     this.displayedItems.splice( idx, 1 );
@@ -178,15 +181,18 @@ export class ExplorerModel {
             }
             for( let idx=this.displayedFolders.length-1; idx>=0; idx-- ) {
                 if( this.selectedFolders.indexOf(this.displayedFolders[idx]) >= 0 ) {
+                    const moved = this.displayedFolders[idx];
+                    this.unindexFolder( moved.id );
                     this.displayedFolders.splice( idx, 1 );
+                    this.indexFolder( moved );
                 }
             }
             this.substractFromCurrentFolder();
-            // TODO reindex the folders
-            
+
             // Remove current selection
             this.selectedFolders = [];
             this.selectedItems = [];
+
             // Update view
             this.requestUpdate();
         });
