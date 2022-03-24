@@ -21,7 +21,11 @@
            on-close="ctrl.closeMove()">
     <ode-modal-title><i18n>explorer.modal.move.title</i18n></ode-modal-title>
     <ode-modal-body>
-        TODO
+        <aside class="sidebar sidebar--left">
+            <ul class="sidebar-tree sidebar__tree">
+                <li ode-sidebar-folder="'default'" highlight-folder="ctrl.moveToFolder" on-select="ctrl.expandMoveToFolder(folder)"></li>
+            </ul>
+        </aside>
     </ode-modal-body>
     <ode-modal-footer>
         <button type="button" class="btn btn-link" data-dismiss="modal"

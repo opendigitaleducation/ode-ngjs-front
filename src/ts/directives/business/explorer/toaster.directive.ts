@@ -1,13 +1,12 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { ACTION, IAction, ID, IProperty, IResource } from "ode-ts-client";
+import { ACTION, IAction, IFolder, IProperty, IResource } from "ode-ts-client";
 import { ExplorerModel } from "../../../stores/explorer.model";
 import { NotifyService } from '../../../services/notify.service';
 
 /* Controller for the directive */
 export class Controller implements IController {
 	constructor( 
-			private $scope:IScope, 
 			private notify:NotifyService, 
 			private model:ExplorerModel
 		) {
@@ -30,7 +29,7 @@ export class Controller implements IController {
 
 	/** Flag to show/hide the move modal. */
 	showMove = false;
-	moveToFolderId?:ID;
+	moveToFolder?:IFolder;
 	/** Flag to show/hide the properties modal. */
 	showProps = false;
 	/** Flag to show/hide the sharing modal. */
@@ -115,17 +114,11 @@ export class Controller implements IController {
 				if( this.model.selectedItems.length || this.model.selectedFolders.length ) {
 					if( !this.showMove ) {
 						// Show the lightbox
-						this.showMove = true;
+						this.openMove();
 					} else {
 						// Validate the move
-						this.model.explorer.move( 
-							this.moveToFolderId ?? 'default',
-							this.model.selectedItems.map(i => i.id), 
-							this.model.selectedFolders.map(f => f.id)
-						).then( () => {
-							// Once moved, the model needs cleaning
-							// TODO
-						});
+						if( this.moveToFolder )
+							this.model.moveSelectionToFolder( this.moveToFolder );
 						// TODO catch Promise errors
 						this.closeMove();
 					}
@@ -155,9 +148,20 @@ export class Controller implements IController {
 		}
 	}
 
+	/** Display the move lightbox. */
+	openMove() {
+		this.moveToFolder = this.model.currentFolder?.folder;
+		this.showMove = true;
+	}
+	/** Close the move lightbox. */
 	closeMove() {
-		delete this.moveToFolderId;
+		delete this.moveToFolder;
 		this.showMove = false;
+	}
+	/** Expand a folder in the move lightbox. */
+	expandMoveToFolder( folder:IFolder ) {
+		this.moveToFolder = folder;
+		this.model.expandFolder( folder );
 	}
 
 	/**
@@ -205,7 +209,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	template = require('./toaster.directive.html').default;
 	scope = {};
 	bindToController = true;
-	controller = ["$scope", "odeNotify", "odeExplorerModel", Controller];
+	controller = ["odeNotify", "odeExplorerModel", Controller];
 	controllerAs = 'ctrl';
 }
 

@@ -66,19 +66,11 @@ export class Controller implements IController {
         }
     }
 
-    onCreate():void {
-        // TODO ajouter une méthode "create" à IExplorerContext, fortement typée plutôt qu'interroger le bus en direct.
-        ExplorerFrameworkFactory.instance().getBus().publish(RESOURCE.BLOG, ACTION.CREATE, "test proto").then( res => {
-            if( typeof res === "string" ) {
-                if( res.indexOf("#") < 0 ) {
-                    // Angular-based routing
-                    this.$location.path(res);
-                } else {
-                    // Browser-based routing
-                    this.$window.location.href = res;
-                }
-            }
-        });
+    onCreate() {
+        if( this.model.explorer && this.model.resourceType ) {
+            this.model.explorer?.create( this.model.resourceType );
+            // exit point to the app
+        }
     }
 }
 

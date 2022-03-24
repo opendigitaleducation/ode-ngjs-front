@@ -1,8 +1,11 @@
 <a href="" 
-        ng-class="{active: ctrl.model.currentFolder===ctrl.folderModel}"
+        ng-class="{active: ctrl.highlightFolder===ctrl.folderModel.folder}"
         ng-click="ctrl.select()">
     {{ctrl.folderModel.folder.name}}
 </a>
 <ul ng-if="ctrl.expanded">
-    <li ng-repeat="f in ctrl.folderModel.subfolders" ode-sidebar-folder="f"></li>
+    <li ng-repeat="f in ctrl.folderModel.subfolders" 
+        ode-sidebar-folder="f"
+        highlight-folder="ctrl.highlightFolder"
+        on-select="ctrl.onSelect({folder:folder})"></li>
 </ul>

@@ -1,8 +1,8 @@
 <aside class="sidebar sidebar--left">
     <h1 class="sidebar-title sidebar__title"><i18n>explorer.sidebar.title</i18n></h1>
     <ul class="sidebar-tree sidebar__tree">
-        <li ode-sidebar-folder="'default'"></li>
-        <li ode-sidebar-folder="'bin'"></li>
+        <li ode-sidebar-folder="'default'" highlight-folder="ctrl.model.currentFolder.folder" on-select="ctrl.onSelect(folder)"></li>
+        <li ode-sidebar-folder="'bin'" highlight-folder="ctrl.model.currentFolder.folder"></li>
     </ul>
     <a class="btn btn-outline-secondary btn-block"
             ng-click="ctrl.showNewFolder=true">
@@ -18,7 +18,7 @@
         </ode-modal-title>
     
         <ode-modal-body>
-            <form id="formCreateFolder" class="col" ng-submit="ctrl.onCreateFolder()">
+            <form id="formCreateFolder" class="col" ng-submit="ctrl.onCreate()">
                 <div class="form-group">
                   <label for="inputCreateFolderName"><i18n>explorer.sidebar.form.create.folder.input</i18n></label>
                   <input type="text" autocomplete="off" class="form-control" id="inputCreateFolderName" ng-model="ctrl.folderName">

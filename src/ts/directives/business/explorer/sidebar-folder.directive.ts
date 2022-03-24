@@ -1,17 +1,16 @@
-import { IAttributes, IController, IDirective, IRootScopeService, IScope } from "angular";
-import { ID } from "ode-ts-client";
+import { IAttributes, IController, IDirective, IScope } from "angular";
+import { ID, IFolder } from "ode-ts-client";
 import { ExplorerModel, FolderModel } from "../../../stores/explorer.model";
 
-type OnSelectParam = {folderCtrl:FolderController};
+type OnSelectParam = {folder:IFolder};
 
 /* Controller for the directive */
 export class FolderController implements IController {
     folderModel?:FolderModel = null as unknown as FolderModel;
+    highlightFolder?:IFolder;
+    onSelect?:(param:OnSelectParam)=>void;
 
     public expanded:boolean = false;
-
-    // Shortcut for updating the view.
-	public requestUpdate?:()=>void;
 
     get hasChildren():boolean {
         if( this.folderModel )
@@ -21,10 +20,7 @@ export class FolderController implements IController {
 
     select() {
         this.expanded = true;
-        this.model.openFolder( this.folderModel?.folder )
-        .then( r => {
-            this.requestUpdate?.call(this);
-        });
+        this.folderModel && this.onSelect && this.onSelect({folder:this.folderModel.folder});
     }
 
     constructor(
@@ -34,7 +30,6 @@ export class FolderController implements IController {
 
 type Scope = IScope & {
     folderId:ID;
-    onSelect:(param:OnSelectParam)=>void;
 }
 
 /* Directive */
@@ -42,9 +37,9 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
     restrict = 'A';
 	templateUrl = require('./sidebar-folder.directive.lazy.html').default;
 	scope = {
-        folderId:"<odeSidebarFolder",
-        onSelect:"&"
+        folderId:"<odeSidebarFolder"
     };
+    bindToController = {onSelect: "&",highlightFolder:"="};
 	controller = ["odeExplorerModel", FolderController];
 	controllerAs = 'ctrl';
     require=["odeSidebarFolder"];
@@ -59,22 +54,15 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         if( scope.folderId==='default' ) {
             ctrl.expanded = true;
         }
-		ctrl.requestUpdate = () => {
-			this.$rootScope.$applyAsync();
-		};
 	}
 
-    constructor(
-		private $rootScope:IRootScopeService
-    ) {}
 }
 
-/** The folder directive.
+/** The sidebar folder directive.
  * 
  * Usage (pseudo-code):
- *      &lt;div ode-sidebar-folder="IFolder" on-select="selectFolderCallback(OnSelectParam)"></div&gt;
+ *      &lt;div ode-sidebar-folder="aFolderId" selected-folder="anIFolder" on-select="selectFolderCallback(OnSelectParam)"></div&gt;
  */
- export function DirectiveFactory($rootScope:IRootScopeService) {
-	return new Directive($rootScope);
+ export function DirectiveFactory() {
+	return new Directive();
 }
-DirectiveFactory.$inject = ["$rootScope"];

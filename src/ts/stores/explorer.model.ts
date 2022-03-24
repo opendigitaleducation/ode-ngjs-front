@@ -11,7 +11,8 @@ type FolderIndex = {
 }
 
 /**
- * Explorer business engine
+ * Explorer business engine.
+ * Explorer methods here keeps the model synchronized.
  */
 export class ExplorerModel {
     app?:App;
@@ -121,6 +122,15 @@ export class ExplorerModel {
         }
     }
 
+    /** Load and index subfolders. */
+    expandFolder( f?:IFolder ) {
+        if( !f ) return Promise.reject('Unknown folder');
+        if( f === this.currentFolder?.folder ) return Promise.resolve();
+
+        return this.explorer?.getSubFolders( f.id )
+        .then( r=> r.folders.forEach(folder => this.indexFolder(folder, f.id)) );
+    }
+
     /** Create a new folder in the current folder. */
     createFolder( name:string ) {
         if( !this.explorer || !this.resourceType ) return Promise.reject();
@@ -132,6 +142,7 @@ export class ExplorerModel {
         })
     }
 
+    /** Add/remove a IFolder or IResource to/from the selection. */
     updateSelection<T extends IFolder|IResource>( o:T, select:boolean ) {
         // @ts-ignore we manually check the typeof 1st parameter.
         const selections:Array<T> = (typeof o.childNumber==='number') ? this.selectedFolders : this.selectedItems;
@@ -148,6 +159,39 @@ export class ExplorerModel {
         }
     }
 
+    /** Move selection to another folder. */
+    moveSelectionToFolder( moveToFolder:IFolder ) {
+        // Check that we do not move a folder inside itself.
+        if( this.selectedFolders.some( f => f.id===moveToFolder.id ) ) {
+            throw 'A folder cannot contain itself';
+        }
+        this.explorer?.move( 
+            moveToFolder.id ?? 'default',
+            this.selectedItems.map(i => i.id), 
+            this.selectedFolders.map(f => f.id)
+        ).then( () => {
+            // Once moved, the model needs cleaning
+            for( let idx=this.displayedItems.length-1; idx>=0; idx-- ) {
+                if( this.selectedItems.indexOf(this.displayedItems[idx]) >= 0 ) {
+                    this.displayedItems.splice( idx, 1 );
+                }
+            }
+            for( let idx=this.displayedFolders.length-1; idx>=0; idx-- ) {
+                if( this.selectedFolders.indexOf(this.displayedFolders[idx]) >= 0 ) {
+                    this.displayedFolders.splice( idx, 1 );
+                }
+            }
+            this.substractFromCurrentFolder();
+            // TODO reindex the folders
+            
+            // Remove current selection
+            this.selectedFolders = [];
+            this.selectedItems = [];
+            // Update view
+            this.requestUpdate();
+        });
+    }
+
     /** Delete selected folders and/or resources. */
     deleteSelection() {
         this.explorer?.delete( this.selectedItems.map(i=>i.id), this.selectedFolders.map(i=>i.id) ).then( () => {
@@ -159,12 +203,7 @@ export class ExplorerModel {
                 }
             });
 
-            if( this.currentFolder ) {
-                // Update item number in this folder
-                this.currentFolder.folder.childNumber -= this.selectedItems.length;
-                if( this.currentFolder.folder.childNumber < 0 )
-                    this.currentFolder.folder.childNumber = 0;
-            }
+            this.substractFromCurrentFolder();
 
             // Remove indexed folders
             this.selectedFolders.forEach( f => this.unindexFolder(f.id) );
@@ -172,6 +211,15 @@ export class ExplorerModel {
             // Update view
             this.requestUpdate();
         });
+    }
+
+    private substractFromCurrentFolder() {
+        if( this.currentFolder ) {
+            // Update item number in this folder
+            this.currentFolder.folder.childNumber -= this.selectedFolders.length;
+            if( this.currentFolder.folder.childNumber < 0 )
+                this.currentFolder.folder.childNumber = 0;
+        }
     }
 
 }

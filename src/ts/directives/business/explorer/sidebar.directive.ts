@@ -1,4 +1,5 @@
 import { IAttributes, IController, IDirective, IRootScopeService, IScope, ITimeoutService } from "angular";
+import { IFolder } from "ode-ts-client";
 import { ExplorerModel } from "../../../stores/explorer.model";
 
 /* Controller for the directive */
@@ -19,7 +20,12 @@ export class Controller implements IController {
     // Shortcut for updating the view.
 	public requestUpdate?:()=>void;
 
-	onCreateFolder() {
+	onSelect(folder:IFolder) {
+        this.model.openFolder( folder )
+		.then( () => this.requestUpdate?.call(this) );
+	}
+
+	onCreate() {
 		if( this.model.explorer && typeof this.folderName==="string" && this.folderName.trim().length ) {
 			this.model.createFolder( this.folderName.trim() )
 			.then( r => {
