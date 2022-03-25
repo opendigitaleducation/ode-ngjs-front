@@ -1,7 +1,7 @@
 import * as Explorer from '../explorer/explorer.directive';
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ACTION, IAction, IFolder, IProperty, IResource } from "ode-ts-client";
-import { ExplorerModel } from "../../../stores/explorer.model";
+import { ExplorerModel, FOLDER_ID } from "../../../stores/explorer.model";
 import { NotifyService } from '../../../services/notify.service';
 
 /* Controller for the directive */
@@ -102,11 +102,11 @@ export class Controller implements IController {
 			break;
 
 			case ACTION.DELETE: {
-				this.model.explorer.delete( 
-					this.model.selectedItems.map(i => i.id), 
-					this.model.selectedFolders.map(f => f.id)
-				);
-				// TODO catch Promise errors
+				if( this.model.currentFolder?.folder.id===FOLDER_ID.BIN ) {
+					this.model.deleteSelection();
+				} else {
+					this.model.moveSelectionToFolder( this.model.getFolderModel(FOLDER_ID.BIN).folder );
+				}
 			}
 			break;
 

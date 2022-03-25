@@ -1,6 +1,6 @@
 import { IAttributes, IController, IDirective, ILocationService, IRootScopeService, IScope, IWindowService } from "angular";
 import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory, IFolder, IFilter, BOOLEAN_FILTER, BooleanFilterType } from "ode-ts-client";
-import { ExplorerModel } from "../../../stores/explorer.model";
+import { ExplorerModel, FOLDER_ID } from "../../../stores/explorer.model";
 
 /* Controller for the directive */
 export class Controller implements IController {
@@ -41,13 +41,13 @@ export class Controller implements IController {
 
         // Explorer has 2 folders by default :
         const defaultFolder:IFolder = {
-            id: "default",
+            id: FOLDER_ID.DEFAULT,
             name: "Mes blogs", // TODO appliquer une clé de trad, en fonction du type de ressource stocké dans ce dossier.
             childNumber: 0, // will be adjusted below
             type: "default"
         };
         const binFolder:IFolder = {
-            id: "bin",
+            id: FOLDER_ID.BIN,
             name: "Corbeille", // TODO appliquer une clé de trad.
             childNumber: 0,
             type: "bin"
@@ -77,10 +77,10 @@ export class Controller implements IController {
             }
 
             // list content
-            const defaultModel = this.model.getFolderModel('default');
+            const defaultModel = this.model.getFolderModel( FOLDER_ID.DEFAULT );
             defaultModel.folder.childNumber = ctx.folders.length;
             ctx.folders.forEach( f => {
-                this.model.indexFolder( f, 'default' );
+                this.model.indexFolder( f, FOLDER_ID.DEFAULT );
                 defaultModel.subfolders.push(f.id);
             });
             this.model.currentFolder = defaultModel;

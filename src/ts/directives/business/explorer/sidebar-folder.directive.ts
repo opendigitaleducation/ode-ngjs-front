@@ -1,6 +1,6 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
 import { ID, IFolder } from "ode-ts-client";
-import { ExplorerModel, FolderModel } from "../../../stores/explorer.model";
+import { ExplorerModel, FolderModel, FOLDER_ID } from "../../../stores/explorer.model";
 
 type OnSelectParam = {folder:IFolder};
 
@@ -51,7 +51,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         ctrl.folderModel = ctrl.model.getFolderModel( scope.folderId );
         if( ! ctrl.folderModel ) throw 'Bad folder model';
         // Auto-expand default folder when linked
-        if( scope.folderId==='default' ) {
+        if( scope.folderId===FOLDER_ID.DEFAULT ) {
             ctrl.expanded = true;
         }
 	}

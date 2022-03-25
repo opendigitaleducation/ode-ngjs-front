@@ -1,5 +1,10 @@
 import { App, ExplorerFrameworkFactory, GetResourcesResult, IContext, ID, IExplorerContext, IFolder, IResource, ISearchParameters, ResourceType } from "ode-ts-client";
 
+export enum FOLDER_ID {
+    DEFAULT="default",
+    BIN="bin"
+};
+
 export type FolderModel = {
     folder: IFolder;
     ancestors: ID[];
@@ -129,7 +134,7 @@ export class ExplorerModel {
         if( f === this.currentFolder?.folder ) return Promise.resolve();
 
         if( this.explorer && this.searchParameters ) {
-            if( f.id!=='default' ) {
+            if( f.id!==FOLDER_ID.DEFAULT ) {
                 this.searchParameters.filters.folder = f.id;
             } else {
                 delete this.searchParameters.filters.folder;
@@ -155,7 +160,7 @@ export class ExplorerModel {
     /** Create a new folder in the current folder. */
     createFolder( name:string ) {
         if( !this.explorer || !this.resourceType ) return Promise.reject();
-        const parentFolderId = this.currentFolder?.folder.id || 'default';
+        const parentFolderId = this.currentFolder?.folder.id || FOLDER_ID.DEFAULT;
         return this.explorer.createFolder( this.resourceType, parentFolderId, name )
         .then( r => {
             this.indexFolder( r, parentFolderId );
@@ -182,15 +187,16 @@ export class ExplorerModel {
 
     /** Move selection to another folder. */
     moveSelectionToFolder( moveToFolder:IFolder ) {
-        if( this.currentFolder?.folder === moveToFolder ) {
+        if( this.currentFolder?.folder === moveToFolder || !this.resourceType) {
             return;
         }
         // Check that we do not move a folder inside itself.
         if( this.selectedFolders.some( f => f.id===moveToFolder.id ) ) {
             throw 'A folder cannot contain itself';
         }
-        this.explorer?.move( 
-            moveToFolder.id ?? 'default',
+        this.explorer?.move(
+            this.resourceType,
+            moveToFolder.id ?? FOLDER_ID.DEFAULT,
             this.selectedItems.map(i => i.id), 
             this.selectedFolders.map(f => f.id)
         ).then( () => {
@@ -221,7 +227,14 @@ export class ExplorerModel {
 
     /** Delete selected folders and/or resources. */
     deleteSelection() {
-        this.explorer?.delete( this.selectedItems.map(i=>i.id), this.selectedFolders.map(i=>i.id) ).then( () => {
+        if( !this.resourceType )
+            return;
+
+        this.explorer?.delete(
+            this.resourceType,
+            this.selectedItems.map(i=>i.id), 
+            this.selectedFolders.map(i=>i.id)
+        ).then( () => {
             // Remove displayed items
             this.selectedItems.forEach( i => {
                 const idx = this.displayedItems.indexOf(i);
