@@ -1,5 +1,5 @@
 import { IAttributes, IController, IDirective, ILocationService, IRootScopeService, IScope, IWindowService } from "angular";
-import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory, IFolder } from "ode-ts-client";
+import { App, ResourceType, IOrder, SORT_ORDER, RESOURCE, ACTION, ExplorerFrameworkFactory, IFolder, IFilter, BOOLEAN_FILTER, BooleanFilterType } from "ode-ts-client";
 import { ExplorerModel } from "../../../stores/explorer.model";
 
 /* Controller for the directive */
@@ -14,6 +14,26 @@ export class Controller implements IController {
         public $rootScope:IRootScopeService,
         public model:ExplorerModel
     ){}
+
+    filterType:{[filter in BooleanFilterType]?: string} = {};
+    getFilterIcon(filter:BooleanFilterType): string {
+        switch(filter) {
+            case "owner":   return "ic-user";
+            case "shared":  return "ic-share";
+            case "public":  return "ic-public";
+            case "favorite":return "ic-favorite";
+            default:        return "";
+        }
+    }
+    getFilterI18n(filter:BooleanFilterType): string {
+        switch(filter) {
+            case "owner":   return "explorer.filter.owner";
+            case "shared":  return "explorer.filter.shared";
+            case "public":  return "explorer.filter.public";
+            case "favorite":return "explorer.filter.favorite";
+            default:        return "";
+        }
+    }
 
     $onInit() {
         if( !this.app ) throw new Error("App undefined for explorer.");
@@ -38,6 +58,25 @@ export class Controller implements IController {
 
         this.model.initialize( this.app, this.resource )
         .then( ctx => {
+            // Filters
+            for( let filter of ctx.filters ) {
+                switch( typeof filter.defaultValue ) {
+                    case "string":
+                        this.filterType[filter.id] = "text";
+                        // @ts-ignore this.model.searchParameters is defined now
+                        this.model.searchParameters.filters[filter.id] = filter.defaultValue as string;
+                        break;
+                    case "boolean": 
+                        this.filterType[filter.id] = "checkbox";
+                        // @ts-ignore this.model.searchParameters is defined now
+                        this.model.searchParameters.filters[filter.id] = filter.defaultValue as boolean;
+                        break;
+                    default:
+                        break;;
+                }
+            }
+
+            // list content
             const defaultModel = this.model.getFolderModel('default');
             defaultModel.folder.childNumber = ctx.folders.length;
             ctx.folders.forEach( f => {
@@ -69,7 +108,7 @@ export class Controller implements IController {
     onCreate() {
         if( this.model.explorer && this.model.resourceType ) {
             this.model.explorer?.create( this.model.resourceType );
-            // exit point to the app
+            // TODO Is the above call an exit point to the legacy app ?
         }
     }
 }

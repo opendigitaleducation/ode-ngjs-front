@@ -64,6 +64,27 @@ export class ExplorerModel {
         return this.context;
     }
 
+    /** Search with current parameters, but with pagination reset. */
+    searchAgain() {
+        if( this.explorer ) {
+            this.explorer.getSearchParameters().pagination.startIdx = 0;
+            // The following triggers the WATCH RESOURCES (see initialize())
+            return this.explorer.getResources();
+        }
+        return Promise.reject();
+    }
+
+    /** Search with current parameters, but next with page. */
+    searchMore() {
+        if( this.explorer ) {
+            const pagination = this.explorer.getSearchParameters().pagination;
+            pagination.startIdx += pagination.pageSize;
+            // The following triggers the WATCH RESOURCES (see initialize())
+            return this.explorer.getResources();
+        }
+        return Promise.reject();
+    }
+
     requestUpdate() {
         document.dispatchEvent( new CustomEvent("explorer.view.updated") );
     }
@@ -114,8 +135,8 @@ export class ExplorerModel {
                 delete this.searchParameters.filters.folder;
             }
             this.currentFolder = this.getFolderModel( f.id );
-            // The following triggers the WATCH RESOURCES (see initialize())
-            return this.explorer?.getResources()
+
+            return this.searchAgain()
             .then( r=> r.folders.forEach(folder => this.indexFolder(folder, f.id)) );
         } else {
             throw "Search context not initialized";
