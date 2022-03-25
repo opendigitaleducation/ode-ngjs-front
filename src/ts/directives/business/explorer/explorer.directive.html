@@ -6,19 +6,22 @@
         <section class="explorer">
             <section class="explorer-header explorer__header">
 
-                <form class="row justify-content-between mb-2">
+                <div class="row justify-content-between mb-2">
                     <div class="col-lg-9 col-md-12 input-searchbar">
                         <!-- <label for="" class="visually-hidden">Taper votre recherche ici</label> -->
                         <i class="ic-search form-control-feedback"></i>
-                        <input type="search" class="form-control" id="" i18n-placeholder="explorer.searchbar.placeholder">
+                        <input type="search" class="form-control" id=""
+                                ng-model="ctrl.model.searchParameters.search"
+                                ng-keyup="ctrl.onSearchTermChanged($event)"
+                                i18n-placeholder="explorer.searchbar.placeholder">
                     </div>
                     <div class="col-lg-3 d-none d-sm-none d-md-none d-lg-block">
-                        <button class="btn btn-block btn-primary" type="submit"
+                        <button class="btn btn-block btn-primary" type="button"
                                 ng-click="ctrl.onCreate()">
                             <i class="ic-plus"></i>&nbsp;<i18n>explorer.toaster.btn.create.label</i18n>
                         </button>
                     </div>
-                </form>
+                </div>
                 
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2>{{ctrl.model.currentFolder.folder.name}}&nbsp;<small>({{ctrl.model.currentFolder.folder.childNumber}} éléments)</small></h2>

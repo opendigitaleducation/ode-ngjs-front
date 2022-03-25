@@ -105,6 +105,19 @@ export class Controller implements IController {
         }
     }
 
+    onSearchTermChanged( e:KeyboardEvent ) {
+        const search = this.model.searchParameters;
+        if( search ) {
+            search.pagination.startIdx = 0;
+            if( e && e.code == "Enter" ) {
+                if( search.search?.length===0 ) {
+                    delete search.search;
+                }
+                this.model.searchAgain();
+            }
+        }
+    }
+
     onCreate() {
         if( this.model.explorer && this.model.resourceType ) {
             this.model.explorer?.create( this.model.resourceType );

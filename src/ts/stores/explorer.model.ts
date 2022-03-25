@@ -58,7 +58,7 @@ export class ExplorerModel {
                     this.selectedFolders  = [];
                     this.selectedItems    = [];
                 } else {
-                    this.displayedItems.concat( resultset.output.resources );
+                    this.displayedItems.push( ...resultset.output.resources );
                 }
                 this.requestUpdate();
             }
@@ -90,6 +90,7 @@ export class ExplorerModel {
         return Promise.reject();
     }
 
+    /** Signal all listeners to refresh their view. */
     requestUpdate() {
         document.dispatchEvent( new CustomEvent("explorer.view.updated") );
     }
@@ -120,6 +121,7 @@ export class ExplorerModel {
         }
     }
 
+    /** Remove a folder (and its subfolders) from the index tree. */
     unindexFolder( folderId:ID ) {
         const folder = this.index[folderId];
         if( typeof folder === "object" ) {
