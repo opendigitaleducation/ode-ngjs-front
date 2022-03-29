@@ -1,4 +1,4 @@
-import { IAttributes, ICompileService, IController, IDirective, IScope } from "angular";
+import { IAttributes, IController, IDirective, IScope } from "angular";
 import { App, USER_PREFS } from "ode-ts-client";
 import { L10n, conf, notif } from "../../../utils"; 
 import { TrackingService } from "../../../services";
@@ -53,7 +53,6 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
 	}
 	
 	constructor( 
-		private $compile:ICompileService, 
 		private tracking:TrackingService 
 		) {}
 
@@ -66,7 +65,7 @@ class Directive implements IDirective<PortalScope,JQLite,IAttributes,IController
  * or
  *      &lt;ode-portal template-url="/platform/assets/themes/...."></ode-portal&gt;
  */
-export function DirectiveFactory($compile:ICompileService, tracking:TrackingService) {
-	return new Directive($compile,tracking);
+export function DirectiveFactory(tracking:TrackingService) {
+	return new Directive(tracking);
 }
-DirectiveFactory.$inject=["$compile","odeTracking"];
+DirectiveFactory.$inject=["odeTracking"];

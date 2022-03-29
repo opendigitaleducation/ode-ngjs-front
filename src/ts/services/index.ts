@@ -9,3 +9,5 @@ export * from './quickstart.service';
 export * from './tracking.service';
 export * from './xiti.service';
 export * from './rich-content.service';
+export * from './video-upload.service';
+export * from './video-event-tracker.service';

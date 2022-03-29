@@ -1,9 +1,7 @@
 import { L10n, conf } from ".";
 import { notify } from "../services/notify.service";
 import $ from "jquery"; // FIXME : remove jQuery dependency 
-
-/** These statuses are sent to the callbacks registered with the state(cb) method. */
-type RecorderStatus = 'idle'|'preparing'|'recording'|'suspended'|'paused'|'playing'|'stop'|'uploading'|'encoding'|'saved';
+import { RecorderPermission, RecorderState } from "./interfaces";
 
 declare const Zlib: any;
 
@@ -135,7 +133,7 @@ export var audio_recorder = (function () {
 
 				recorder = context.createScriptProcessor(bufferSize, 2, 2);
 				recorder.onaudioprocess = (e:AudioProcessingEvent) => {
-					if (this.status !== 'recording') {
+					if (this.state !== 'recording') {
 						return;
 					}
 					var left = new Float32Array(e.inputBuffer.getChannelData(0));
@@ -149,7 +147,7 @@ export var audio_recorder = (function () {
 
 					sendWavChunk();
 
-					notifyFollowers(this.status);
+					notifyFollowers(this.state);
 				};
 
 				gainNode.connect(recorder);
@@ -184,31 +182,31 @@ export var audio_recorder = (function () {
 			if (ws) {
 				ws.send("cancel");
 			}
-			this.status = 'idle';
+			this.state = 'idle';
 			player.pause();
 			if (player.currentTime > 0) {
 				player.currentTime = 0;
 			}
 			leftChannel = [];
 			rightChannel = [];
-			notifyFollowers(this.status);
+			notifyFollowers(this.state);
 		},
 		flush: function () {
 			this.stop();
 			this.elapsedTime = 0;
 			leftChannel = [];
 			rightChannel = [];
-			notifyFollowers(this.status);
+			notifyFollowers(this.state);
 		},
 		record: async function () {
 			player.pause();
 			var that = this;
-			if (that.status == 'preparing') return;
-			that.status = 'preparing';
+			if (that.state == 'preparing') return;
+			that.state = 'preparing';
 			await getZlib();
 			if (ws) {
-				that.status = 'recording';
-				notifyFollowers(that.status);
+				that.state = 'recording';
+				notifyFollowers(that.state);
 				if (!loaded) {
 					that.loadComponents();
 				}
@@ -219,8 +217,8 @@ export var audio_recorder = (function () {
 						player.currentTime = 0;
 					}
 
-					that.status = 'recording';
-					notifyFollowers(that.status);
+					that.state = 'recording';
+					notifyFollowers(that.state);
 					if (!compress) {
 						ws && ws.send('rawdata');
 					}
@@ -230,8 +228,8 @@ export var audio_recorder = (function () {
 				};
 				ws.onerror = function (event: Event) {
 					console.log(event);
-					that.status = 'stop';
-					notifyFollowers(that.status);
+					that.state = 'stopped';
+					notifyFollowers(that.state);
 					closeWs();
 					notify.error( (event as ErrorEvent).error );
 				}
@@ -240,7 +238,7 @@ export var audio_recorder = (function () {
 						console.log(event.data);
 						closeWs();
 						notify.error(event.data);
-					} else if (event.data && event.data === "ok" && that.status === "encoding") {
+					} else if (event.data && event.data === "ok" && that.state === "encoding") {
 						closeWs();
 						notify.info("recorder.saved");
 						notifyFollowers('saved');
@@ -249,26 +247,27 @@ export var audio_recorder = (function () {
 
 				}
 				ws.onclose = function (event) {
-					that.status = 'stop';
+					that.state = 'stopped';
 					that.elapsedTime = 0;
-					notifyFollowers(that.status);
+					notifyFollowers(that.state);
 					clearWs();
 				}
 			}
 		},
 		suspend: function () {
-			this.status = 'suspended';
+			this.state = 'suspended';
 			player.pause();
-			notifyFollowers(this.status);
+			notifyFollowers(this.state);
+			return Promise.resolve();
 		},
 		pause: function () {
-			this.status = 'paused';
+			this.state = 'paused';
 			player.pause();
-			notifyFollowers(this.status);
+			notifyFollowers(this.state);
 		},
 		play: function () {
 			this.pause();
-			this.status = 'playing';
+			this.state = 'playing';
 			var encoder = new Worker('/infra/public/js/audioEncoder.js');
 			encoder.postMessage(["init", context.sampleRate])
 			encoder.postMessage(['wav', rightChannel, leftChannel, recordingLength]);
@@ -276,19 +275,19 @@ export var audio_recorder = (function () {
 				player.src = window.URL.createObjectURL(e.data);
 				player.play();
 			};
-			notifyFollowers(this.status);
+			notifyFollowers(this.state);
 		},
-		state: function (callback:Function) {
+		status: function (callback:Function) {
 			followers.push(callback);
 		},
 		title: "",
-		status: 'idle',
-		permission: 'idle',
+		state: 'idle' as RecorderState,
+		permission: 'idle' as RecorderPermission,
 		save: function () {
 			sendWavChunk();
 			ws && ws.send("save-" + this.title);
-			this.status = 'encoding';
-			notifyFollowers(this.status);
+			this.state = 'encoding';
+			notifyFollowers(this.state);
 		},
 		mute: function (mute:boolean) {
 			if (mute) {

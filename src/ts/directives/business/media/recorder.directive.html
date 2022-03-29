@@ -13,7 +13,8 @@
 
 <!-- video button -->
 <div ng-class="{ 'd-none': !ctrl.showMenu || !ctrl.isVideoCompatible }">
-    <a class="btn-circle" href="#">
+    <a id="btnVideoRecorder" class="btn-circle" href="#"
+            ng-click="ctrl.switchVideoRecord()">
         <i class="fas fa-video"></i>
     </a>
 </div>
@@ -23,7 +24,7 @@
 </div>
 
 <!-- audio recorder -->
-<div ng-if="ctrl.showRecorder" ng-class="{ 'd-none': ctrl.showMenu || ctrl.isVideo || !ctrl.isAudioCompatible }">
+<div ng-if="ctrl.hasPermission" ng-class="{ 'd-none': ctrl.showMenu || ctrl.isVideo || !ctrl.isAudioCompatible }">
     <div class="record-timer">
         <i class="fas fa-microphone"></i>
         [[ctrl.time()]]
@@ -63,4 +64,44 @@
     </div>
 </div>
 
-<!-- TODO video recorder -->
+<!-- video recorder -->
+<div ng-if="ctrl.hasPermission && !(ctrl.showMenu || ctrl.isAudio) && ctrl.isVideoCompatible">
+    <div class="record-timer">
+        <i class="fas fa-video"></i>
+        &nbsp;[[ctrl.msToTime(ctrl.recorder.elapsedTime)]]/[[ctrl.msToTime(ctrl.recordMaxTime)]]
+    </div>
+    <div>
+        <select class="form-select mb-2"
+            ng-if="ctrl.videoInputDevices.length > 1"
+            ng-options="vid as vid.label for vid in ctrl.videoInputDevices"
+            ng-disabled="ctrl.isRecording"
+            ng-model="ctrl.selectedVid" ng-change="ctrl.switchVideo(ctrl.selectedVid.deviceId)" >
+        </select>
+    </div>
+    <div id="recorderWidgetVideoPlayer"><!--The video player will be appended here--></div>
+    <div>
+        <input type="text" class="form-control" i18n-placeholder="title" ng-model="ctrl.recorder.title" />
+    </div>
+    <div class="record-controls">
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.switchVideoRecord()"
+                ng-disabled="ctrl.isEncoding || ctrl.isUploading">
+            <i class="fas" ng-class="{'fa-stop': ctrl.isRecording, 'fa-redo-alt': !ctrl.isRecording}"></i>
+            <span class="label">[[ctrl.isRecording ? 'embed.stop' : 'embed.redo' | i18n]]</span>
+        </button>
+
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.switchPlay()"
+                ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
+            <i class="fas" ng-class="{'fa-pause': ctrl.isPlaying, 'fa-play': !ctrl.isPlaying}"></i>
+            <span class="label">[[ctrl.isPlaying ? 'embed.pause' : 'embed.play' | i18n]]</span>
+        </button>
+
+        <button type="button" class="btn btn-circle"
+                ng-click="ctrl.saveRecord()"
+                ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading">
+            <i ng-class="ctrl.getSaveBtnClass()"></i>
+            <span class="label"><i18n>embed.save</i18n></span>
+        </button>
+    </div>
+</div>

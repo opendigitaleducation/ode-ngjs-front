@@ -1,71 +1,76 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
+import { APP } from "ode-ts-client";
 import { NgHelperService, TrackedAction } from "../../..";
-import { audio_recorder } from "../../../utils/audio-recorder";
-
-interface IAnyRecorder {
-    isCompatible():boolean;
-    title:string;
-    status:string;
-    permission:string;
-    elapsedTime:number;
-    state(callback:Function):void;
-    pause():void;
-    play():void;
-    suspend():void;
-    record():void;
-    flush():void;
-    save():void;
-}
+import { VideoEventTrackerService, VideoUploadService } from "../../../services";
+import { conf, deviceType, IAnyRecorder, RecorderState, session } from "../../../utils";
+import { audio_recorder } from "../../../utils/recorder-audio";
+import { VideoRecorder } from "../../../utils/recorder-video";
 
 type RecorderType = "audio" | "video";
 
 /* Controller for the directive */
 export class Controller implements IController {
     private _recorder:IAnyRecorder = this.setRecorder( "audio" );    // Defaults to audio recorder
-    public isAudioCompatible:boolean = audio_recorder.isCompatible() /* && video_recorder.isCompatible()*/;
-    public isVideoCompatible:boolean = /* video_recorder.isCompatible()*/ false;
+    public isAudioCompatible:boolean = audio_recorder.isCompatible();
+    public isVideoCompatible:boolean = VideoRecorder.isCompatible() && session().hasWorkflow("com.opendigitaleducation.video.controllers.VideoController|capture");
+
+    // @ts-ignore the following is set in the AngularJS link method
+    public videoFactory: ()=>HTMLMediaElement;
+    // @ts-ignore the following is set in the AngularJS link method
+    public videoDurationHandler: (event: Event)=>void;
+    // @ts-ignore the following is set in the AngularJS link method
+    public recorderStatus: (status:RecorderState)=>void;
 
     setRecorder( type:RecorderType ):IAnyRecorder {
         if( type==="audio" ) {
             this._recorder = audio_recorder;
-        // } else {
-        //     this._recorder = video_recorder;
+        } else {
+            this._recorder = new VideoRecorder( 
+                this.videoFactory, 
+                this.videoDurationHandler,
+                this.videoUploadService,
+                this.videoEventTrackerService,
+                this.selectedVid
+            );
         }
+        this._recorder.status( this.recorderStatus );
         return this._recorder;
     }
 
+    // Utility accessors for simpler template reading.
     get recorder():IAnyRecorder {
         return this._recorder;
     }
+    get hasPermission()     { return this.recorder.permission === 'granted' };
 
-    get getPermission() { return this.recorder.permission === 'granted' };
+    get isIdle()            { return !this.recorder || this.recorder.state === 'idle'; }
+    get isPreparing()       { return this.recorder.state === 'preparing'; }
+    get isRecording()       { return this.recorder.state === 'recording'; }
+    get isSuspended()       { return this.recorder.state === 'suspended'; }
+    get isPaused()          { return this.recorder.state === 'paused'; }
+    get isPlaying()         { return this.recorder.state === 'playing'; }
+    get isStopped()         { return this.recorder.state === 'stopped'; }
+    get isEncoding()        { return this.recorder.state === 'encoding'; }
+    get isUploading()       { return this.recorder.state === 'uploading'; }
 
-    get isIdle()            { return !this.recorder || this.recorder.status === 'idle'; }
-    get isPreparing()       { return this.recorder.status === 'preparing'; }
-    get isRecording()       { return this.recorder.status === 'recording'; }
-    get isSuspended()       { return this.recorder.status === 'suspended'; }
-    get isPaused()          { return this.recorder.status === 'paused'; }
-    get isPlaying()         { return this.recorder.status === 'playing'; }
-    get isStopped()         { return this.recorder.status === 'stop'; }
-    get isEncoding()        { return this.recorder.status === 'encoding'; }
-    get isUploading()       { return this.recorder.status === 'uploading'; }
-
-    get showMenu()          { return this.isIdle || this.isStopped || !this.getPermission; }
-    get showRecorder()      { return this.getPermission }
+    get showMenu()          { return this.isIdle || this.isStopped || !this.hasPermission; }
+    get showRecorder()      { return this.hasPermission }
 
     get showActionButtons() { return this.recorder && this.recorder.elapsedTime > 0 && !this.isStopped; }
 
-    get isAudio():boolean {
-        return this._recorder === audio_recorder;
-    }
-    get isVideo():boolean {
-        return false;
+    get isAudio():boolean   { return this._recorder === audio_recorder; }
+    get isVideo():boolean   { return this._recorder !== audio_recorder; }
+
+    // Video-specific members
+    videoInputDevices?: MediaDeviceInfo[];
+    selectedVid?: MediaDeviceInfo;
+    /** Max video recording duration, in ms. */
+    get recordMaxTime():number {
+        return this.videoUploadService.maxDuration * 60 * 1000;
     }
 
     switchAudioRecord() {
-        if( !this.recorder ) {
-            this.setRecorder( "audio" );
-        }
+        this.setRecorder( "audio" );
         if( this.isRecording ) {
             this.recorder?.suspend();
         } else {
@@ -79,29 +84,57 @@ export class Controller implements IController {
         }
     }
 
+    switchVideoRecord() {
+        const startRecording = this.showMenu;
+        if( this.isAudio ) {
+            this.setRecorder( "video" );
+        }
+        if( startRecording ) {
+            this.recorder?.record();
+
+            // Track this event.
+            const btn = document.getElementById("btnVideoRecorder");
+            if( btn ) {
+                this.trackEvent(btn, { detail:{'open':'video'} });
+            }
+        } else if( this.isRecording ) {
+            this.recorder?.suspend(); // Stop recording and prepare playing
+        } else {
+            this.recorder?.flush(); // Revert to idle state
+            this.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+        }
+    }
+
     // Give an opportunity to track some events from outside of this component.
     private trackEvent(e:HTMLElement, p:CustomEventInit<TrackedAction>) {
         // Allow events to bubble up.
         if(typeof p.bubbles === "undefined") p.bubbles = true;
 
         let event = null;
-        if( p && p.detail?.open==='audio' ) {
+        if( p && (p.detail?.open==='audio' || p.detail?.open==='video') ) {
             event = new CustomEvent( 'ode-recorder', p );
         }
         if( event && e ) {
             e.dispatchEvent(event);
         }
     }
+    
+    /** Format a duration in milliseconds as a human-readable string. */
+    msToTime = (s: number): string => {
+        s /= 1000;
+        let minutes = parseInt(''+(s / 60));
+        let seconds = parseInt(''+(s % 60));
+        return minutes +':'+ this.pad2(seconds);
+    }
 
     private pad2(val:number):string {
         return ((val < 10) ? '0':'') + val;
     }
 
+    /** Format elapsedTime (in seconds) to a human-readable string. */
     time() {
         if( !this.recorder ) return "";
-        let minutes = parseInt(''+(this.recorder.elapsedTime / 60));
-        let seconds = parseInt(''+(this.recorder.elapsedTime % 60));
-        return this.pad2(minutes) + ':' + this.pad2(seconds);
+        return this.msToTime( this.recorder.elapsedTime*1000 );
     }
 
     switchPlay() {
@@ -112,6 +145,12 @@ export class Controller implements IController {
                 this.recorder.play();
             }
         }
+    }
+
+    async switchVideo(id:string) {
+        const rec = this.recorder as VideoRecorder;
+        await rec.switchCamera(id);
+        await rec.record();
     }
 
     saveRecord() {
@@ -130,6 +169,11 @@ export class Controller implements IController {
             return 'fas fa-save';
         }
     }
+
+    constructor(
+        public videoUploadService: VideoUploadService,
+        public videoEventTrackerService: VideoEventTrackerService
+    ){}
 }
 
 interface Scope extends IScope {
@@ -148,7 +192,7 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         format: '@?',
         onUpload: '&?'
     };
-	controller = [Controller];
+	controller = ["odeVideoUploadService", "odeVideoEventTrackerService", Controller];
 	controllerAs = 'ctrl';
 	require = ['odeRecorder'];
 
@@ -161,17 +205,108 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
      * @param controllers Array of "require"d controllers : [ngModelCtrl]
      */
     link(scope:Scope, elem:JQLite, attr:IAttributes, controllers?:IController[]): void {
-        let ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
+        const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
         if( !ctrl || ! ctrl.recorder ) {
             return;
         }
 
-        ctrl.recorder.state( (eventName:string) => {
-            if(eventName === 'saved'){
-                scope.onUpload && scope.onUpload();
+        // If video is available, initialize it.
+        if( ctrl.isVideoCompatible ) {
+            // Detect available video capture devices
+            const lang = conf().Platform.idiom;
+            const backCameraChoice = {deviceId:"environment", label: lang.translate("video.back.camera"), groupId:'', kind:'videoinput'} as MediaDeviceInfo;
+            const frontCameraChoice = {deviceId:"user", label: lang.translate("video.front.camera"), groupId:'', kind:'videoinput'} as MediaDeviceInfo;
+
+            ctrl.videoUploadService.initialize()
+            // First call to the API, so that the operating system ask for user's consent if needed, then enumerate video stream devices,
+            .then( () => {
+                return navigator.mediaDevices.enumerateDevices();
+            })
+            // ...Filter on video inputs only,
+            .then( devices => { 
+                return devices.filter( device => { 
+                    //console.debug( JSON.stringify(device) );
+                    return device.kind === "videoinput";
+                })
+            })
+            // ...Assemble the final cameras list,
+            .then( videoinputs => {
+                switch( deviceType ) {
+                    case "Mobile":
+                    case "Tablet":
+                        if( videoinputs && videoinputs.length>1 ) {
+                            // This mobile/tablet has more than 1 camera 
+                            // => we assume at least one is on the front (user) and one is on the back (environment),
+                            //    and let the system choose the best for us.
+                            ctrl.videoInputDevices = [backCameraChoice, frontCameraChoice];
+                        } else {
+                            // Else we let the system use the only one that exists (or none)
+                            ctrl.videoInputDevices = [backCameraChoice];
+                        }
+                        break;
+                    default: // "Desktop" or other future types => list all cameras without distinction.
+                        ctrl.videoInputDevices = videoinputs;
+                        break;
+                }
+            })
+            .catch( () => {
+                console.error('[VideoController.videoInputDevices] An error occured while detecting cameras.');
+                ctrl.videoInputDevices = [backCameraChoice];
+            })
+            .finally( () => {
+                if( ctrl.videoInputDevices )
+                    ctrl.selectedVid = ctrl.videoInputDevices[0];
+                this.helperSvc.safeApply( scope );
+            });
+        }
+
+        ctrl.videoFactory = () => {
+            const videoElem = document.createElement("video");
+            videoElem.setAttribute( "style", "max-width:100%" );
+            videoElem.setAttribute( "playsinline", "true" );
+            videoElem.setAttribute( "autoplay", "" );
+            videoElem.setAttribute( "muted", "" );
+            // Wait before inserting this new element in the DOM tree.
+            setTimeout( () => {
+                document.getElementById("recorderWidgetVideoPlayer")?.appendChild( videoElem );
+            }, 100 );
+
+            return videoElem;
+        }
+
+        const timestamps = {
+            startedAt: 0,
+            endedAt: 0
+        }
+
+        // Video duration is measured in milliseconds
+        ctrl.videoDurationHandler = (event:Event) => {
+            if( timestamps.startedAt===0 ) {
+                timestamps.startedAt = event.timeStamp;
             }
-            this.helperSvc.safeApply( scope );   // Force reevaluation of the recorder's field
-        });
+            if( ctrl.isRecording ) {
+                timestamps.endedAt = event.timeStamp;
+                ctrl.recorder.elapsedTime = timestamps.endedAt - timestamps.startedAt;
+
+                if( ctrl.recorder.elapsedTime >= ctrl.recordMaxTime ) {
+                    //ctrl.switchVideoRecord();
+                    ctrl.recorder.suspend();
+                }
+            }
+            this.helperSvc.safeApply( scope );
+        }
+
+        ctrl.recorderStatus = (status:RecorderState|'saved') => {
+            if( status==='recording' ) {
+                timestamps.endedAt = timestamps.startedAt = 0;
+            }
+            if( status==='saved' ){
+                scope.onUpload && scope.onUpload();
+                ctrl.recorder.flush();
+                ctrl.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+            }
+            this.helperSvc.safeApply( scope );   // Force reevaluation of the recorder's status
+        }
     }
 }
 
