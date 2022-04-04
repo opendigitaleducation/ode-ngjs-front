@@ -94,7 +94,7 @@ export class Controller implements IController {
 				if( this.model.selectedItems.length ) {
 					this.model.explorer?.open(
 						this.model.resourceType,
-						this.model.selectedItems[0].id
+						this.model.selectedItems[0].assetId
 					);
 					// TODO catch Promise errors
 				}

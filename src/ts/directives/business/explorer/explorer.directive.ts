@@ -42,12 +42,14 @@ export class Controller implements IController {
         // Explorer has 2 folders by default :
         const defaultFolder:IFolder = {
             id: FOLDER_ID.DEFAULT,
+            assetId: FOLDER_ID.DEFAULT,
             name: "Mes blogs", // TODO appliquer une clé de trad, en fonction du type de ressource stocké dans ce dossier.
             childNumber: 0, // will be adjusted below
             type: "default"
         };
         const binFolder:IFolder = {
             id: FOLDER_ID.BIN,
+            assetId: FOLDER_ID.BIN,
             name: "Corbeille", // TODO appliquer une clé de trad.
             childNumber: 0,
             type: "bin"

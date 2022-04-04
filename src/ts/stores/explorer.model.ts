@@ -189,14 +189,12 @@ export class ExplorerModel {
 
     /** Move selection to another folder. */
     moveSelectionToFolder( moveToFolder:IFolder ) {
-        if( this.currentFolder?.folder === moveToFolder || !this.resourceType) {
-            return;
-        }
+        if( !this.explorer || !this.resourceType || this.currentFolder?.folder === moveToFolder ) return Promise.reject();
         // Check that we do not move a folder inside itself.
         if( this.selectedFolders.some( f => f.id===moveToFolder.id ) ) {
             throw 'A folder cannot contain itself';
         }
-        this.explorer?.move(
+        return this.explorer.move(
             this.resourceType,
             moveToFolder.id ?? FOLDER_ID.DEFAULT,
             this.selectedItems.map(i => i.id), 

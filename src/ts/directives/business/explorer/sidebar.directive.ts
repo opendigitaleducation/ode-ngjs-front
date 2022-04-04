@@ -32,7 +32,7 @@ export class Controller implements IController {
 			.then( r => {
 				this.folderName = "";
 				this.showNewFolder = false;
-//				this.requestUpdate?.call(this);
+				this.requestUpdate?.call(this);
 			});
 		}
 	}
