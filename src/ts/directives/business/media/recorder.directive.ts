@@ -3,10 +3,21 @@ import { APP } from "ode-ts-client";
 import { NgHelperService, TrackedAction } from "../../..";
 import { VideoEventTrackerService, VideoUploadService } from "../../../services";
 import { conf, deviceType, IAnyRecorder, RecorderState, session } from "../../../utils";
+import { IObjectGuardDelegate } from "../../../utils/navigation-guard";
 import { audio_recorder } from "../../../utils/recorder-audio";
 import { VideoRecorder } from "../../../utils/recorder-video";
 
 type RecorderType = "audio" | "video";
+
+class VideoRecordGuardModel implements IObjectGuardDelegate{
+    hasRecorded = false;
+    guardObjectIsDirty(): boolean{
+        return this.hasRecorded;
+    }
+    guardObjectReset(): void{
+        this.hasRecorded = false;
+    }
+}
 
 /* Controller for the directive */
 export class Controller implements IController {
@@ -179,6 +190,7 @@ export class Controller implements IController {
 interface Scope extends IScope {
     format?:string;
     onUpload?:Function;
+    recordGuard?: VideoRecordGuardModel;
 }
 
 /* Directive */
@@ -209,6 +221,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         if( !ctrl || ! ctrl.recorder ) {
             return;
         }
+
+        scope.recordGuard = new VideoRecordGuardModel();
 
         // If video is available, initialize it.
         if( ctrl.isVideoCompatible ) {
@@ -297,13 +311,28 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
         }
 
         ctrl.recorderStatus = (status:RecorderState|'saved') => {
-            if( status==='recording' ) {
-                timestamps.endedAt = timestamps.startedAt = 0;
-            }
-            if( status==='saved' ){
-                scope.onUpload && scope.onUpload();
-                ctrl.recorder.flush();
-                ctrl.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+            switch( status ) {
+                case 'recording' : {
+                    timestamps.endedAt = timestamps.startedAt = 0;
+
+                    if( scope.recordGuard )
+                        scope.recordGuard.hasRecorded = true;
+                }
+                break;
+                case 'saved' : {
+                    if( scope.recordGuard )
+                        scope.recordGuard.guardObjectReset();
+                        
+                    scope.onUpload && scope.onUpload();
+                    ctrl.recorder.flush();
+                    ctrl.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+                }
+                case 'idle' : {
+                    if( scope.recordGuard )
+                        scope.recordGuard.guardObjectReset();
+                }
+                default: 
+                    break;
             }
             this.helperSvc.safeApply( scope );   // Force reevaluation of the recorder's status
         }

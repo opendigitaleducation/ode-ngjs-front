@@ -1,5 +1,5 @@
 import angular, { IModule } from "angular";
-import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget, AppTitle, Pulsar, Assistant, Lightbox, SmartBanner, Modal, ModalContainer, Infotip, Autocomplete, Recorder, SkinSrc, ConnectorLightbox, Help, BindHtml, Xiti } from "../directives";
+import { Portal, Navbar, WithTheme, Popover, PopoverContent, PopoverOpener, Logout, WidgetContainer, Widget, AppTitle, Pulsar, Assistant, Lightbox, SmartBanner, Modal, ModalContainer, Infotip, Autocomplete, Recorder, SkinSrc, ConnectorLightbox, Help, BindHtml, Xiti, NavigationTrigger, GuardRoot, InputGuard, DirtyGuard, DocumentGuard, CustomGuard, ResetGuard } from "../directives";
 import { QuickstartService, ThemeHelperService, WidgetService, RichContentService, VideoUploadService, VideoEventTrackerService } from "../services";
 
 const dndLists = require('angular-drag-and-drop-lists');
@@ -17,6 +17,14 @@ const module = angular.module("odeUi", ['dndLists']);
     .directive("odeModal", Modal.DirectiveFactory)
     .directive("odeModalContainer", ModalContainer.DirectiveFactory)
     .directive("odeInfotip", Infotip.DirectiveFactory)
+
+    .directive("navigationTrigger", NavigationTrigger.DirectiveFactory)
+    .directive("guardRoot", GuardRoot.DirectiveFactory)
+    .directive("inputGuard", InputGuard.DirectiveFactory)
+    .directive("dirtyGuard", DirtyGuard.DirectiveFactory)
+    .directive("documentGuard", DocumentGuard.DirectiveFactory)
+    .directive("customGuard", CustomGuard.DirectiveFactory)
+    .directive("resetGuard", ResetGuard.DirectiveFactory)
 
     .directive("appTitle", AppTitle.DirectiveFactory)
     .directive("logout", Logout.DirectiveFactory)

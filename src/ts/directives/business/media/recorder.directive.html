@@ -65,7 +65,9 @@
 </div>
 
 <!-- video recorder -->
-<div ng-if="ctrl.hasPermission && !(ctrl.showMenu || ctrl.isAudio) && ctrl.isVideoCompatible">
+<div ng-if="ctrl.hasPermission && !(ctrl.showMenu || ctrl.isAudio) && ctrl.isVideoCompatible"
+        navigation-guard="true"
+        guard-root="videoCapturedGuard">
     <div class="record-timer">
         <i class="fas fa-video"></i>
         &nbsp;[[ctrl.msToTime(ctrl.recorder.elapsedTime)]]/[[ctrl.msToTime(ctrl.recordMaxTime)]]
@@ -82,7 +84,7 @@
     <div>
         <input type="text" class="form-control" i18n-placeholder="title" ng-model="ctrl.recorder.title" />
     </div>
-    <div class="record-controls">
+    <div class="record-controls" custom-guard="recordGuard">
         <button type="button" class="btn btn-circle"
                 ng-click="ctrl.switchVideoRecord()"
                 ng-disabled="ctrl.isEncoding || ctrl.isUploading">

@@ -19,6 +19,14 @@ export * as I18nTitle from './components/i18n/i18n-title.directive';
 export * as I18nPlaceholder from './components/i18n/i18n-placeholder.directive';
 export * as I18nFilter from './components/i18n/i18n.filter';
 
+export * as NavigationTrigger from './components/navigation/navigation-trigger.directive';
+export * as GuardRoot from './components/navigation/guard-root.directive';
+export * as InputGuard from './components/navigation/input-guard.directive';
+export * as DirtyGuard from './components/navigation/dirty-guard.directive';
+export * as DocumentGuard from './components/navigation/document-guard.directive';
+export * as CustomGuard from './components/navigation/custom-guard.directive';
+export * as ResetGuard from './components/navigation/reset-guard.directive';
+
 export * as AppTitle from './components/app-title/app-title.directive';
 export * as Assistant from './components/pulsar/assistant.directive';
 export * as Pulsar from './components/pulsar/pulsar.directive';
