@@ -50,7 +50,7 @@ class Controller implements IController {
 	readonly MAX_EVENTS_DISPLAYED = 5;
 
 	private dateToMoment(date:string) {
-		var numberHoursLag = L10n.moment( L10n.moment(date).format("YYYY MM DD HH:MM") )
+		var numberHoursLag = L10n.moment( L10n.moment(date).format("YYYY MM DD HH:MM"), 'YYYY MM DD HH:MM' )
 			.format('Z')
 			.split(':')[0];
 		return L10n.utc(date).add(numberHoursLag, 'hours');
