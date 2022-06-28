@@ -240,7 +240,6 @@ export var audio_recorder = (function () {
 						notify.error(event.data);
 					} else if (event.data && event.data === "ok" && that.state === "encoding") {
 						closeWs();
-						notify.info("recorder.saved");
 						notifyFollowers('saved');
 						this.elapsedTime = 0;
 					}

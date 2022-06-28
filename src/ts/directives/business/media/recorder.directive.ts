@@ -1,5 +1,4 @@
 import { IAttributes, IController, IDirective, IScope } from "angular";
-import { APP } from "ode-ts-client";
 import { NgHelperService, TrackedAction } from "../../..";
 import { VideoEventTrackerService, VideoUploadService } from "../../../services";
 import { conf, deviceType, IAnyRecorder, RecorderState, session } from "../../../utils";
@@ -7,7 +6,7 @@ import { IObjectGuardDelegate } from "../../../utils/navigation-guard";
 import { audio_recorder } from "../../../utils/recorder-audio";
 import { VideoRecorder } from "../../../utils/recorder-video";
 
-type RecorderType = "audio" | "video";
+type RecorderType = "audio" | "video" | "none";
 
 class VideoRecordGuardModel implements IObjectGuardDelegate{
     hasRecorded = false;
@@ -75,14 +74,31 @@ export class Controller implements IController {
     // Video-specific members
     videoInputDevices?: MediaDeviceInfo[];
     selectedVid?: MediaDeviceInfo;
+
+    // Disabled State
+    disabledButtons:boolean = true;
+    displaySavedMessage:boolean = false;
+    selectedRecorder:string = "none";
+
     /** Max video recording duration, in ms. */
     get recordMaxTime():number {
         return this.videoUploadService.maxDuration * 60 * 1000;
     }
 
+    switchRecorder(type: string) {
+        if (type === "audio") {
+            this.selectedRecorder = "audio";
+            this.setRecorder( "audio" );
+        } else {
+            this.selectedRecorder = "video";
+            this.setRecorder( "video" );
+        }
+    }
+
     switchAudioRecord() {
         this.setRecorder( "audio" );
         if( this.isRecording ) {
+            this.disabledButtons = false;
             this.recorder?.suspend();
         } else {
             this.recorder?.record();
@@ -97,9 +113,6 @@ export class Controller implements IController {
 
     switchVideoRecord() {
         const startRecording = this.showMenu;
-        if( this.isAudio ) {
-            this.setRecorder( "video" );
-        }
         if( startRecording ) {
             this.recorder?.record();
 
@@ -179,6 +192,35 @@ export class Controller implements IController {
         } else {
             return 'fas fa-save';
         }
+    }
+
+    getSavedStatus(status:string):boolean {
+        if (status === 'saved') {
+            this.displaySavedMessage = true;
+            return true;
+        } else {
+            this.displaySavedMessage = false;
+            return false;
+        }
+    }
+
+    switchRecord() {
+        if( this.recorder ) {
+            if( this.isRecording ) {
+                this.disabledButtons = false;
+                this.recorder.suspend();
+            } else {
+                this.recorder.record();
+            }
+        }
+    }
+    
+    clean() {
+        this.displaySavedMessage = false;
+        this.disabledButtons = true;
+        this.recorder?.flush(); // Revert to idle state
+        this.selectedRecorder = "none";
+        this.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
     }
 
     constructor(
@@ -324,8 +366,9 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
                         scope.recordGuard.guardObjectReset();
                         
                     scope.onUpload && scope.onUpload();
-                    ctrl.recorder.flush();
-                    ctrl.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+                    ctrl.getSavedStatus(status);
+                    // ctrl.recorder.flush();
+                    // ctrl.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
                 }
                 case 'idle' : {
                     if( scope.recordGuard )

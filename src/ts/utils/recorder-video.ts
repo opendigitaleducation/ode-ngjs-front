@@ -101,7 +101,6 @@ export class VideoRecorder implements IAnyRecorder {
         this.uploader.upload( this.getBuffer(), this.title, true, Math.round(this.elapsedTime) )
         .then( response => {
             if( response.state==="succeed" ) {
-                notify.info("video.file.saved");
                 this.tracker.generateSaveEvent( this.elapsedTime, response );
                 this.updateStatus( 'saved' );
                 this.updateStatus( 'suspended' );
