@@ -49,8 +49,8 @@
                 ng-class="{ 'd-none': ctrl.isVideo || !ctrl.isAudioCompatible }"
                 ng-disabled="ctrl.isEncoding || ctrl.isUploading || ctrl.isPlaying || ctrl.isSaved">
             <i class="fas" ng-class="{'fa-microphone': !ctrl.isRecording, 'fa-pause': ctrl.isRecording}"></i>
-            <span class="label" ng-if="ctrl.isIdle"><i18n>embed.record</i18n></span>
-            <span class="label" ng-if="!ctrl.isRecording && !ctrl.isIdle"><i18n>embed.resume</i18n></span>
+            <span class="label" ng-if="ctrl.isIdle || ctrl.isStopped"><i18n>embed.record</i18n></span>
+            <span class="label" ng-if="!ctrl.isRecording && !ctrl.isIdle && !ctrl.isStopped" ng-class="{'d-none': ctrl.isIdle}"><i18n>embed.resume</i18n></span>
             <span class="label" ng-if="ctrl.isRecording"><i18n>embed.suspend</i18n></span>
         </button>
 
@@ -69,9 +69,9 @@
             <span class="label"><i18n>embed.save</i18n></span>
         </button>
 
-        <button type="button" class="btn btn-circle"
+        <button type="button" class="btn btn-circle btn-danger"
                 ng-click="ctrl.clean()"
-                ng-disabled="ctrl.disabledButtons || ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading || ctrl.isPlaying">
+                ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading || ctrl.isPlaying">
             <i class="fas fa-times"></i>
             <span class="label"><i18n>embed.redo</i18n></span>
         </button>
@@ -134,9 +134,9 @@
         </button>
 
         <button
-            type="button" class="btn btn-circle"
+            type="button" class="btn btn-circle btn-danger"
             ng-click="ctrl.clean()"
-            ng-disabled="ctrl.disabledButtons || ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading || ctrl.isPlaying">
+            ng-disabled="ctrl.isRecording || ctrl.isEncoding || ctrl.isUploading || ctrl.isPlaying">
             <i class="fas fa-times"></i>
             <span class="label"><i18n>embed.redo</i18n></span>
         </button>

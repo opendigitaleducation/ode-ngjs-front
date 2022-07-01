@@ -88,6 +88,7 @@ export class Controller implements IController {
     switchRecorder(type: string) {
         if (type === "audio") {
             this.selectedRecorder = "audio";
+            console.log(this.recorder.state);
             this.setRecorder( "audio" );
         } else {
             this.selectedRecorder = "video";
@@ -219,8 +220,10 @@ export class Controller implements IController {
         this.displaySavedMessage = false;
         this.disabledButtons = true;
         this.recorder?.flush(); // Revert to idle state
+
         this.selectedRecorder = "none";
-        this.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+        //this.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+        console.log(this.recorder.state);
     }
 
     constructor(
