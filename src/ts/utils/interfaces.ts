@@ -14,6 +14,7 @@ export interface IAnyRecorder {
     play():void;
     suspend():Promise<void>;
     record():Promise<void>;
+    prepare?():void;
     flush():void;
     save():void;
 }

@@ -19,8 +19,7 @@
     <button
         type="button"
         ng-click="ctrl.switchRecorder('video')"
-        class="btn btn-circle"
-        ng-click="ctrl.switchVideoRecord()">
+        class="btn btn-circle">
         <i class="fas fa-video"></i>
     </button>
 </div>
@@ -108,7 +107,7 @@
             type="button"
             class="btn btn-circle"
             ng-if="!(ctrl.isAudio) && ctrl.isVideoCompatible"
-            ng-click="ctrl.switchRecord()"
+            ng-click="ctrl.switchVideoRecord()"
             ng-disabled="ctrl.isEncoding || ctrl.isUploading || ctrl.isPlaying || ctrl.isSaved">
             <i class="fas" ng-class="{'fa-stop': ctrl.isRecording, 'fa-video': !ctrl.isRecording}"></i>
             <span class="label">[[ctrl.isRecording ? 'embed.stop' : 'embed.record' | i18n]]</span>

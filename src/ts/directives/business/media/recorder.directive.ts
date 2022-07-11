@@ -88,11 +88,12 @@ export class Controller implements IController {
     switchRecorder(type: string) {
         if (type === "audio") {
             this.selectedRecorder = "audio";
-            console.log(this.recorder.state);
             this.setRecorder( "audio" );
         } else {
             this.selectedRecorder = "video";
+            this.msToTime( 0 );
             this.setRecorder( "video" );
+            this.recorder?.prepare?.();
         }
     }
 
@@ -113,20 +114,21 @@ export class Controller implements IController {
     }
 
     switchVideoRecord() {
-        const startRecording = this.showMenu;
-        if( startRecording ) {
+        if( this.isRecording ) {
+            this.disabledButtons = false;
+            this.recorder?.suspend();
+        } else {
             this.recorder?.record();
-
+    
             // Track this event.
             const btn = document.getElementById("btnVideoRecorder");
             if( btn ) {
                 this.trackEvent(btn, { detail:{'open':'video'} });
             }
-        } else if( this.isRecording ) {
-            this.recorder?.suspend(); // Stop recording and prepare playing
-        } else {
-            this.recorder?.flush(); // Revert to idle state
-            this.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
+        }
+
+        if (this.isPaused) {
+            this.restart();
         }
     }
 
@@ -187,6 +189,18 @@ export class Controller implements IController {
         this.recorder?.record();
     }
 
+    restart() {
+        const videoPlayer = document.getElementById("recorderWidgetVideoPlayer");
+        videoPlayer?.removeChild(videoPlayer.firstElementChild as HTMLElement)
+
+        this.recorder?.flush();
+        this.switchRecorder("video");
+        
+        setTimeout( () => {
+            this.recorder?.record();
+        }, 100 );
+    }
+
     getSaveBtnClass() {
         if( this.isEncoding || this.isUploading ) {
             return 'fas fa-spinner fa-spin';
@@ -204,26 +218,12 @@ export class Controller implements IController {
             return false;
         }
     }
-
-    switchRecord() {
-        if( this.recorder ) {
-            if( this.isRecording ) {
-                this.disabledButtons = false;
-                this.recorder.suspend();
-            } else {
-                this.recorder.record();
-            }
-        }
-    }
     
     clean() {
         this.displaySavedMessage = false;
         this.disabledButtons = true;
         this.recorder?.flush(); // Revert to idle state
-
         this.selectedRecorder = "none";
-        //this.setRecorder( "audio" ); // Set audio recorder so that video recorder will create its video tag again
-        console.log(this.recorder.state);
     }
 
     constructor(

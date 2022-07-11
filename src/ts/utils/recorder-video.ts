@@ -314,6 +314,29 @@ export class VideoRecorder implements IAnyRecorder {
             return 'video/webm;codecs=vp8,opus';
         }
     }
+    async prepare() {
+        if (!this.gumVideo) {
+            this.gumVideo = this.videoFactory();
+        }
+        const stream = await navigator.mediaDevices.getUserMedia(this.constraints);
+        this.stream = stream;
+        if (!this.stream) {
+            console.warn('[VideoRecorder.prepareRecord] stream not init')
+            return;
+        }
+        if (this._status !== 'recording') {
+            if( this.gumVideo ) {
+                this.gumVideo.muted = true;
+                this.gumVideo.volume = 1;
+                this.gumVideo.autoplay = true;
+                if( this.gumVideo.src ) {
+                    window.URL.revokeObjectURL( this.gumVideo.src );
+                }
+                this.gumVideo.srcObject = this.stream;
+                this.gumVideo.controls = false;
+            }
+        }
+    }
     async record() {
         await this.startStreaming();
         if (!this.stream) return;
