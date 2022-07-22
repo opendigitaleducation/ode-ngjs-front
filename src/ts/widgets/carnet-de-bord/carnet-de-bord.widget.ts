@@ -97,6 +97,16 @@ class Controller implements IController {
 		}
 		return "";
 	}
+
+    userStatus(){
+        if (this.me.type === 'PERSRELELEVE') {
+            return 'parent';
+        } else if (this.me.type === 'ELEVE') {
+            return 'eleve';
+        } else {
+            return '';
+        }
+    }
 	
 	getChildId( index:number ){
 		const xmlFirstName = this.getTag('Prenom', index).toLowerCase();
