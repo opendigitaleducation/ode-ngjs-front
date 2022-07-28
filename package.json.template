@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/opendigitaleducation/ode-ngjs-front#readme",
   "files": [
-    "dist/ts/**/*",
-    "dist/examples/**/*"
+    "dist/**/*"
   ],
   "dependencies": {
     "core-js": "^3.9.1",
