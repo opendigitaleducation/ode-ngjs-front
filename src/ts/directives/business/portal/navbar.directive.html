@@ -63,7 +63,9 @@
 
 <div class="no-2d navigation--secondary">
     <a class="d-mobile-none" href="/timeline/timeline">
-        <img class="logo" skin-src="img/illustrations/logo.png" alt="Logo de l'ENT">
+        <object class="logo" type="image/svg+xml" object-src="img/illustrations/logo.svg" alt="Logo de l'ENT">
+            <img class="logo" skin-src="img/illustrations/logo.png" alt="Logo de l'ENT">
+        </object>
         <span class="text-truncate d-desktop-none" ng-bind-html="ctrl.title"></span>
     </a>
 
@@ -96,7 +98,9 @@
     <div class="container">
         <a class="navbar-brand" href="/timeline/timeline?token=[[ctrl.version]]"
                 ng-click="ctrl.trackEvent($event, {detail:{'open':'timeline', 'from':'logo'} })">
-            <img class="logo" skin-src="img/illustrations/logo.png" alt="Logo de l'ENT">
+            <object class="logo" type="image/svg+xml" object-src="img/illustrations/logo.svg" alt="Logo de l'ENT">
+                <img class="logo" skin-src="img/illustrations/logo.png" alt="Logo de l'ENT">
+            </object>
         </a>
 
         <nav class="navbar-nav">
