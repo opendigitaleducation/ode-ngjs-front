@@ -142,7 +142,7 @@
     </div>
 </div>
 
-<div ng-class="{'d-none': !ctrl.displaySavedMessage, 'd-block': ctrl.displaySavedMessage}">
+<div ng-class="{'d-none': !ctrl.displaySavedMessage, 'd-block record-widget-message': ctrl.displaySavedMessage}">
     <p class="text-success">{{ctrl.recorder.title}} <i18n>embed.saved.file</i18n></p>
     <a ng-href="/workspace/workspace#/apps" class="btn btn btn-outline-third rounded-pill d-inline-block mx-auto"><i18n>embed.goto.file</i18n></a>
     <button class="btn btn-link d-block mx-auto" ng-click="ctrl.clean()"><i18n>embed.new.recording</i18n></button>
