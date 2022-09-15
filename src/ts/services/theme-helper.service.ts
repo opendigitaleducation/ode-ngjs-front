@@ -63,7 +63,6 @@ export class ThemeHelperService {
 
     /* Extracted from an old code base. */
     toSkinUrl( url:string ):string {
-        
         const theme = angular.element(document.querySelectorAll("#theme"));
         if(!theme.attr('href')) {
             return "";

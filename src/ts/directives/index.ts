@@ -46,7 +46,6 @@ export * as Portal from './business/portal/portal.directive';
 export * as Navbar from './business/portal/navbar.directive';
 export * as WithTheme from './business/theme/with-theme.directive';
 export * as SkinSrc from './business/theme/skin-src.directive';
-export * as ObjectSrc from './business/theme/object-src.directive';
 export * as Logout from './business/portal/logout.directive';
 export * as Infotip from './components/modal/infotip.directive';
 export * as Recorder from './business/media/recorder.directive'
