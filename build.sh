@@ -11,6 +11,10 @@ if [ "$#" -lt 1 ]; then
   exit 1
 fi
 
+MVN_MOD_GROUPID=`grep 'modowner=' gradle.properties | sed 's/modowner=//'`
+MVN_MOD_NAME=`grep 'modname=' gradle.properties | sed 's/modname=//'`
+MVN_MOD_VERSION=`grep 'version=' gradle.properties | sed 's/version=//'`
+
 if [ ! -e node_modules ]
 then
   mkdir node_modules
@@ -45,7 +49,14 @@ esac
 done
 
 clean () {
-  rm -rf node_modules dist build .gradle package.json package-lock.json deployment
+  rm -rf node_modules 
+  rm -rf dist 
+  rm -rf build 
+  rm -rf .gradle 
+  rm -rf package.json 
+  rm -rf package-lock.json 
+  rm -rf deployment 
+  rm -rf yarn.lock
 }
 
 init () {
@@ -55,8 +66,19 @@ init () {
     echo "[init] Get branch name from git..."
     BRANCH_NAME=`git branch | sed -n -e "s/^\* \(.*\)/\1/p"`
   fi
-  docker-compose run -e BRANCH_NAME=$BRANCH_NAME --rm -u "$USER_UID:$GROUP_GID" gradle sh -c "gradle generateTemplate"
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install --production=false"
+
+  echo "[init] Generate deployment file from conf.deployment..."
+  mkdir -p deployment/$MVN_MOD_NAME
+  cp conf.deployment deployment/$MVN_MOD_NAME/conf.json.template
+  sed -i "s/%MODNAME%/${MVN_MOD_NAME}/" deployment/$MVN_MOD_NAME/conf.json.template
+  sed -i "s/%VERSION%/${MVN_MOD_VERSION}/" deployment/$MVN_MOD_NAME/conf.json.template
+
+  echo "[init] Generate package.json from package.json.template..."
+  NPM_VERSION_SUFFIX=`date +"%Y%m%d%H%M"`
+  cp package.json.template package.json
+  sed -i "s/%generateVersion%/${NPM_VERSION_SUFFIX}/" package.json
+
+  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --production=false"
 }
 
 # Install local dependencies as tarball (installing as folder creates symlinks which won't resolve in the docker container)
@@ -73,6 +95,12 @@ localDep () {
 
 build () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm run build"
+  status=$?
+  if [ $status != 0 ];
+  then
+    exit $status
+  fi
+
   VERSION=`grep "version="  gradle.properties| sed 's/version=//g'`
   echo "ode-ngjs-front=$VERSION `date +'%d/%m/%Y %H:%M:%S'`" >> dist/version.txt
 }
@@ -89,25 +117,35 @@ publishNPM () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm publish --tag $LOCAL_BRANCH"
 }
 
+archive() {
+  echo "[archive] Archiving dist folder and conf.j2 file..."
+  tar cfzh ${MVN_MOD_NAME}.tar.gz dist/* ode-ngjs-front/conf.j2
+}
+
 publishNexus () {
-  VERSION=`grep "version="  gradle.properties| sed 's/version=//g'`
-  case "$VERSION" in
+  case "$MVN_MOD_VERSION" in
     *SNAPSHOT) nexusRepository='snapshots' ;;
     *)         nexusRepository='releases' ;;
   esac
-  if [ -e "?/.gradle" ] && [ ! -e "?/.gradle/gradle.properties" ]
-  then
-    echo "odeUsername=$NEXUS_ODE_USERNAME" > "?/.gradle/gradle.properties"
-    echo "odePassword=$NEXUS_ODE_PASSWORD" >> "?/.gradle/gradle.properties"
-    echo "sonatypeUsername=$NEXUS_SONATYPE_USERNAME" >> "?/.gradle/gradle.properties"
-    echo "sonatypePassword=$NEXUS_SONATYPE_PASSWORD" >> "?/.gradle/gradle.properties"
-  fi
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" gradle sh -c "gradle deploymentJar tarGz publish"
+  mvn deploy:deploy-file \
+    --batch-mode \
+    -DgroupId=$MVN_MOD_GROUPID \
+    -DartifactId=$MVN_MOD_NAME \
+    -Dversion=$MVN_MOD_VERSION \
+    -Dpackaging=tar.gz \
+    -Dfile=${MVN_MOD_NAME}.tar.gz \
+    -DrepositoryId=wse \
+    -Durl=https://maven.opendigitaleducation.com/nexus/content/repositories/$nexusRepository/
 }
 
 publishMavenLocal(){
-  VERSION=`grep "version="  gradle.properties| sed 's/version=//g'`
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" gradle sh -c "gradle deploymentJar tarGz publishToMavenLocal"
+  mvn install:install-file \
+    --batch-mode \
+    -DgroupId=$MVN_MOD_GROUPID \
+    -DartifactId=$MVN_MOD_NAME \
+    -Dversion=$MVN_MOD_VERSION \
+    -Dpackaging=tar.gz \
+    -Dfile=${MVN_MOD_NAME}.tar.gz
 }
 
 for param in "$@"
@@ -126,10 +164,13 @@ do
       build
       ;;
     install)
-      build && publishMavenLocal && rm -rf build
+      build && archive && publishMavenLocal && rm -rf build
       ;;
     watch)
       watch
+      ;;
+    archive)
+      archive
       ;;
     publishNPM)
       publishNPM

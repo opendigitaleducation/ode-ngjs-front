@@ -14,6 +14,11 @@ pipeline {
         sh "./build.sh build"
       }
     }
+    stage('Archive') {
+      steps {
+        sh './build.sh archive'
+      }
+    }
     stage('Publish NPM') {
       steps {
         configFileProvider([configFile(fileId: '.npmrc-infra-front', variable: 'NPMRC')]) {
