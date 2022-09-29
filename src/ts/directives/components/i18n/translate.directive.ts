@@ -7,15 +7,6 @@ class Directive extends I18nBase implements IDirective<IScope,JQLite,IAttributes
     replace = true;
 
     link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
-        /* FIXME What is this, and why pollute the scope ??
-        if(attrs.params){
-            var params = scope.$eval(attrs.params);
-            for(var i = 0; i < params.length; i++){
-                scope[i] = params[i];
-            }
-        }
-        */
-
         attrs.$observe('content', val => {
             if(!attrs.content){
                 return;
