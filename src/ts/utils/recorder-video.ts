@@ -2,6 +2,7 @@ import { IAnyRecorder, RecorderPermission, RecorderState } from "./interfaces";
 import { conf, session } from "./shorts";
 import { L10n } from "./localization";
 import { notify, VideoEventTrackerService, VideoUploadService } from "../services";
+import { devices } from "./browser-info";
 
 //declare var navigator:Navigator;
 
@@ -79,9 +80,36 @@ export class VideoRecorder implements IAnyRecorder {
     public static isCompatible() {
         if( typeof navigator.mediaDevices?.getSupportedConstraints==='function' ) {
             const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-            return supportedConstraints['deviceId'] || false; // At least 1 device should exist.
+            return (supportedConstraints['deviceId'] && !(VideoRecorder.isIncompatibleDevice() || VideoRecorder.isIncompatibleBrowser())) || false; // At least 1 device should exist.
         }
         return false;
+    }
+
+    public static isIncompatibleDevice() {
+        const os = devices.getOSInfo();
+        /*
+        console.log( "Actual OS="+ os.name +" version "+ os.version );
+        let ios1 = devices.getOSInfo("Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1");
+        console.log( "iOS1 OS="+ ios1.name +" version "+ ios1.version );
+        let ios2 = devices.getOSInfo("Mozilla/5.0 (iPad; CPU OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Mobile/15E148 Safari/604.1");
+        console.log( "iOS2 OS="+ ios2.name +" version "+ ios2.version );
+        let ios3 = devices.getOSInfo("Mozilla/5.0 (iPad; CPU OS 14_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1");
+        console.log( "iOS3 OS="+ ios3.name +" version "+ ios3.version );
+        */
+        // iOS 14.3+ has built-in MediaRecorder capabilities.
+        if( os && os.name==="iOS" && os.version && os.version>="14.3" )
+            return false;
+
+        return devices.isIphone() || devices.isIpad() || devices.isIpod();
+    }
+
+    public static isIncompatibleBrowser() {
+        if(!(window as any).MediaRecorder){
+            return true;
+        }
+        // Check against supported browsers.
+        const browser = devices.getBrowserInfo();
+        return ['Firefox', 'Chrome', 'Edge', 'Opera', 'Safari', 'CriOS', 'FxiOS'].findIndex( (item) => browser.name==item ) === -1;
     }
 
     suspend():Promise<void> {
