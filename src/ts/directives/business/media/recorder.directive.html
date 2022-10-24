@@ -28,6 +28,27 @@
 	<p><i18n>recorder.not.supported</i18n></p>
 </div>
 
+<!-- More precise incompatibility messages -->
+<div ng-if="!ctrl.isVideoCompatible" class="flex-fill">
+    <div ng-if="VideoRecorder.isIncompatibleBrowser()">
+        <p><i18n>embed.video.incompatible.details</i18n></p>
+        <p class="update">
+            <a href="https://www.google.fr/chrome/browser/desktop/" target="_blank">
+                <img src="/auth/public/img/chrome_logo.png" />
+            </a>
+            <a href="https://www.mozilla.org/fr/firefox/new/" target="_blank">
+                <img src="/auth/public/img/firefox_logo.png" />
+            </a>
+        </p>
+    </div>
+    <div ng-if="VideoRecorder.isIncompatibleDevice()">
+        <p><i18n>embed.video.incompatible.devices</i18n></p>
+        <p><i18n>embed.video.incompatible.devices.footer</i18n></p>
+        <img skin-src="images/emptyscreen-recorder-video.svg" height="150">
+    </div>
+</div>
+
+
 <!-- audio recorder -->
 <div
     id="audioRecorder"
