@@ -102,8 +102,8 @@
 			<button class="btn btn-primary" ng-click="ctrl.newBookmark()"><i18n>bookmark-widget.widget.new.bookmark</i18n></button>
 		</div>
 
-		<div ng-if="ctrl.isCreatingBookmark()">
-			<button form="formCreated" type="reset" class="btn btn-light" ng-click="ctrl.cancelCreate()">
+		<div ng-if="ctrl.isCreatingBookmark()" class="d-flex gap-3">
+			<button form="formCreated" type="reset" class="btn btn-tertiary" ng-click="ctrl.cancelCreate()">
 				<i18n>bookmark-widget.widget.createform.cancel</i18n>
 			</button>
 			<button form="formCreated" type="submit" class="btn btn-primary" ng-click="ctrl.createBookmark()">
@@ -112,7 +112,7 @@
 		</div>
 
 		<div ng-if="ctrl.isEditingBookmark()">
-			<button form="formEdited" type="reset" class="btn btn-light" ng-click="ctrl.cancelEdit()">
+			<button form="formEdited" type="reset" class="btn btn-tertiary" ng-click="ctrl.cancelEdit()">
 				<i18n>bookmark-widget.widget.editform.cancel</i18n>
 			</button>
 			<button form="formEdited" type="submit" class="btn btn-primary" ng-click="ctrl.updateBookmark()">
