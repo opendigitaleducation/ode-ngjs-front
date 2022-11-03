@@ -27,6 +27,7 @@ export class ThemeHelperService {
         "cursus-widget":        "ic-widget-aide-devoirs",
         "maxicours-widget":     "ic-widget-maxicours",
         "school-widget":        "ic-widget-schoolbook",
+        "universalis":          "ic-widget-universalis",
     }
 
     constructor( 
