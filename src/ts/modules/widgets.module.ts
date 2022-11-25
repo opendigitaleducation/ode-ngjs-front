@@ -12,6 +12,7 @@ import CarnetDeBord = require("../widgets/carnet-de-bord/carnet-de-bord.widget")
 import DicoDeLaZone = require("../widgets/dicodelazone-widget/dicodelazone-widget.widget");
 import Calendar = require("../widgets/calendar-widget/calendar-widget.widget");
 import Universalis = require("../widgets/universalis-widget/universalis-widget.widget");
+import Briefme = require("../widgets/briefme-widget/briefme-widget.widget");
 import LastInfos = require("../widgets/last-infos-widget/last-infos-widget.widget");
 
 // ============ /!\ IMPORTANT /!\ ============
@@ -74,6 +75,7 @@ const module = angular.module("odeWidgets", [])
             case KnownWidget.dicoDeLaZone: await loadDicoDeLaZoneWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.calendar: await loadCalendarWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.universalis: await loadUniversalisWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.briefme: await loadBriefmeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.lastInfos: await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             default: throw `Unknown widget "${widgetName}"`;
         }
@@ -342,6 +344,25 @@ function loadUniversalisWidgetModule() {
                 reject();
             },
             "widgets/universalis-widget/universalis-widget.widget"
+        );
+    });
+}
+
+/** Dynamically load the "briefme" widget, which is packaged as a separate entry thanks to require.ensure(). */
+function loadBriefmeWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/briefme-widget/briefme-widget.widget"],
+            function(require) {
+                var jsModule = <typeof Briefme> require("../widgets/briefme-widget/briefme-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/briefme-widget/briefme-widget.widget"
         );
     });
 }
