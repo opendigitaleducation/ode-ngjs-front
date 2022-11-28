@@ -35,7 +35,6 @@ class BriefmeSection
 		
 		for(let entree of reponse.results)
 			this.articles.push(new BriefmeArticle(entree.title, entree.published_at, entree.url));
-		console.log(this);
 	}
 }
 
@@ -114,7 +113,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
-	require = ['odeBriefme'];
+	require = ['odeBriefmeWidget'];
 
     async link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]) {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
@@ -142,4 +141,4 @@ notif().onLangReady().promise.then( lang => {
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORTING THE MODULE NAME :
 export const odeModuleName = "odeBriefmeWidgetModule";
-angular.module( odeModuleName, []).directive( "odeBriefme", DirectiveFactory );
+angular.module( odeModuleName, []).directive( "odeBriefmeWidget", DirectiveFactory );
