@@ -48,7 +48,8 @@ export enum KnownWidget {
     carnetDeBord    = "carnet-de-bord",
     dicoDeLaZone    = "dicodelazone-widget",
     calendar        = "calendar-widget",
-    universalis     = "universalis",
+    universalis     = "universalis-widget",
+    briefme         = "briefme-widget",
     lastInfos       = "last-infos-widget"
 };
 export type WidgetLoader = (widgetName:String)=>Promise<void>;

@@ -62,7 +62,7 @@ class Directive implements IDirective<IScope,JQLite,IAttributes,IController[]> {
 	bindToController = true;
 	controller = [Controller];
 	controllerAs = 'ctrl';
-	require = ['odeUniversalis'];
+	require = ['odeUniversalisWidget'];
 
     async link(scope:IScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]) {
         const ctrl:Controller|null = controllers ? controllers[0] as Controller : null;
@@ -90,4 +90,4 @@ notif().onLangReady().promise.then( lang => {
 // THIS ANGULAR MODULE WILL BE DYNAMICALLY ADDED TO THE APPLICATION.
 // RESPECT THE NAMING CONVENTION BY EXPORTING THE MODULE NAME :
 export const odeModuleName = "odeUniversalisWidgetModule";
-angular.module( odeModuleName, []).directive( "odeUniversalis", DirectiveFactory );
+angular.module( odeModuleName, []).directive( "odeUniversalisWidget", DirectiveFactory );
