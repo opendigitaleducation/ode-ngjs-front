@@ -1,6 +1,6 @@
 import angular, { IAttributes, IController, IDirective, IScope } from "angular";
 import { IUserDescription, IUserInfo, School, WidgetFrameworkFactory, WidgetUserPref, WIDGET_NAME } from "ode-ts-client";
-import { conf, notif, session, http } from "../../utils";
+import { conf, notif, session, http, Base64 } from "../../utils";
 
 class BriefmeArticle
 {
@@ -43,13 +43,14 @@ class Controller implements IController
 {
 	private _userPref?:WidgetUserPref;
 	private selectedSchool?:School;
+	private parametrage:boolean = false;
 
 	private sections: BriefmeSection[] = [
 		new BriefmeSection("Brief.eco", "/appregistry/widget/cache/external/briefeco"),
 		new BriefmeSection("Brief.me", "/appregistry/widget/cache/external/briefme"),
 		new BriefmeSection("Brief.science", "/appregistry/widget/cache/external/briefscience")
 	];
-	private contenu: BriefmeSection = this.sections[0];
+	public contenu: BriefmeSection = this.sections[0];
 
 	protected get description():IUserDescription {
 		return session().description;
@@ -69,9 +70,9 @@ class Controller implements IController
 		this.setSelectedSchool( defaultIndex );
 
 		for(let section of this.sections)
-			section.charger();
+			await section.charger();
 
-		this.ouvrirBrief(this.sections[(this.sections.length / 2) + (this.sections.length % 2)]);
+		this.ouvrirBrief(this.sections[Math.floor(this.sections.length / 2)]);
 	}
 
 
@@ -102,6 +103,16 @@ class Controller implements IController
 	private ouvrirBrief(brief: BriefmeSection)
 	{
 		this.contenu = brief;
+	}
+
+	public genererLien(article: BriefmeArticle)
+	{
+		let urlBase: string = article.url;
+		let UAIb64: string = Base64.encode(this.selectedSchool?.UAI != null ? this.selectedSchool?.UAI : "");
+		let exports: string[] = this.selectedSchool?.exports != null ? this.selectedSchool?.exports : [];
+		let codeGARb64 = Base64.encode(exports != null && exports.length > 0 ? exports[0] : "");
+
+		return urlBase.replace("ID_ETAB", UAIb64).replace("ID_ENT", codeGARb64);
 	}
 }
 

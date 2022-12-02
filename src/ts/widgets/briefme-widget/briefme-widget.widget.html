@@ -21,6 +21,13 @@
 <div class="widget-header">
 	<div class="subtitle"><i18n>briefme.title</i18n></div>
 	<div class="widget-options">
+		<div class="tools">
+			<a href="#" class="tool tool-option" i18n-title="briefme-widget.school.choose.title"
+					ng-if="ctrl.hasManySchools"
+					ng-click="ctrl.parametrage = true">
+				<i class="fas fa-cog"></i>
+			</a>
+		</div>
 		<div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
 	</div>
 </div>
@@ -28,15 +35,18 @@
 <div class="widget-body">
 	<div class="container-advanced-nav" style="display: block;">
 		<div class="list-trigger">
-			<div ng-repeat="section in ctrl.sections track by $index" style="flex: 1;">
-				<div class="trigger" ng-click="ctrl.ouvrirBrief(section)" ng-class="{on: section == ctrl.contenu}">[[section.nom]]</div>
+			<div ng-repeat="section in ctrl.sections track by $index" ng-if="section.articles.length > 0" style="flex: 1;">
+				<div class="trigger"
+					ng-click="ctrl.ouvrirBrief(section)" ng-class="{on: section == ctrl.contenu}">
+					[[section.nom]]
+				</div>
 			</div>
 		</div>
 	</div>
 	<div>
 		<ul class="list">
 			<li class="item link" ng-repeat="article in ctrl.contenu.articles track by $index" style="padding: 1rem 2rem">
-				<a href="[[article.url]]" target="_blank" rel="noopener"
+				<a href="[[ctrl.genererLien(article)]]" target="_blank" rel="noopener"
 						ng-click="trackEvent($event, {detail:{'open':article.url} })">
 					<div class="title">[[article.titre]]</div>
 					<div class="meta">[[article.publication]]</div>
@@ -45,3 +55,32 @@
 		</ul>
 	</div>
 </div>
+
+<ode-modal visible="ctrl.parametrage" on-close="ctrl.parametrage = false" dnd-nodrag>
+	<ode-modal-title>
+		<i18n>briefme-widget.school.choose.title</i18n>
+	</ode-modal-title>
+	
+	<ode-modal-body>
+		<div>
+			<div ng-if="!ctrl.hasManySchools" class="school mb-3">{{ctrl.selectedSchool.name}}</div>
+			<div ng-if="ctrl.hasManySchools" class="dropdown mb-3" style="display: flex; justify-content: space-around;">
+				<i18n>briefme-widget.school.choose.label</i18n>
+				<div class="school-multiple dropdown-toggle" role="button" id="universalisWidgetSchool" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a href="" class="">{{ctrl.selectedSchool.name}}</a>
+				</div>
+				<div class="school-choice dropdown-menu" aria-labelledby="universalisWidgetSchool">
+					<div tabindex="0" role="button" class="dropdown-item"
+						 ng-repeat="school in ctrl.description.schools"
+						 ng-click="ctrl.onSchoolSelected($index)"
+						 ng-keydown="ctrl.onSchoolSelected($index, $event)">
+						{{school.name}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</ode-modal-body>
+
+	<ode-modal-footer>
+	</ode-modal-footer>
+</ode-modal>

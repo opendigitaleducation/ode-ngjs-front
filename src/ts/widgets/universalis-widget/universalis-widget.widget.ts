@@ -30,7 +30,6 @@ class Controller implements IController
 	private setSelectedSchool( idx:number ):boolean {
 		if( 0 <= idx && idx < this.description.schools.length && this.selectedSchool !== this.description.schools[idx]) {
 			this.selectedSchool = this.description.schools[idx];
-			console.log(this.selectedSchool);
 			return true;
 		}
 		return false;
