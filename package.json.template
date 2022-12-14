@@ -1,6 +1,6 @@
 {
   "name": "ode-ngjs-front",
-  "version": "1.2.7-dev-produit.%generateVersion%",
+  "version": "1.2.7-feat-produit.%generateVersion%",
   "description": "Open Digital Education Frontend Framework",
   "main": "dist/ts/index.js",
   "types": "dist/ts/index.d.ts",
