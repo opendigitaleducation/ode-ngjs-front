@@ -110,7 +110,19 @@ class Controller implements IController
 		let urlBase: string = article.url;
 		let UAIb64: string = Base64.encode(this.selectedSchool?.UAI != null ? this.selectedSchool?.UAI : "");
 		let exports: string[] = this.selectedSchool?.exports != null ? this.selectedSchool?.exports : [];
-		let codeGARb64 = Base64.encode(exports != null && exports.length > 0 ? exports[0] : "");
+		let codeGar = "";
+		if(exports != null)
+		{
+			for(let i = 0; i < exports.length; ++i)
+				if(exports[i].startsWith("GAR-"))
+				{
+					codeGar = exports[i].replace("GAR-", "");
+					break;
+				}
+				if(codeGar == "")
+					codeGar = exports[0];
+		}
+		let codeGARb64 = Base64.encode(codeGar);
 
 		return urlBase.replace("ID_ETAB", UAIb64).replace("ID_ENT", codeGARb64);
 	}
