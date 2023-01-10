@@ -393,7 +393,7 @@ export class VideoRecorder implements IAnyRecorder {
     }
 
     public stopRecording(preparePlay: boolean):Promise<void> {
-        if( this.mediaRecorder?.state==="active" ) {
+        if( this.mediaRecorder?.state==="recording" ) {
             this.mediaRecorder?.requestData(); // get last recorded data slice
             this.mediaRecorder?.stop();
         }
