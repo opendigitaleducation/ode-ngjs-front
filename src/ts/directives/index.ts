@@ -1,15 +1,15 @@
 /* From the Explorer prototype */
-export * as Explorer from './business/explorer/explorer.directive';
-export * as Sidebar from './business/explorer/sidebar.directive';
-export * as SidebarFolder from './business/explorer/sidebar-folder.directive';
-export * as ResourceList from './business/explorer/resource-list.directive';
-export * as DominoFolder from './business/explorer/domino-folder.directive';
-export * as DominoItem from './business/explorer/domino-item.directive';
-export * as Toaster from './business/explorer/toaster.directive';
+// export * as Explorer from './business/explorer/explorer.directive';
+// export * as Sidebar from './business/explorer/sidebar.directive';
+// export * as SidebarFolder from './business/explorer/sidebar-folder.directive';
+// export * as ResourceList from './business/explorer/resource-list.directive';
+// export * as DominoFolder from './business/explorer/domino-folder.directive';
+// export * as DominoItem from './business/explorer/domino-item.directive';
+// export * as Toaster from './business/explorer/toaster.directive';
 export * as Modal from './components/modal/modal.directive';
 export * as ModalContainer from './components/modal/modal-container.directive';
-export * as PropsPanel from './business/props/props-panel.directive';
-export * as SharePanel from './business/share/share-panel.directive';
+// export * as PropsPanel from './business/props/props-panel.directive';
+// export * as SharePanel from './business/share/share-panel.directive';
 
 /* Legacy (ported from infra-front) */
 export * as Translate from './components/i18n/translate.directive';

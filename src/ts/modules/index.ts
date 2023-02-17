@@ -1,7 +1,7 @@
 import { odeBaseModule } from "./base.module";
 import { odeI18nModule } from "./i18n.module";
 import { odeUiModule } from "./ui.module";
-import { odeExplorerModule } from "./explorer.module";
+// import { odeExplorerModule } from "./explorer.module";
 import { odeWidgetModule } from "./widgets.module";
 
 /**
@@ -33,7 +33,7 @@ export abstract class OdeModules {
         return odeWidgetModule().name;
     };
     /** Explorer module. Declares components for exploring assets from resource-producing apps. */
-    static getExplorer():string {
+   /*  static getExplorer():string {
         return odeExplorerModule().name;
-    };
+    }; */
 }
