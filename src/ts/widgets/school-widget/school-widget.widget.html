@@ -2,7 +2,7 @@
 	<div class="widget-body">
 		<div class="widget-school-header" ng-style="ctrl.getWidgetStyle()">
 			<div class="d-flex align-items-center">
-				<div class="me-4">
+				<div class="me-16">
 					<a href="/userbook/mon-compte" class="avatar-link" i18n-title="navbar.myaccount"
 							ng-click="trackEvent($event, {detail:{'open':'profile'} })">
 						<img data-ng-src="[[ctrl.avatar ? ctrl.avatar+'?thumbnail=48x48' : '']]" alt="{{ctrl.description.displayName}}" />
@@ -31,41 +31,41 @@
 		</div>
 		<div class="btn-group">
 			<!-- Students -->
-			<a href="/userbook/annuaire#/search" class="btn btn-third rounded-pill"
+			<a href="/userbook/annuaire#/search" class="btn btn-secondary rounded-pill"
 				ng-if="ctrl.isStudent"
 				ng-click="trackEvent($event, {detail:{'open':'student.class'} })"
 				translate content="school-widget.widget.my.classroom"></a>
-			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-outline-third rounded-pill" 
+			<a ng-href="{{ctrl.getUrlTeachersOfMyClass()}}" class="btn btn-outline-secondary rounded-pill" 
 				ng-if="ctrl.isStudent"
 				ng-click="trackEvent($event, {detail:{'open':'student.teachers'} })"
 				translate content="school-widget.widget.my.team"></a>
 
 			<!-- Teachers -->
-			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-third rounded-pill"
+			<a ng-href="{{ctrl.getUrlStudentsOfMyClasses()}}" class="btn btn-secondary rounded-pill"
 				ng-if="ctrl.isTeacher"
 				ng-click="trackEvent($event, {detail:{'open':'teacher.students'} })"
 				translate content="school-widget.widget.my.classrooms"></a>
-			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-outline-third rounded-pill"
+			<a ng-href="{{ctrl.getUrlSchoolTeachers()}}" class="btn btn-outline-secondary rounded-pill"
 				ng-if="ctrl.isTeacher"
 				ng-click="trackEvent($event, {detail:{'open':'teacher.teachers'} })"
 				translate content="school-widget.widget.school.team"></a>
 
 			<!-- Relatives -->
-			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-third rounded-pill"
+			<a ng-href="{{ctrl.getUrlTeachersOfMyChildren()}}" class="btn btn-secondary rounded-pill"
 				ng-if="ctrl.isRelative"
 				ng-click="trackEvent($event, {detail:{'open':'relative.teachers'} })"
 				translate content="school-widget.widget.school.team"></a>
-			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-outline-third rounded-pill"
+			<a ng-href="{{ctrl.getUrlSchoolPersonnels()}}" class="btn btn-outline-secondary rounded-pill"
 				ng-if="ctrl.isRelative"
 				ng-click="trackEvent($event, {detail:{'open':'relative.direction'} })"
 				translate content="school-widget.widget.school.managers"></a>
 
 			<!-- Personnel -->
-			<a ng-href="{{ctrl.getUrlSchoolPersonnelsAndTeachers()}}" class="btn btn-third rounded-pill"
+			<a ng-href="{{ctrl.getUrlSchoolPersonnelsAndTeachers()}}" class="btn btn-secondary rounded-pill"
 				ng-if="ctrl.isPersonnel"
 				ng-click="trackEvent($event, {detail:{'open':'personnel.personnels'} })"
 				translate content="school-widget.widget.school.personnelAndTeachers"></a>
-			<a ng-href="{{ctrl.getUrlStudents()}}" class="btn btn-outline-third rounded-pill"
+			<a ng-href="{{ctrl.getUrlStudents()}}" class="btn btn-outline-secondary rounded-pill"
 				ng-if="ctrl.isPersonnel"
 				ng-click="trackEvent($event, {detail:{'open':'personnel.students'} })"
 				translate content="school-widget.widget.students"></a>

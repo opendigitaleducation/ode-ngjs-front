@@ -3,6 +3,9 @@
 	.widget-qwant .widget-header {
 		border: 0;
 	}
+	.widget-qwant .widget-body img {
+		margin: auto;
+	}
 </style>
 <div class="widget-qwant">
 	<div class="widget-header">
@@ -14,7 +17,7 @@
 	<div class="widget-body" dnd-nodrag>
 		<div class="widget-empty-message">
 			<div class="row row-cols-1 align-items-center">
-				<div class="mb-3">
+				<div class="mb-12">
 					<a href="https://www.qwant.com" target="_blank" rel="noopener"
 							ng-click="trackEvent($event, {detail:{'open':'qwant'} })">
 						<img src="/assets/widgets/qwant/logo-qwant.svg" width="77" height="75" alt="Qwant">
