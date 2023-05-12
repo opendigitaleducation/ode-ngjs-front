@@ -349,7 +349,8 @@ class Directive implements IDirective<Scope,JQLite,IAttributes,IController[]> {
 
                 if( ctrl.recorder.elapsedTime >= ctrl.recordMaxTime ) {
                     //ctrl.switchVideoRecord();
-                    ctrl.recorder.suspend();
+                    ctrl.disabledButtons = false;
+                    ctrl.recorder?.suspend();
                 }
             }
             this.helperSvc.safeApply( scope );
