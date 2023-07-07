@@ -212,6 +212,7 @@ export var audio_recorder = (function () {
       notifyFollowers(this.state);
     },
     flush: function () {
+      this.title = "";
       this.stop();
       this.elapsedTime = 0;
       leftChannel = [];

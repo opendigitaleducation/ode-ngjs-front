@@ -116,6 +116,7 @@ export class VideoRecorder implements IAnyRecorder {
 
     flush():void {
         this.stopStreaming();
+        this.title = "";
     }
 
     save():void {
