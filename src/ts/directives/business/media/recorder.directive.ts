@@ -186,6 +186,7 @@ export class Controller implements IController {
 
     saveRecord() {
         this.recorder?.save();
+        this.recordIsSaved= true;
     };
 
     redo() {
@@ -216,11 +217,9 @@ export class Controller implements IController {
     getSavedStatus(status:string):boolean {
         if (status === 'saved') {
             this.displaySavedMessage = true;
-            this.recordIsSaved= true;
             return true;
         } else {
             this.displaySavedMessage = false;
-            this.recordIsSaved= false;
             return false;
         }
     }
