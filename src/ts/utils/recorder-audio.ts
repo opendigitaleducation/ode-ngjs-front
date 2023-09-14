@@ -136,9 +136,7 @@ export var audio_recorder = (function () {
           L10n.moment().format("DD/MM/YYYY");
       }
       loaded = true;
-
-      console.log("coucouPassLoadComponents", this.title);
-
+      
       const handleMediaStream = (mediaStream: MediaStream) => {
         this.permission = "granted";
         context = new resolvedNavigatorModules.AudioContext();
@@ -256,19 +254,25 @@ export var audio_recorder = (function () {
           closeWs();
           notify.error((event as ErrorEvent).error);
         };
-        ws.onmessage = (event) => {
-          if (event.data && event.data.indexOf("error") !== -1) {
+        ws.onmessage = async (event) => {
+					if (event.data && event.data.indexOf && typeof event.data.indexOf === 'function' && event.data.indexOf("error") !== -1) {
             console.log(event.data);
             closeWs();
             notify.error(event.data);
-          } else if (
-            event.data &&
-            event.data === "ok" &&
-            that.state === "encoding"
-          ) {
-            closeWs();
-            notifyFollowers("saved");
-            this.elapsedTime = 0;
+					} 
+            else if (event.data && event.data.text && typeof event.data.text === 'function' && this.state === "encoding")
+          {
+            let data = JSON.parse(await event.data.text());
+            if (data.status === "ok") {
+							closeWs();
+							// let docId = data.docId;
+							notifyFollowers(`saved`);
+							this.elapsedTime = 0;
+						} else {
+							console.log(event.data);
+							closeWs();
+							notify.error(event.data);
+						}
           }
         };
         ws.onclose = function (event) {
