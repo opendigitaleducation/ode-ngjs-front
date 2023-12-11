@@ -175,7 +175,7 @@
                                 <a class="bookmarked-app" connector-lightbox-trigger="app" aria-label=[[app.displayName]] target="[[app.target]]"
                                 href="[[app.address]]" i18n-title="[[app.displayName]]" ng-switch="app.icon.indexOf('/')"
                                 ng-click="ctrl.trackEvent($event, {detail:{'open':'app', 'app':app} })"
-                                    ng-repeat="app in ctrl.apps track by $index">
+                                ng-repeat="app in ctrl.apps | limitTo:6 track by $index">
                                     <i class="fs-1" ng-class="ctrl.getIconClass(app)" ng-switch-when="-1"></i>
                                         <img skin-src="[[app.icon]]" ng-switch-default alt=[[app.displayName]] />
                                 </a>
