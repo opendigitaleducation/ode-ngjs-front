@@ -1,0 +1,227 @@
+<!-- 
+ ~	Copyright © WebServices pour l'Éducation, 2014
+ ~
+ ~ This file is part of ENT Core. ENT Core is a versatile ENT engine based on the JVM.
+ ~
+ ~ This program is free software; you can redistribute it and/or modify
+ ~ it under the terms of the GNU Affero General Public License as
+ ~ published by the Free Software Foundation (version 3 of the License).
+ ~
+ ~ For the sake of explanation, any module that communicate over native
+ ~ Web protocols, such as HTTP, with ENT Core is outside the scope of this
+ ~ license and could be license under its own terms. This is merely considered
+ ~ normal use of ENT Core, and does not fall under the heading of "covered work".
+ ~
+ ~ This program is distributed in the hope that it will be useful,
+ ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ ~
+ -->
+
+<style>
+  .widget-dashboard .dashboard-list .item:nth-child(2n) {
+    background: #fafafa;
+  }
+</style>
+
+<div class="widget-dashboard">
+  <div class="widget-header" style="border: 0">
+    <div class="subtitle">
+      <a
+        rel="noopener"
+        ng-click="ctrl.onButtonClick(ctrl.generateLinkGar(), 'EDUMALIN_OPEN_GAR')"
+        style="display: flex"
+      >
+        <img
+          src="/assets/widgets/edumalin-widget/edumalin.png"
+          width="40"
+          height="40"
+          alt="edumalin"
+        />
+        <span style="padding-left: 20px"><i18n>edumalin.title</i18n></span>
+      </a>
+    </div>
+    <div class="widget-options">
+      <div class="widget-handle" title="Déplacer le widget">
+        <i class="fas fa-grip-vertical" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget-body" dnd-nodrag>
+    <div ng-if="!ctrl.isDataLoaded" class="widget-empty-message">
+      <div class="row row-cols-1 align-items-center">
+        <div class="mb-3">
+          <div
+            class="widget-empty-message"
+            ng-if="ctrl.userEvents === undefined || ctrl.userEvents.length === 0"
+          >
+            <i18n>edumalin.empty</i18n>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="dashboard-list" ng-if="ctrl.isDataLoaded">
+      <li
+        class="item link-discret"
+        ng-repeat="widget in ctrl.data"
+        ng-click="ctrl.openLightBox(widget, $event)"
+      >
+        <a href="#" class="item-inner">
+          <div class="row">
+            <div class="col-3 mt-16">
+              <img
+                ng-if="!ctrl.isURL(widget.picture)"
+                src="/assets/widgets/edumalin-widget/edumalin.png"
+                width="40"
+                height="40"
+                alt="edumalin"
+                class="m-auto"
+              />
+              <img
+                ng-if="ctrl.isURL(widget.picture)"
+                ng-src="{{ctrl.encodeUrlPicture(widget.picture)}}"
+                width="60"
+                height="60"
+                alt="edumalin"
+                class="m-auto"
+              />
+            </div>
+            <div class="col-9">
+              <div class="subtitle" translate content="[[widget.title]]"></div>
+              <div
+                class="subtext"
+                translate
+                ng-if="widget.description"
+                content="[[widget.description.length>70 ? widget.description.slice(0, 70) + ' ...' : widget.description]]"
+              ></div>
+              <div
+                class="info meta"
+                ng-style="{'color': ctrl.displayIconColor(widget.type.name)}"
+                ng-if="widget.type"
+              >
+                <i class="fas [[ctrl.displayIcon(widget.type.name)]]"></i>
+                [[widget.type.name]]
+              </div>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <ode-modal
+    visible="ctrl.showLightbox"
+    on-close="ctrl.showLightbox=false"
+    size="lg"
+    class="modal-widget"
+  >
+    <ode-modal-title>
+      <h2 translate content="[[ctrl.currentWidget.title]]"></h2>
+    </ode-modal-title>
+
+    <ode-modal-body>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-sm-12">
+            <img
+              ng-if="!ctrl.isURL(ctrl.currentWidget.picture)"
+              src="/assets/widgets/edumalin-widget/edumalin.png"
+              width="200"
+              height="200"
+              alt="edumalin"
+              class="m-auto"
+            />
+            <img
+              ng-if="ctrl.isURL(ctrl.currentWidget.picture)"
+              ng-src="{{ctrl.encodeUrlPicture(ctrl.currentWidget.picture)}}"
+              width="200"
+              height="200"
+              alt="edumalin"
+              class="m-auto"
+            />
+          </div>
+          <div class="col-md-8 col-sm-12">
+            <div
+              class="label"
+              translate
+              content="[[ctrl.currentWidget.description]]"
+            ></div>
+
+            <div
+              class="mb-3 mt-12"
+              ng-if="ctrl.isTypeRDV(ctrl.currentWidget.type.name)"
+              ng-style="{'color': ctrl.displayIconColor(ctrl.currentWidget.type.name)}"
+            >
+              <a
+                href="[[ctrl.currentWidget.googleMap]]"
+                target="_blank"
+                rel="noopener"
+              >
+                <div class="label">
+                  <i
+                    class="fas [[ctrl.displayIcon(ctrl.currentWidget.type.name)]]"
+                  ></i>
+                  <span
+                    translate
+                    content="[[ctrl.currentWidget.type.name]]"
+                  ></span>
+                </div>
+              </a>
+            </div>
+            <div
+              class="mb-3 mt-12"
+              ng-if="!ctrl.isTypeRDV(ctrl.currentWidget.type.name)"
+            >
+              <div class="label">
+                <i
+                  class="fas [[ctrl.displayIcon(ctrl.currentWidget.type.name)]]"
+                  ng-style="{'color': ctrl.displayIconColor(ctrl.currentWidget.type.name)}"
+                ></i>
+                <span
+                  translate
+                  content="[[ctrl.currentWidget.type.name]]"
+                  ng-style="{'color': ctrl.displayIconColor(ctrl.currentWidget.type.name)}"
+                ></span>
+                <span
+                  ng-if="ctrl.isTypeWebinaire(ctrl.currentWidget.type.name)"
+                >
+                  | <i18n>edumalin.webinaire.date</i18n>:
+                  [[ctrl.dateFormat(ctrl.currentWidget.dateTime)]] |
+                  <i18n>edumalin.webinaire.duration</i18n>:
+                  [[ctrl.currentWidget.duration]] min</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="row">
+            <div class="col-md-5 col-sm-12"></div>
+            <div class="col-md-3 col-sm-12 mb3">
+              <button
+                type="button"
+                class="btn btn-outline-primary form-control"
+                ng-click="ctrl.onButtonClick(ctrl.generateLinkGar(), 'EDUMALIN_OPEN_GAR')"
+                translate
+                content="edumalin.acceder"
+              />
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <button
+                ng-if="ctrl.currentWidget.buttonLink"
+                type="button"
+                class="btn btn-primary form-control"
+                ng-click="ctrl.onButtonClick(ctrl.currentWidget.buttonLink, 'EDUMALIN_OPEN_LINK')"
+                translate
+              >
+                {{ctrl.currentWidget.buttonTitle}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ode-modal-body>
+  </ode-modal>
+</div>

@@ -29,6 +29,7 @@ export class ThemeHelperService {
         "school-widget":        "ic-widget-schoolbook",
         "universalis-widget":   "ic-widget-universalis",
         "briefme-widget":       "ic-widget-briefme big",
+        "edumalin-widget":      "ic-widget-edumalin",
     }
 
     constructor( 

@@ -14,6 +14,7 @@ import Calendar = require("../widgets/calendar-widget/calendar-widget.widget");
 import Universalis = require("../widgets/universalis-widget/universalis-widget.widget");
 import Briefme = require("../widgets/briefme-widget/briefme-widget.widget");
 import LastInfos = require("../widgets/last-infos-widget/last-infos-widget.widget");
+import Edumalin = require("../widgets/edumalin-widget/edumalin-widget.widget");
 
 // ============ /!\ IMPORTANT /!\ ============
 //
@@ -51,7 +52,8 @@ export enum KnownWidget {
     calendar        = "calendar-widget",
     universalis     = "universalis-widget",
     briefme         = "briefme-widget",
-    lastInfos       = "last-infos-widget"
+    lastInfos       = "last-infos-widget",
+    edumalin        = "edumalin-widget"
 };
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
@@ -77,6 +79,7 @@ const module = angular.module("odeWidgets", [])
             case KnownWidget.universalis: await loadUniversalisWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.briefme: await loadBriefmeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.lastInfos: await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.edumalin: await loadEdumalinWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             default: throw `Unknown widget "${widgetName}"`;
         }
     };
@@ -363,6 +366,25 @@ function loadBriefmeWidgetModule() {
                 reject();
             },
             "widgets/briefme-widget/briefme-widget.widget"
+        );
+    });
+}
+
+/** Dynamically load the "edumalin" widget, which is packaged as a separate entry thanks to require.ensure(). */
+function loadEdumalinWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/edumalin-widget/edumalin-widget.widget"],
+            function(require) {
+                var jsModule = <typeof Edumalin> require("../widgets/edumalin-widget/edumalin-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/edumalin-widget/edumalin-widget.widget"
         );
     });
 }
