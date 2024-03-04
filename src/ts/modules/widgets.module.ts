@@ -15,6 +15,8 @@ import Universalis = require("../widgets/universalis-widget/universalis-widget.w
 import Briefme = require("../widgets/briefme-widget/briefme-widget.widget");
 import LastInfos = require("../widgets/last-infos-widget/last-infos-widget.widget");
 import Edumalin = require("../widgets/edumalin-widget/edumalin-widget.widget");
+import Mediacentre = require("../widgets/mediacentre-widget/mediacentre-widget.widget");
+
 
 // ============ /!\ IMPORTANT /!\ ============
 //
@@ -53,7 +55,9 @@ export enum KnownWidget {
     universalis     = "universalis-widget",
     briefme         = "briefme-widget",
     lastInfos       = "last-infos-widget",
-    edumalin        = "edumalin-widget"
+    edumalin        = "edumalin-widget",
+    mediacentre     = "mediacentre-widget"
+
 };
 export type WidgetLoader = (widgetName:String)=>Promise<void>;
 
@@ -80,6 +84,7 @@ const module = angular.module("odeWidgets", [])
             case KnownWidget.briefme: await loadBriefmeWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.lastInfos: await loadLastInfosWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
             case KnownWidget.edumalin: await loadEdumalinWidgetModule().then( mod=>{ $injector.loadNewModules([mod]) }); break;
+            case KnownWidget.mediacentre: await loadMediacentreWidgetModule().then( mod =>{ $injector.loadNewModules([mod]) }); break;
             default: throw `Unknown widget "${widgetName}"`;
         }
     };
@@ -385,6 +390,25 @@ function loadEdumalinWidgetModule() {
                 reject();
             },
             "widgets/edumalin-widget/edumalin-widget.widget"
+        );
+    });
+}
+
+/** Dynamically load the "mediacentre" widget, which is packaged as a separate entry thanks to require.ensure(). */
+function loadMediacentreWidgetModule() {
+    return new Promise<string>( (resolve, reject) => {
+        // Note: the following "require.ensure" function acts as a compiling directive for webpack, and cannot be variabilized.
+        require.ensure(
+            ["../widgets/mediacentre-widget/mediacentre-widget.widget"],
+            function(require) {
+                var jsModule = <typeof Mediacentre> require("../widgets/mediacentre-widget/mediacentre-widget.widget");
+                resolve( jsModule.odeModuleName );
+            },
+            function(error) {
+                console.log(error);
+                reject();
+            },
+            "widgets/mediacentre-widget/mediacentre-widget.widget"
         );
     });
 }
