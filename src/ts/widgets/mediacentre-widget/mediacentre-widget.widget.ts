@@ -1,5 +1,6 @@
 import angular, {IAttributes, ICompileService, IController, IDirective} from "angular";
-import {conf, notif, TrackedScope, TrackedAction, TrackedActionFromWidget, http} from "../../utils";
+import {conf, notif, TrackedScope, TrackedAction, TrackedActionFromWidget, http, session} from "../../utils";
+import {IUserDescription, School, WIDGET_NAME, WidgetFrameworkFactory, WidgetUserPref} from "ode-ts-client";
 
 type Resource = {
     authors: string[];
@@ -88,6 +89,40 @@ class Controller implements IController {
             throw e;
         }
     }
+
+
+    // Universalis
+
+    private _userPref?:WidgetUserPref;
+    private selectedSchool?:School;
+
+    protected get description():IUserDescription {
+        return session().description;
+    }
+
+    public async initializeUniversalis() {
+        if (!this.hasUniversalis) return;
+
+        this._userPref = WidgetFrameworkFactory.instance().list.find( w => w.platformConf.name===WIDGET_NAME.MEDIACENTRE)?.userPref;
+        await notif().onSessionReady().promise;
+
+        let defaultIndex = 0;
+        if( this._userPref?.schoolId && angular.isArray(this.description.schools) ) {
+            defaultIndex = this.description.schools.findIndex( school => school.id===this._userPref?.schoolId );
+            if( defaultIndex < 0 ) {
+                defaultIndex = 0;
+            }
+        }
+        this.setSelectedSchool( defaultIndex );
+    }
+
+    private setSelectedSchool( idx:number ):boolean {
+        if( 0 <= idx && idx < this.description.schools.length && this.selectedSchool !== this.description.schools[idx]) {
+            this.selectedSchool = this.description.schools[idx];
+            return true;
+        }
+        return false;
+    }
 }
 
 /* Directive */
@@ -100,23 +135,13 @@ class Directive implements IDirective<TrackedScope,JQLite,IAttributes,IControlle
     controllerAs = 'ctrl';
     require = ['odeMediacentreWidget'];
 
-    link (scope:TrackedScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): void {
+    async link (scope:TrackedScope, elem:JQLite, attrs:IAttributes, controllers?:IController[]): Promise<void> {
         const ctrl: Controller|null = controllers ? controllers[0] as Controller : null;
         if (!ctrl) return;
 
-        // Init resources
-        ctrl.initResources().then(() => {
-            if (ctrl.hasUniversalis) { // Display Universalis widget
-                setTimeout(() => {
-                    const htmlFragment = `<ode-universalis-widget></ode-universalis-widget>`;
-                    const compiled = this.$compile(htmlFragment)(scope);
-                    let universalisContainer = elem.find("#universalis-container");
-                    if (universalisContainer) universalisContainer.append(compiled);
-                    scope.$apply();
-                }, 100);
-            }
-            scope.$apply();
-        });
+        await ctrl.initResources(); // Init Mediacentre resources
+        await ctrl.initializeUniversalis(); // Init Universalis search bar
+        scope.$apply();
 
         // Give an opportunity to track some events from outside of this widget.
         scope.trackEvent = (e:Event, p:CustomEventInit<TrackedAction>): void => {

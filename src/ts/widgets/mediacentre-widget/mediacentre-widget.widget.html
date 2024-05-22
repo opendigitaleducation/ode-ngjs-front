@@ -58,28 +58,34 @@
         white-space: nowrap;
     }
     /* Universalis component */
-    .widget-mediacentre #universalis-container .widget-header,
-    .widget-mediacentre #universalis-container .school {
-        display: none;
-    }
     .widget-mediacentre #universalis-container .widget-body {
-        padding: 5px;
+        padding: 10px 0;
     }
     .widget-mediacentre #universalis-container .widget-empty-message {
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
+        padding: 12px;
     }
     .widget-mediacentre #universalis-container .widget-empty-message:first-child,
     .widget-mediacentre #universalis-container form {
-        max-height: 30px;
+        max-height: 40px;
+    }
+    .widget-mediacentre #universalis-container .widget-empty-message:first-child *,
+    .widget-mediacentre #universalis-container .widget-empty-message form * {
+        max-height: inherit;
     }
     .widget-mediacentre #universalis-container img {
         width: auto;
     }
-    .widget-mediacentre #universalis-container .widget-empty-message:first-child *,
-    .widget-mediacentre #universalis-container form * {
-        max-height: inherit;
+    .widget-mediacentre #universalis-container form {
+        width: 90%;
+    }
+    .widget-mediacentre #universalis-container form .input-group input#inputUniversalisQ {
+        height: 30px;
+    }
+    .widget-mediacentre #universalis-container form .input-group button {
+        padding: 0 8px;
     }
 </style>
 
@@ -112,6 +118,36 @@
     </div>
 
     <div class="widget-footer border-top border-ghost" ng-if="ctrl.hasUniversalis">
-        <div id="universalis-container"></div>
+        <div id="universalis-container">
+            <div class="widget-body">
+                <div class="widget-empty-message">
+                    <div class="row row-cols-1 align-items-center">
+                        <div class="mb-3">
+                            <a href="http://www.universalis-edu.com" target="_blank" rel="noopener"
+                               ng-click="trackEvent($event, {detail:{'open':'universalis'} })">
+                                <img src="/assets/widgets/mediacentre-widget/universalis.png" width="75" alt="Universalis">
+                            </a>
+                        </div>
+                    </div>
+                    <form method="GET" action="https://www.universalis-edu.com/nomade/precherche/" target="_blank" autocomplete="off">
+                        <div class="row row-cols-1 align-items-center">
+                            <label class="sr-only" for="inputUniversalisQ" translate content="{{ctrl.selectedSchool.UAI == null ? 'mediacentre.widget.universalis.no.uai' : 'mediacentre.widget.universalis.search'}}"></label>
+                            <div class="input-group mb-2">
+                                <input type="text" id="inputUniversalisQ" class="form-control" name="q" maxlen
+                                       gth="255"
+                                       i18n-placeholder="{{ctrl.selectedSchool.UAI == null ? 'mediacentre.widget.universalis.no.uai' : 'mediacentre.widget.universalis.search'}}" ng-disabled="ctrl.selectedSchool.UAI == null" />
+                                <input type="hidden" name="r" value="www" />
+                                <input type="hidden" name="uai" value="{{ctrl.selectedSchool.UAI}}"/>
+                                <button class="btn btn-outline-secondary" ng-class="{'disabled': ctrl.selectedSchool.UAI == null}" aria-labelledby="inputUniversalisQ"
+                                        ng-click="trackEvent($event, {detail:{'search':'launch'} })">
+                                    <i class="ic-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

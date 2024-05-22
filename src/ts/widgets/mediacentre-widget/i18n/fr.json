@@ -2,5 +2,8 @@
   "mediacentre-widget": "Mes favoris Médiacentre",
   "mediacentre.widget.title": "Mes favoris Médiacentre",
   "mediacentre.widget.more": "voir plus",
-  "mediacentre.widget.empty": "Aucune ressource favorite"
+  "mediacentre.widget.empty": "Aucune ressource favorite",
+
+  "mediacentre.widget.universalis.no.uai": "UAI non renseigné",
+  "mediacentre.widget.universalis.search": "Rechercher dans Universalis"
 }
