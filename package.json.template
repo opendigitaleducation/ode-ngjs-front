@@ -1,30 +1,30 @@
 {
   "name": "ode-ngjs-front",
-  "version": "1.4.3-dev.%generateVersion%",
+  "version": "1.4.4",
   "description": "Open Digital Education Frontend Framework",
-  "main": "dist/ts/index.js",
-  "types": "dist/ts/index.d.ts",
-  "scripts": {
-    "compile": "npx tsc --build ./tsconfig.json",
-    "test": "npm run compile && npm run jasmine",
-    "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
-    "karma": "npx karma start src/test/config/karma.js",
-    "build": "npx webpack",
-    "watch": "npx webpack --config webpack.config.watch.js --env build_target=${npm_config_watch_springboard}/assets/js/ode-ngjs-front --watch"
+  "homepage": "https://github.com/opendigitaleducation/ode-ngjs-front#readme",
+  "bugs": {
+    "url": "https://github.com/opendigitaleducation/ode-ngjs-front/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/opendigitaleducation/ode-ngjs-front.git"
   },
-  "author": "Open Digital Education",
   "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/opendigitaleducation/ode-ngjs-front/issues"
-  },
-  "homepage": "https://github.com/opendigitaleducation/ode-ngjs-front#readme",
+  "author": "Open Digital Education",
+  "main": "dist/ts/index.js",
+  "types": "dist/ts/index.d.ts",
   "files": [
     "dist/**/*"
   ],
+  "scripts": {
+    "build": "npx webpack",
+    "compile": "npx tsc --build ./tsconfig.json",
+    "jasmine": "npx jasmine --config=src/test/config/jasmine.json",
+    "karma": "npx karma start src/test/config/karma.js",
+    "test": "npm run compile && npm run jasmine",
+    "watch": "npx webpack --config webpack.config.watch.js --env build_target=${npm_config_watch_springboard}/assets/js/ode-ngjs-front --watch"
+  },
   "dependencies": {
     "core-js": "3.9.1",
     "humane-js": "3.2.2",
@@ -39,9 +39,9 @@
     "@types/ua-parser-js": "0.7.35",
     "angular": "1.8.3",
     "angular-drag-and-drop-lists": "2.1.0",
+    "angular-mocks": "1.8.3",
     "angular-route": "1.8.3",
     "angular-sanitize": "1.8.3",
-    "angular-mocks": "1.8.3",
     "file-loader": "6.2.0",
     "html-loader": "2.1.2",
     "http-server": "0.12.3",
@@ -51,7 +51,7 @@
     "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "4.0.1",
     "moment-locales-webpack-plugin": "~1.2.0",
-    "ode-ts-client": "dev",
+    "ode-ts-client": "1.2.2",
     "terser-webpack-plugin": "5.1.4",
     "ts-loader": "8.0.18",
     "typescript": "4.2.2",
