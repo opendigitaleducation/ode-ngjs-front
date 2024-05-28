@@ -1,0 +1,117 @@
+<style>
+    /* Médiacentre body */
+    .widget-mediacentre .widget-body {
+        max-height: 300px;
+        overflow: auto;
+    }
+    .widget-mediacentre .widget-body .empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        font-style: italic;
+    }
+    .widget-mediacentre .widget-body .resource-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .widget-mediacentre .widget-body .resource-list-item {
+        position: relative;
+        width: 25%;
+        height: 150px;
+    }
+    .widget-mediacentre .widget-body .resource-list-item a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: background-color .8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        margin: 1px;
+        padding: 0 8px;
+        color: unset;
+        text-decoration: none;
+        background: #fafafa;
+        height: 99%;
+        width: auto;
+    }
+    .widget-mediacentre .widget-body .resource-list-item a:hover {
+        background-color: white;
+        color: #ff8d2e;
+        cursor: pointer;
+    }
+    .widget-mediacentre .widget-body .resource-list-item .picture {
+        height: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .widget-mediacentre .widget-body .resource-list-item .picture img {
+        max-height: 100%;
+        max-width: 100%;
+    }
+    .widget-mediacentre .widget-body .resource-list-item .title {
+        height: 20%;
+        max-width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    /* Universalis component */
+    .widget-mediacentre #universalis-container .widget-header,
+    .widget-mediacentre #universalis-container .school {
+        display: none;
+    }
+    .widget-mediacentre #universalis-container .widget-body {
+        padding: 5px;
+    }
+    .widget-mediacentre #universalis-container .widget-empty-message {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .widget-mediacentre #universalis-container .widget-empty-message:first-child,
+    .widget-mediacentre #universalis-container form {
+        max-height: 30px;
+    }
+    .widget-mediacentre #universalis-container img {
+        width: auto;
+    }
+    .widget-mediacentre #universalis-container .widget-empty-message:first-child *,
+    .widget-mediacentre #universalis-container form * {
+        max-height: inherit;
+    }
+</style>
+
+<div class="widget-mediacentre">
+    <div class="widget-header">
+        <div class="subtitle">
+            <a class="seemore" href="/mediacentre" i18n-title="mediacentre.widget.more" dnd-nodrag
+               ng-click="trackEvent($event, {detail:{'open':'more'} })">
+                <i18n>mediacentre.widget.title</i18n>
+                <span class="seemore-text"><i18n>mediacentre.widget.more</i18n></span>
+            </a>
+        </div>
+        <div class="widget-options">
+            <div class="widget-handle" title="Déplacer le widget"><i class="fas fa-grip-vertical" aria-hidden="true"></i></div>
+        </div>
+    </div>
+
+    <div class="widget-body" dnd-nodrag>
+        <ul class="resource-list" ng-if="ctrl.resources.length > 0">
+            <li class="resource-list-item" ng-repeat="resource in ctrl.resources" title="[[resource.title]]">
+                <a ng-href="[[resource.link]]">
+                    <div class="picture"><img skin-src="[[resource.image]]" alt="[[resource.title]]" /></div>
+                    <div class="title">[[resource.title]]</div>
+                </a>
+            </li>
+        </ul>
+        <div class="empty" ng-if="ctrl.resources.length <= 0">
+            <i18n>mediacentre.widget.empty</i18n>
+        </div>
+    </div>
+
+    <div class="widget-footer border-top border-ghost" ng-if="ctrl.hasUniversalis">
+        <div id="universalis-container"></div>
+    </div>
+</div>
