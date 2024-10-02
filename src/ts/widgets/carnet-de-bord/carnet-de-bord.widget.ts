@@ -246,6 +246,7 @@ class Controller implements IController {
 
             var iswork = $(eleve).find('PageCahierDeTextes CahierDeTextes TravailAFaire Descriptif').text();
             if (iswork) {
+                const parser = new DOMParser();
                 var diaries = $(eleve).find('PageCahierDeTextes CahierDeTextes');
                 $(diaries).each(function(i, diary){
                     if ($(diary).find('TravailAFaire Descriptif').text()) {
@@ -261,7 +262,10 @@ class Controller implements IController {
                             delivdate = delivdate.format('DD/MM/YYYY');
                             delivdate = lang.translate('carnet-de-bord.widget.for')+" "+delivdate
                             let descr:any = $(work).find('Descriptif');
-                            descr = descr.html(descr.text()).text();
+                            //can throw a DOMException
+                            //descr = descr.html(descr.text()).text();
+                            const doc = parser.parseFromString(descr.text(), 'text/html');
+                            descr = doc.documentElement.textContent;
 
                             subsections.push({
                                 header: delivdate,
