@@ -1,6 +1,6 @@
 {
   "name": "ode-ngjs-front",
-  "version": "1.4.7-develop-pedago.0",
+  "version": "1.4.7-%branch%.%generateVersion%",
   "description": "Open Digital Education Frontend Framework",
   "homepage": "https://github.com/opendigitaleducation/ode-ngjs-front#readme",
   "bugs": {
