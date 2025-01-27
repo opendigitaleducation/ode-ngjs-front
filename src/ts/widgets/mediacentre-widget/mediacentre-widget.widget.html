@@ -106,7 +106,7 @@
     <div class="widget-body" dnd-nodrag>
         <ul class="resource-list" ng-if="ctrl.resources.length > 0">
             <li class="resource-list-item" ng-repeat="resource in ctrl.resources" title="[[resource.title]]">
-                <a ng-href="[[resource.link]]">
+                <a ng-href="[[resource.link]]" target="_blank">
                     <div class="picture"><img skin-src="[[resource.image]]" alt="[[resource.title]]" /></div>
                     <div class="title">[[resource.title]]</div>
                 </a>
