@@ -100,8 +100,8 @@ publishNPM () {
 }
 
 archive() {
-  echo "[archive] Archiving dist folder and conf.j2 file..."
-  tar cfzh ${MVN_MOD_NAME}.tar.gz dist/* ode-ngjs-front/conf.j2
+  echo "[archive] Archiving dist folder..."
+  tar cfzh ${MVN_MOD_NAME}.tar.gz dist/*
 }
 
 publishNexus () {
